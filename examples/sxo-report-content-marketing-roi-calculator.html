@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SXO Analysis: content marketing ROI calculator</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f7;
+    --surface-3: #e8ebf0;
+    --border: #d1d5de;
+    --border-light: #bfc5d2;
+    --text: #1a1f2e;
+    --text-muted: #4a5168;
+    --text-dim: #7a8198;
+    --accent: #2563eb;
+    --accent-glow: rgba(37, 99, 235, 0.08);
+    --green: #16a34a;
+    --green-bg: rgba(22, 163, 74, 0.08);
+    --red: #dc2626;
+    --red-bg: rgba(220, 38, 38, 0.07);
+    --yellow: #b45309;
+    --yellow-bg: rgba(180, 83, 9, 0.07);
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.07);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .report { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  .report-header {
+    position: relative; padding: 48px 40px 40px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid #334155; border-radius: 16px; margin-bottom: 40px; overflow: hidden;
+  }
+  .report-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent)); }
+  .report-header .meta-label { color: #94a3b8; }
+  .report-header .meta-value { color: #e2e8f0; }
+  .report-header .meta-value a { color: #93c5fd; }
+  .report-header .label { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #93c5fd; background: rgba(147, 197, 253, 0.15); padding: 4px 12px; border-radius: 4px; margin-bottom: 16px; }
+  .report-header h1 { font-size: 28px; font-weight: 700; line-height: 1.3; margin-bottom: 24px; color: #f1f5f9; }
+  .report-header h1 span { color: #93c5fd; }
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-item .meta-label { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim); }
+  .meta-item .meta-value { font-size: 14px; color: var(--text); word-break: break-all; }
+  .meta-item .meta-value a { color: var(--accent); text-decoration: none; }
+
+  .section { margin-bottom: 32px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .section-number { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--accent-glow); border: 1px solid rgba(96, 165, 250, 0.3); border-radius: 10px; font-size: 15px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+  .section-header h2 { font-size: 20px; font-weight: 700; color: var(--text); }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+  .card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card h3 .icon { font-size: 16px; }
+  .card p, .card li { color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+  .card p + p { margin-top: 8px; }
+  .card ul, .card ol { padding-left: 20px; margin-top: 8px; }
+  .card li + li { margin-top: 4px; }
+
+  .sub-label { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+
+  .table-wrap { overflow-x: auto; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim); background: var(--surface-2); border-bottom: 1px solid var(--border); }
+  thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  thead th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+  tbody td { padding: 10px 14px; color: var(--text-muted); border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--surface-2); }
+
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; white-space: nowrap; }
+  .badge-pass { color: var(--green); background: var(--green-bg); }
+  .badge-fail { color: var(--red); background: var(--red-bg); }
+  .badge-warn { color: var(--yellow); background: var(--yellow-bg); }
+  .badge-info { color: var(--accent); background: var(--accent-glow); }
+  .badge-neutral { color: var(--text-muted); background: var(--surface-3); }
+
+  .priority-high { color: var(--red); font-weight: 600; }
+  .priority-medium { color: var(--yellow); font-weight: 600; }
+  .priority-low { color: var(--green); font-weight: 600; }
+
+  .verdict { padding: 20px 24px; border-radius: var(--radius); margin: 16px 0; font-weight: 500; }
+  .verdict-partial { background: var(--yellow-bg); border: 1px solid rgba(251, 191, 36, 0.25); color: var(--yellow); }
+  .verdict-good { background: var(--green-bg); border: 1px solid rgba(52, 211, 153, 0.25); color: var(--green); }
+  .verdict-bad { background: var(--red-bg); border: 1px solid rgba(248, 113, 113, 0.25); color: var(--red); }
+  .verdict .verdict-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .verdict p { font-size: 13px; line-height: 1.6; opacity: 0.85; }
+
+  .user-story-quote { position: relative; padding: 24px 28px; background: linear-gradient(135deg, var(--surface-2), var(--surface-3)); border-left: 3px solid var(--purple); border-radius: 0 var(--radius) var(--radius) 0; margin: 16px 0; font-size: 15px; font-style: italic; color: var(--text); line-height: 1.8; }
+
+  .reco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 700px) { .reco-grid { grid-template-columns: 1fr; } }
+  .reco-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; position: relative; overflow: hidden; }
+  .reco-card.recommended { border-color: rgba(96, 165, 250, 0.4); box-shadow: 0 0 20px rgba(96, 165, 250, 0.05); }
+  .reco-card.recommended::before { content: 'RECOMMENDED'; position: absolute; top: 12px; right: -32px; background: var(--accent); color: var(--bg); font-size: 9px; font-weight: 700; letter-spacing: 1px; padding: 3px 36px; transform: rotate(45deg); }
+  .reco-card h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .reco-card .reco-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .reco-card .reco-meta-item .reco-meta-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim); }
+  .reco-card .reco-meta-item .reco-meta-value { font-size: 14px; font-weight: 600; }
+
+  .checklist { list-style: none; padding: 0; margin: 0; }
+  .checklist li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-muted); }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { flex-shrink: 0; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 12px; font-weight: 700; margin-top: 1px; }
+  .check-pass { background: var(--green-bg); color: var(--green); }
+  .check-fail { background: var(--red-bg); color: var(--red); }
+  .check-warn { background: var(--yellow-bg); color: var(--yellow); }
+  .check-na { background: var(--surface-3); color: var(--text-dim); }
+
+  .gap-item { padding: 16px; background: var(--surface-2); border-radius: var(--radius-sm); margin-bottom: 10px; border-left: 3px solid var(--border-light); }
+  .gap-item.gap-high { border-left-color: var(--red); }
+  .gap-item.gap-medium { border-left-color: var(--yellow); }
+  .gap-item.gap-low { border-left-color: var(--green); }
+  .gap-item h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+  .gap-detail { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 12px; margin-top: 8px; }
+  @media (max-width: 600px) { .gap-detail { grid-template-columns: 1fr; } }
+  .gap-detail > div { padding: 8px 10px; background: var(--surface); border-radius: 6px; }
+  .gap-detail .gd-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 3px; }
+
+  .serp-type { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; background: var(--surface-3); color: var(--text-muted); }
+  .serp-type-guide { background: var(--accent-glow); color: var(--accent); }
+  .serp-type-tool { background: var(--green-bg); color: var(--green); }
+  .serp-type-comparison { background: var(--yellow-bg); color: var(--yellow); }
+
+  .cwv-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+  .cwv-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim); background: var(--surface-2); border-bottom: 1px solid var(--border); }
+  .cwv-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  .cwv-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+  .cwv-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  .cwv-table tr:last-child td { border-bottom: none; }
+  .cwv-good { color: var(--green); font-weight: 600; }
+  .cwv-warn { color: var(--yellow); font-weight: 600; }
+  .cwv-poor { color: var(--red); font-weight: 600; }
+
+  .score-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+  .score-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--surface-2); border-radius: var(--radius-sm); flex: 1; min-width: 140px; }
+  .score-value { font-size: 28px; font-weight: 700; line-height: 1; }
+  .score-label { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim); }
+
+  .img-audit-summary { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+  .img-audit-stat { padding: 10px 14px; background: var(--surface-2); border-radius: var(--radius-sm); text-align: center; min-width: 100px; }
+  .img-audit-stat .stat-value { font-size: 24px; font-weight: 700; line-height: 1.2; }
+  .img-audit-stat .stat-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  .report-footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--text-dim); }
+
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-8 { margin-bottom: 8px; }
+  .text-accent { color: var(--accent); }
+  .text-muted { color: var(--text-muted); }
+  .fw-600 { font-weight: 600; }
+  .fs-13 { font-size: 13px; }
+
+  @media print {
+    body { background: #fff; color: #1a1a1a; font-size: 12px; }
+    .report { max-width: 100%; padding: 0; }
+    .report-header { background: #f5f5f5; border: 1px solid #ddd; }
+    .report-header::before { display: none; }
+    .report-header h1, .section-header h2, .card h3, .reco-card h3, .gap-item h4 { color: #1a1a1a; }
+    .card, .reco-card, .gap-item { background: #fafafa; border-color: #ddd; }
+    .label, .section-number { background: #eee; color: #333; border-color: #ccc; }
+    thead th { background: #eee; }
+    tbody td, .card p, .card li, .checklist li { color: #333; }
+    .reco-card.recommended::before { background: #333; color: #fff; }
+  }
+</style>
+</head>
+<body>
+<div class="report">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="report-header">
+    <div class="label">SXO Analysis</div>
+    <h1>SXO Analysis: <span>content marketing ROI calculator</span></h1>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Target Page</span>
+        <span class="meta-value"><a href="https://storychief.io/blog/roi-content-marketing" target="_blank">storychief.io/blog/roi-content-marketing</a></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Date</span>
+        <span class="meta-value">2026-03-23</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Market</span>
+        <span class="meta-value">United States / en</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Data Source</span>
+        <span class="meta-value">DataForSEO SERP API + Lighthouse</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ 1. SERP ANALYSIS ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2>SERP Analysis</h2>
+    </div>
+
+    <!-- 1a Autocomplete / Related -->
+    <div class="card">
+      <h3><span class="icon">&#128269;</span> Autocomplete / Related Searches</h3>
+      <div class="sub-label">Observation</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Search Term</th><th>Intent</th></tr></thead>
+          <tbody>
+            <tr><td>Free content marketing roi calculator</td><td><span class="badge badge-info">Tool</span></td></tr>
+            <tr><td>Marketing roi calculator excel template</td><td><span class="badge badge-info">Tool</span></td></tr>
+            <tr><td>HubSpot ROI calculator</td><td><span class="badge badge-info">Tool</span></td></tr>
+            <tr><td>Simple ROI calculator</td><td><span class="badge badge-info">Tool</span></td></tr>
+            <tr><td>Software ROI calculator</td><td><span class="badge badge-info">Tool</span></td></tr>
+            <tr><td>Marketing calculator</td><td><span class="badge badge-info">Tool</span></td></tr>
+            <tr><td>ROI calculator examples</td><td><span class="badge badge-warn">Guide</span></td></tr>
+            <tr><td>Sales ROI calculator</td><td><span class="badge badge-info">Tool</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>7 out of 8 related searches contain the word &ldquo;calculator&rdquo; or &ldquo;template&rdquo; &mdash; overwhelmingly <strong>transactional, tool-seeking intent</strong>. Users want an interactive tool they can use immediately, not an article explaining formulas. The presence of &ldquo;free&rdquo; and &ldquo;simple&rdquo; signals that users expect low friction and zero cost. Brand searches (HubSpot) show established tool providers dominate mind-share.</p>
+    </div>
+
+    <!-- 1b Google Ads -->
+    <div class="card">
+      <h3><span class="icon">&#128176;</span> Google Ads / Shopping Signals</h3>
+      <div class="sub-label">Observation</div>
+      <p>No paid ads appear for this keyword. Google does not show shopping results or comparison sites either.</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>The absence of paid ads suggests this is not a high-commercial-value keyword for direct product sales. However, the keyword has strong <strong>lead generation value</strong> &mdash; companies like HubSpot and Piwik PRO use free calculators as top-of-funnel lead magnets to capture email addresses and qualify prospects. The real monetization is downstream, not in the SERP itself.</p>
+    </div>
+
+    <!-- 1c AI Overview -->
+    <div class="card">
+      <h3><span class="icon">&#9889;</span> AI Overview</h3>
+      <div class="sub-label">Observation</div>
+      <p>Google shows a comprehensive AI Overview at position 1 (before all organic results). It provides the ROI formula directly: <strong>ROI = ((Revenue &minus; Costs) / Costs) &times; 100</strong>, lists key cost components, and links to 4 calculator tools (HubSpot, JID Digital, Piwik PRO, Softr). StoryChief is cited as a reference source but is not listed among the recommended tools.</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>Google considers the formula itself a &ldquo;solved answer&rdquo; &mdash; meaning <strong>pure informational content about ROI formulas has diminishing click value</strong>. Users who just want the formula get it without clicking. The AI Overview then points to calculator tools for users who want to apply the formula &mdash; confirming that the click-worthy action is &ldquo;use a tool,&rdquo; not &ldquo;read an article.&rdquo; StoryChief&rsquo;s article is good enough to be cited but not good enough to be recommended as a destination.</p>
+    </div>
+
+    <!-- 1d PAA -->
+    <div class="card">
+      <h3><span class="icon">&#10067;</span> People Also Ask</h3>
+      <div class="sub-label">Observation</div>
+      <p>No dedicated PAA box appeared for this exact keyword. The AI Overview absorbed the Q&amp;A function, answering the &ldquo;how to calculate&rdquo; question directly with formula, components, and tool recommendations.</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>When Google replaces PAA with an AI Overview, it signals that the informational layer is fully covered algorithmically. <strong>The only reason to click is to DO something</strong> &mdash; use a calculator, input your own data, get a personalized result. This further reinforces the tool-first intent.</p>
+    </div>
+
+    <!-- 1e Images -->
+    <div class="card">
+      <h3><span class="icon">&#128444;</span> Image Integration</h3>
+      <div class="sub-label">Observation</div>
+      <p>No image pack appears in the SERP for this keyword.</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>The absence of images confirms this is a <strong>utility-driven keyword</strong>. Users aren&rsquo;t looking for visual inspiration or infographics &mdash; they want a functional tool. Visual content plays a supporting role (calculator UI screenshots, result charts) rather than a discovery role.</p>
+    </div>
+
+    <!-- 1f Top-10 -->
+    <div class="card">
+      <h3><span class="icon">&#127942;</span> Top-10 Page Types</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pos.</th><th>Domain</th><th>Title</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td class="fw-600">1</td><td>hubspot.com</td><td>HubSpot Marketing ROI Calculator</td><td><span class="serp-type serp-type-tool">Tool</span></td></tr>
+            <tr><td class="fw-600">2</td><td>piwik.pro</td><td>Marketing ROI calculator</td><td><span class="serp-type serp-type-tool">Tool</span></td></tr>
+            <tr><td class="fw-600">3</td><td>searchengineland.com</td><td>ROI Calculator &amp; Formula</td><td><span class="serp-type serp-type-tool">Tool</span></td></tr>
+            <tr><td class="fw-600">4</td><td>hootsuite.com</td><td>Social Media ROI Calculator [FREE TOOL]</td><td><span class="serp-type serp-type-tool">Tool</span></td></tr>
+            <tr><td class="fw-600">5</td><td>siegemedia.com</td><td>How To Measure Content Marketing ROI [Free Calculator]</td><td><span class="serp-type serp-type-tool">Tool + Guide</span></td></tr>
+            <tr><td class="fw-600">6</td><td>johnisaacson.co.uk</td><td>Free Content Marketing ROI Calculator</td><td><span class="serp-type serp-type-tool">Tool</span></td></tr>
+            <tr><td class="fw-600">7</td><td>selzy.com</td><td>ROI Calculator for Marketing Campaigns</td><td><span class="serp-type serp-type-tool">Tool + Guide</span></td></tr>
+            <tr><td class="fw-600">8</td><td>napierb2b.com</td><td>ROI Calculator for Your Marketing Campaigns</td><td><span class="serp-type serp-type-tool">Tool</span></td></tr>
+            <tr><td class="fw-600">9</td><td>upgrowth.in</td><td>Content Marketing ROI Calculator</td><td><span class="serp-type serp-type-tool">Tool</span></td></tr>
+            <tr><td class="fw-600">10</td><td>beaconmm.com</td><td>ROI Calculator</td><td><span class="serp-type serp-type-tool">Tool</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p><strong>10 out of 10 results are interactive calculator/tool pages.</strong> Not a single pure blog article ranks in the top 10. The top 3 are major SaaS brands (HubSpot, Piwik PRO, Search Engine Land) offering free calculators as lead magnets. Position 5 (Siege Media) is the closest to a hybrid &mdash; it combines a calculator with guide content. This is the clearest possible SERP signal: Google rewards tools for this keyword, not articles.</p>
+    </div>
+
+    <!-- 1g Meta Descriptions -->
+    <div class="card">
+      <h3><span class="icon">&#128203;</span> Meta Description Patterns</h3>
+      <ol>
+        <li><strong>Tool-first language:</strong> &ldquo;Use our calculator,&rdquo; &ldquo;Calculate your ROI,&rdquo; &ldquo;Try our interactive tool&rdquo; &mdash; immediate action verbs dominate.</li>
+        <li><strong>Free / no friction:</strong> &ldquo;Free,&rdquo; &ldquo;free tool,&rdquo; &ldquo;simply add your information&rdquo; &mdash; removing barriers to click.</li>
+        <li><strong>Personalization promise:</strong> &ldquo;Personalized ROI forecast,&rdquo; &ldquo;estimate how much additional revenue&rdquo; &mdash; results specific to YOUR business.</li>
+        <li><strong>Credibility signals:</strong> &ldquo;Based on real customer benchmarks&rdquo; (HubSpot), brand authority implicit in domain names.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 2. USER STORY ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2>User Story</h2>
+    </div>
+
+    <div class="card">
+      <h3>Identified Elements</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Element</th><th>Derived from SERPs</th></tr></thead>
+          <tbody>
+            <tr><td class="fw-600">Knowledge Level</td><td>Already informed &mdash; knows content marketing exists and has a budget, but can&rsquo;t quantify the return. Not looking for &ldquo;what is ROI&rdquo; definitions.</td></tr>
+            <tr><td class="fw-600">Required Content Type</td><td>Interactive calculator/tool with personalized inputs &mdash; not an explanatory article. All top 10 are tools.</td></tr>
+            <tr><td class="fw-600">Personalization Need</td><td>High &mdash; related searches include &ldquo;simple,&rdquo; &ldquo;free,&rdquo; &ldquo;excel template.&rdquo; Users want to plug in THEIR numbers and see THEIR ROI.</td></tr>
+            <tr><td class="fw-600">Journey Phase</td><td>Consideration &rarr; Decision. Already doing content marketing, needs data to justify continuing or scaling the investment to stakeholders.</td></tr>
+            <tr><td class="fw-600">Emotional State</td><td>Pressure to justify spend. Likely asked by a manager or CFO: &ldquo;What&rsquo;s the ROI of all this content?&rdquo; Needs a credible, numbers-backed answer fast.</td></tr>
+            <tr><td class="fw-600">Primary Goal</td><td>Get a concrete ROI number for their content marketing investment &mdash; ideally within 60 seconds of landing on the page.</td></tr>
+            <tr><td class="fw-600">Secondary Goal</td><td>Find a framework or template they can reuse monthly/quarterly for reporting to leadership.</td></tr>
+            <tr><td class="fw-600">Barriers</td><td>Complexity (too many variables), credibility (is the formula trustworthy?), time (don&rsquo;t want to read a 2,000-word article to get a number).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>User Story Statement</h3>
+      <div class="user-story-quote">
+        &ldquo;I see proving the ROI of our content marketing to leadership as a major challenge and want an interactive calculator I can plug my own numbers into, to get a credible ROI figure I can present in our next budget meeting and feel confident that our content investment is justified.&rdquo;
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 3. TARGET PAGE COMPARISON ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2>Target Page Comparison</h2>
+    </div>
+
+    <!-- 3a First Screen -->
+    <div class="card">
+      <h3>First Screen Check (3-Second Test)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>User Story Element</th><th>Status</th><th>Assessment</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Headline addresses the keyword/intention</td>
+              <td><span class="badge badge-warn">Partial</span></td>
+              <td>H1 is &ldquo;How to Prove the ROI of Content Marketing?&rdquo; &mdash; mentions ROI but does NOT mention &ldquo;calculator.&rdquo; Reads as an article, not a tool.</td>
+            </tr>
+            <tr>
+              <td>Primary tool/content immediately accessible</td>
+              <td><span class="badge badge-fail">No</span></td>
+              <td>No calculator, no interactive element visible. First screen shows blog navigation, cookie banner, and article introduction text.</td>
+            </tr>
+            <tr>
+              <td>Trust signals visible</td>
+              <td><span class="badge badge-fail">No</span></td>
+              <td>No author byline with credentials, no customer count, no &ldquo;based on X calculations&rdquo; credibility marker above the fold.</td>
+            </tr>
+            <tr>
+              <td>CTA clear and prominent</td>
+              <td><span class="badge badge-fail">No</span></td>
+              <td>The only CTA visible is &ldquo;Try for free&rdquo; for StoryChief&rsquo;s platform &mdash; not related to ROI calculation. No &ldquo;Calculate your ROI now&rdquo; button.</td>
+            </tr>
+            <tr>
+              <td>No friction barriers</td>
+              <td><span class="badge badge-warn">Partial</span></td>
+              <td>Cookie consent banner takes up significant screen space. No login required, but the user has to scroll through a full article to find any ROI formulas.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3b Gap Analysis -->
+    <div class="card">
+      <h3>User Story Coverage (Gap Analysis)</h3>
+
+      <div class="gap-item gap-high">
+        <h4>Required Content Type <span class="badge badge-fail">High</span></h4>
+        <div class="gap-detail">
+          <div><div class="gd-label">SERP Signal</div>10/10 top results are interactive calculators. AI Overview links to calculator tools.</div>
+          <div><div class="gd-label">Target Page</div>Pure blog article (1,613 words) with text-based ROI formulas. Zero interactive elements.</div>
+          <div><div class="gd-label">Gap</div>Complete page type mismatch. The page is an article competing in a SERP that exclusively rewards tools.</div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-high">
+        <h4>Personalization Need <span class="badge badge-fail">High</span></h4>
+        <div class="gap-detail">
+          <div><div class="gd-label">SERP Signal</div>Users want to input their own numbers. Related searches: &ldquo;simple,&rdquo; &ldquo;free,&rdquo; &ldquo;excel template.&rdquo;</div>
+          <div><div class="gd-label">Target Page</div>Generic formulas with static example numbers ($1,000 spend, $2,000 revenue). No way to input personal data.</div>
+          <div><div class="gd-label">Gap</div>No personalization. Users can&rsquo;t calculate THEIR ROI &mdash; they can only read about how ROI works in theory.</div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-high">
+        <h4>Primary Goal: Immediate ROI Number <span class="badge badge-fail">High</span></h4>
+        <div class="gap-detail">
+          <div><div class="gd-label">SERP Signal</div>Top results deliver a ROI number within 30-60 seconds of landing. Calculator above the fold.</div>
+          <div><div class="gd-label">Target Page</div>User must read ~1,600 words of article content, manually apply formulas with their own math.</div>
+          <div><div class="gd-label">Gap</div>Time-to-value is 10-15 minutes (read + manual math) vs. 60 seconds on competitor pages.</div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-medium">
+        <h4>Emotional State: Pressure to Justify <span class="badge badge-warn">Medium</span></h4>
+        <div class="gap-detail">
+          <div><div class="gd-label">SERP Signal</div>Meta descriptions promise &ldquo;personalized ROI forecast,&rdquo; &ldquo;based on real benchmarks.&rdquo; Users need a credible number for leadership.</div>
+          <div><div class="gd-label">Target Page</div>Article uses generic examples. No benchmark data from StoryChief&rsquo;s own customer base. No exportable report.</div>
+          <div><div class="gd-label">Gap</div>Missing credibility layer. A marketer can&rsquo;t present &ldquo;I read a blog post&rdquo; to their CFO &mdash; they need a data-backed output.</div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-medium">
+        <h4>Secondary Goal: Reusable Framework <span class="badge badge-warn">Medium</span></h4>
+        <div class="gap-detail">
+          <div><div class="gd-label">SERP Signal</div>Related search: &ldquo;Marketing roi calculator excel template.&rdquo; Users want a repeatable reporting tool.</div>
+          <div><div class="gd-label">Target Page</div>No downloadable template, no saved calculations, no recurring reporting feature.</div>
+          <div><div class="gd-label">Gap</div>No takeaway artifact. User reads the article and leaves with knowledge but no tool they can reuse.</div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-low">
+        <h4>Barriers: Complexity <span class="badge badge-pass">Low</span></h4>
+        <div class="gap-detail">
+          <div><div class="gd-label">SERP Signal</div>Users fear complexity &mdash; related search &ldquo;simple ROI calculator.&rdquo;</div>
+          <div><div class="gd-label">Target Page</div>Article actually explains the formula clearly with step-by-step examples. Two different calculation methods provided.</div>
+          <div><div class="gd-label">Gap</div>Content quality is good &mdash; the explanation is clear. But it&rsquo;s delivered in the wrong format (text vs. interactive tool).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3c Verdict -->
+    <div class="card">
+      <h3>Overall Verdict</h3>
+      <div class="verdict verdict-bad">
+        <div class="verdict-title">Search Experience is not met &mdash; structural overhaul required</div>
+        <p>The page delivers good informational content about ROI calculation, and Google&rsquo;s AI Overview even cites it as a reference. However, the fundamental page type is wrong: this is a blog article competing in a SERP where 100% of organic results are interactive tools. No amount of text optimization will close this gap &mdash; the page needs an interactive calculator to match the search experience Google rewards.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 4. OPTIMIZATION RECOMMENDATIONS ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2>Optimization Recommendations</h2>
+    </div>
+
+    <div class="reco-grid">
+      <div class="reco-card recommended">
+        <h3>Option A: Hybrid Page &mdash; Calculator + Guide</h3>
+        <p class="fs-13 text-muted">Transform the page into a hybrid: interactive ROI calculator above the fold (3-5 input fields: monthly content spend, leads generated, conversion rate, customer lifetime value) with the existing article content restructured as a &ldquo;How It Works&rdquo; guide below. Add a downloadable Excel template as a lead magnet CTA.</p>
+        <ul class="mt-8">
+          <li class="fs-13 text-muted">Addresses: Required Content Type, Personalization Need, Primary Goal, Barriers</li>
+          <li class="fs-13 text-muted">Leverages existing article content (don&rsquo;t delete it &mdash; restructure below the calculator)</li>
+          <li class="fs-13 text-muted">Calculator results can feed into StoryChief trial CTA (&ldquo;Automate your content marketing &rarr; Try StoryChief free&rdquo;)</li>
+          <li class="fs-13 text-muted">Add FAQPage schema for the guide section + Calculator schema for the tool</li>
+        </ul>
+        <div class="reco-meta">
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Effort</div>
+            <div class="reco-meta-value priority-high">High</div>
+          </div>
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Impact</div>
+            <div class="reco-meta-value priority-high">High</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reco-card">
+        <h3>Option B: Embed Third-Party Calculator</h3>
+        <p class="fs-13 text-muted">If building a custom calculator is too resource-intensive, embed an existing ROI calculator (e.g., via iframe or a simple JavaScript widget) at the top of the current article. Update the title to include &ldquo;Calculator&rdquo; and restructure the H1 to &ldquo;Content Marketing ROI Calculator &amp; Formula Guide.&rdquo;</p>
+        <ul class="mt-8">
+          <li class="fs-13 text-muted">Addresses: Required Content Type (partially), Primary Goal</li>
+          <li class="fs-13 text-muted">Quick win: can be implemented within a day</li>
+          <li class="fs-13 text-muted">Risk: embedded third-party tools may not match StoryChief&rsquo;s branding or capture leads</li>
+          <li class="fs-13 text-muted">Less competitive than a native calculator but better than a pure article</li>
+        </ul>
+        <div class="reco-meta">
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Effort</div>
+            <div class="reco-meta-value text-accent">Low</div>
+          </div>
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Impact</div>
+            <div class="reco-meta-value text-muted">Medium</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-16">
+      <h3>Recommendation</h3>
+      <p><strong>Option A is strongly recommended.</strong> The SERP signal is unambiguous: 10/10 results are tools. A hybrid page (calculator + guide) is the only approach that can realistically compete. StoryChief already has the article content &mdash; the investment is in building the calculator component. The existing guide content becomes a competitive advantage because most calculator-only pages lack depth. The hybrid format (like Siege Media at position 5) is the sweet spot: tool for rankings, content for AI Overview citations, and lead capture for business value.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 5. CHECKLISTS ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2>Checklists</h2>
+    </div>
+
+    <!-- Layout Basics -->
+    <div class="card">
+      <h3>Layout Basics</h3>
+      <ul class="checklist">
+        <li><span class="check-icon check-fail">&#10007;</span><span>Key elements (H1, tool, CTA) visible within 3 seconds? &mdash; No. First screen shows cookie banner, navigation, and article intro. No tool or CTA visible.</span></li>
+        <li><span class="check-icon check-warn">!</span><span>Content sections clearly separated with whitespace? &mdash; Partially. Article has clear H2/H3 hierarchy but sections run into each other without visual breaks.</span></li>
+        <li><span class="check-icon check-warn">!</span><span>Element order logical (user guided through the page)? &mdash; Partially. Article flows logically but doesn&rsquo;t match the user journey (want tool first, explanation second).</span></li>
+        <li><span class="check-icon check-pass">&#10003;</span><span>Layout consistent (buttons, headlines, links uniform)? &mdash; Yes. StoryChief&rsquo;s blog template is clean and consistent.</span></li>
+        <li><span class="check-icon check-fail">&#10007;</span><span>Important CTAs high-contrast and eye-catching? &mdash; No relevant CTA for ROI calculation. &ldquo;Try for free&rdquo; is for StoryChief platform, not the user&rsquo;s goal.</span></li>
+        <li><span class="check-icon check-warn">!</span><span>Page visually varied (no text walls)? &mdash; Partially. Long text blocks with minimal visual variation. No charts, tables, or interactive elements break up the content.</span></li>
+        <li><span class="check-icon check-pass">&#10003;</span><span>Mobile rendering checked? &mdash; Yes. Responsive layout confirmed.</span></li>
+      </ul>
+    </div>
+
+    <!-- SEO Target URL -->
+    <div class="card">
+      <h3>SEO Hygiene &mdash; Target URL</h3>
+      <ul class="checklist">
+        <li><span class="check-icon check-warn">!</span><span>H1 contains primary keyword? &mdash; Partially. Contains &ldquo;ROI of Content Marketing&rdquo; but missing &ldquo;calculator&rdquo; which is the dominant intent signal.</span></li>
+        <li><span class="check-icon check-pass">&#10003;</span><span>Title tag optimized (55-60 chars, keyword)? &mdash; Yes. &ldquo;How to Prove the ROI of Content Marketing? [Real Examples]&rdquo; (58 chars). But again, missing &ldquo;calculator.&rdquo;</span></li>
+        <li><span class="check-icon check-pass">&#10003;</span><span>Meta description optimized (150-160 chars, CTA)? &mdash; Yes. 153 chars. Mentions formula and measurability but no calculator CTA.</span></li>
+        <li><span class="check-icon check-fail">&#10007;</span><span>Structured data present (Schema.org)? &mdash; No FAQPage, HowTo, or Calculator schema detected.</span></li>
+        <li><span class="check-icon check-pass">&#10003;</span><span>Internal linking to relevant pages? &mdash; Yes. 71 internal links including content distribution and SEO-related pages.</span></li>
+        <li><span class="check-icon check-pass">&#10003;</span><span>JavaScript content crawlable? &mdash; Yes. Server-rendered content accessible.</span></li>
+      </ul>
+    </div>
+
+    <!-- Images -->
+    <div class="card">
+      <h3>Images &amp; Alt Tags</h3>
+      <div class="img-audit-summary">
+        <div class="img-audit-stat">
+          <div class="stat-value">15</div>
+          <div class="stat-label">Total images</div>
+        </div>
+        <div class="img-audit-stat">
+          <div class="stat-value cwv-good">15</div>
+          <div class="stat-label">with alt tag</div>
+        </div>
+        <div class="img-audit-stat">
+          <div class="stat-value cwv-good">0</div>
+          <div class="stat-label">missing alt tag</div>
+        </div>
+      </div>
+      <p class="fs-13 text-muted mt-8">All 15 images have alt tags. Lighthouse image-alt audit score: 1.0 (perfect).</p>
+    </div>
+
+    <!-- CWV -->
+    <div class="card">
+      <h3>Core Web Vitals &amp; Performance</h3>
+      <div class="score-row">
+        <div class="score-item">
+          <div class="score-value cwv-warn">80</div>
+          <div class="score-label">Performance</div>
+        </div>
+        <div class="score-item">
+          <div class="score-value cwv-warn">89</div>
+          <div class="score-label">Accessibility</div>
+        </div>
+        <div class="score-item">
+          <div class="score-value cwv-good">92</div>
+          <div class="score-label">SEO</div>
+        </div>
+      </div>
+      <table class="cwv-table">
+        <thead><tr><th>Metric</th><th>Value</th><th>Rating</th></tr></thead>
+        <tbody>
+          <tr><td>LCP (Largest Contentful Paint)</td><td>1.7s</td><td><span class="badge badge-pass">Good</span></td></tr>
+          <tr><td>CLS (Cumulative Layout Shift)</td><td>0.136</td><td><span class="badge badge-warn">Needs Improvement</span></td></tr>
+          <tr><td>TBT (Total Blocking Time)</td><td>10ms</td><td><span class="badge badge-pass">Good</span></td></tr>
+          <tr><td>FCP (First Contentful Paint)</td><td>1.6s</td><td><span class="badge badge-pass">Good</span></td></tr>
+          <tr><td>TTFB (Time to First Byte)</td><td>300ms</td><td><span class="badge badge-pass">Good</span></td></tr>
+          <tr><td>Speed Index</td><td>1.9s</td><td><span class="badge badge-pass">Good</span></td></tr>
+        </tbody>
+      </table>
+      <div class="mt-16">
+        <div class="sub-label">Optimization Tips</div>
+        <ul class="mt-8">
+          <li class="fs-13 text-muted">CLS 0.136 is in the &ldquo;needs improvement&rdquo; range (&gt;0.1). Set explicit width/height on images and embeds to prevent layout shifts during page load.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SEO Domain -->
+    <div class="card">
+      <h3>SEO Hygiene &mdash; Domain</h3>
+      <ul class="checklist">
+        <li><span class="check-icon check-pass">&#10003;</span><span>Domain strength competitive with top 3? &mdash; StoryChief.io is a recognized SaaS brand, but competes against HubSpot, Piwik PRO, and Search Engine Land &mdash; significantly stronger domains.</span></li>
+        <li><span class="check-icon check-warn">!</span><span>External backlinks to target page? &mdash; Page is cited in Google AI Overview, suggesting some authority, but likely fewer backlinks than top-3 competitors with established calculator pages.</span></li>
+        <li><span class="check-icon check-pass">&#10003;</span><span>Crawlability confirmed? &mdash; Yes. HTTPS, canonical set, no noindex detected.</span></li>
+        <li><span class="check-icon check-warn">!</span><span>E-E-A-T signals present? &mdash; No visible author byline, no credentials, no &ldquo;based on our data&rdquo; experience signals. StoryChief has E-E-A-T as a content marketing platform but doesn&rsquo;t leverage it on this page.</span></li>
+        <li><span class="check-icon check-pass">&#10003;</span><span>Mobile-friendliness domain-wide? &mdash; Yes. Responsive design confirmed.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="report-footer">
+    SXO Analysis generated with Claude Code &middot; sxo-analyzer Skill &middot; 2026-03-23
+  </footer>
+
+</div>
+</body>
+</html>

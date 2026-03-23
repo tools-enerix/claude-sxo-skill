@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SXO Wireframe: content marketing ROI calculator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f8f9fb; --surface: #ffffff; --surface-2: #f1f3f7; --surface-3: #e8ebf0;
+    --border: #d1d5de; --border-light: #e2e5ec; --text: #1a1f2e; --text-muted: #4a5168; --text-dim: #7a8198;
+    --accent: #2563eb; --accent-glow: rgba(37, 99, 235, 0.08);
+    --green: #16a34a; --green-bg: rgba(22, 163, 74, 0.08); --green-border: rgba(22, 163, 74, 0.25);
+    --red: #dc2626; --red-bg: rgba(220, 38, 38, 0.07); --red-border: rgba(220, 38, 38, 0.25);
+    --yellow: #b45309; --yellow-bg: rgba(180, 83, 9, 0.07); --yellow-border: rgba(180, 83, 9, 0.25);
+    --purple: #7c3aed; --purple-bg: rgba(124, 58, 237, 0.07);
+    --ist-bg: #fafafa; --ist-border: #d4d4d8; --soll-bg: #f0f7ff; --soll-border: rgba(37, 99, 235, 0.3);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --radius: 12px; --radius-sm: 8px;
+  }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; font-size: 14px; -webkit-font-smoothing: antialiased; }
+  .wireframe-report { max-width: 1600px; margin: 0 auto; padding: 32px 24px 80px; }
+  .wf-header { position: relative; padding: 40px 36px 32px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 16px; margin-bottom: 32px; overflow: hidden; }
+  .wf-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent)); }
+  .wf-header .label { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #93c5fd; background: rgba(147, 197, 253, 0.15); padding: 4px 12px; border-radius: 4px; margin-bottom: 12px; }
+  .wf-header h1 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 16px; color: #f1f5f9; }
+  .wf-header h1 span { color: #93c5fd; }
+  .wf-header .meta-row { display: flex; gap: 24px; flex-wrap: wrap; font-size: 13px; }
+  .wf-header .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .wf-header .meta-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: #94a3b8; }
+  .wf-header .meta-value { color: #e2e8f0; font-size: 13px; }
+  .wf-header .meta-value a { color: #93c5fd; text-decoration: none; }
+  .user-story-banner { position: relative; padding: 20px 24px; background: linear-gradient(135deg, var(--surface-2), var(--surface-3)); border-left: 3px solid var(--purple); border-radius: 0 var(--radius) var(--radius) 0; margin-bottom: 32px; font-size: 14px; font-style: italic; color: var(--text); line-height: 1.7; }
+  .user-story-banner .us-label { font-style: normal; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--purple); margin-bottom: 6px; }
+  .page-type-rec { background: var(--surface); border: 2px solid var(--accent); border-radius: var(--radius); padding: 24px; margin-bottom: 32px; }
+  .page-type-rec .ptr-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .page-type-rec .ptr-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; background: var(--accent); color: #fff; }
+  .page-type-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
+  .pt-option { border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 14px; background: var(--surface-2); }
+  .pt-option.pt-recommended { border-color: var(--accent); background: var(--accent-glow); }
+  .pt-option .pt-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .pt-option .pt-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .pt-option .pt-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 3px; margin-top: 6px; }
+  .pt-tag.pt-tag-rec { background: var(--accent); color: #fff; }
+  .pt-tag.pt-tag-alt { background: var(--surface-3); color: var(--text-dim); }
+  .comparison { display: grid; grid-template-columns: 1fr; gap: 32px; margin-bottom: 32px; }
+  .col-header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  .col-ist .col-header { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .col-soll .col-header { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .wf-block { border: 2px dashed var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 12px; position: relative; min-height: 60px; }
+  .wf-block .block-label { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+  .wf-block .block-content { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .col-ist .wf-block { background: var(--ist-bg); border-color: var(--ist-border); }
+  .col-ist .block-label { background: var(--surface-3); color: var(--text-dim); }
+  .col-soll .wf-block { background: var(--soll-bg); border-color: var(--soll-border); }
+  .col-soll .block-label { background: var(--accent-glow); color: var(--accent); }
+  .wf-block.prio-high { border-left: 4px solid var(--red); }
+  .wf-block.prio-medium { border-left: 4px solid var(--yellow); }
+  .wf-block.prio-low { border-left: 4px solid var(--green); }
+  .wf-block.prio-new { border-left: 4px solid var(--accent); border-style: solid; }
+  .problem-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-top: 8px; }
+  .problem-tag.problem-missing { background: var(--red-bg); color: var(--red); }
+  .problem-tag.problem-weak { background: var(--yellow-bg); color: var(--yellow); }
+  .problem-tag.problem-ok { background: var(--green-bg); color: var(--green); }
+  .placeholder { background: var(--surface); border: 1px solid var(--border-light); border-radius: 6px; padding: 10px 12px; margin-top: 8px; font-family: var(--mono); font-size: 12px; color: var(--accent); line-height: 1.5; }
+  .placeholder .ph-type { font-weight: 700; color: var(--text); }
+  .placeholder .ph-detail { color: var(--text-muted); font-family: var(--font); font-size: 11px; margin-top: 4px; font-style: italic; }
+  .gap-ref { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.3px; padding: 1px 6px; border-radius: 3px; background: var(--purple-bg); color: var(--purple); margin-top: 6px; }
+  .img-placeholder { display: flex; align-items: center; justify-content: center; background: var(--surface-3); border: 2px dashed var(--border); border-radius: 6px; padding: 20px; margin-top: 8px; color: var(--text-dim); font-size: 12px; text-align: center; min-height: 80px; }
+  .meta-comments { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+  .meta-comments .mc-title { font-family: var(--font); font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .meta-comments code { display: block; padding: 3px 0; color: var(--accent); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 24px; font-size: 12px; color: var(--text-muted); }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 16px; height: 16px; border-radius: 4px; border: 2px solid; flex-shrink: 0; }
+  .legend-swatch.swatch-high { border-color: var(--red); background: var(--red-bg); }
+  .legend-swatch.swatch-medium { border-color: var(--yellow); background: var(--yellow-bg); }
+  .legend-swatch.swatch-low { border-color: var(--green); background: var(--green-bg); }
+  .legend-swatch.swatch-new { border-color: var(--accent); background: var(--accent-glow); }
+  .legend-swatch.swatch-ist { border-color: var(--ist-border); background: var(--ist-bg); border-style: dashed; }
+  .legend-swatch.swatch-soll { border-color: var(--soll-border); background: var(--soll-bg); }
+  .wf-footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--text-dim); }
+  @media (max-width: 800px) { .wf-header { padding: 24px 20px 20px; } .wf-header h1 { font-size: 20px; } .legend { flex-direction: column; gap: 8px; } }
+  @media print { body { background: #fff; font-size: 11px; } .wireframe-report { max-width: 100%; padding: 0; } .wf-header { background: #f0f0f0; border: 1px solid #ccc; color: #1a1a1a; } .wf-header::before { display: none; } .wf-header h1, .wf-header .meta-value { color: #1a1a1a; } .comparison { grid-template-columns: 1fr; gap: 16px; } .wf-block { page-break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="wireframe-report">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="wf-header">
+    <div class="label">SXO Wireframe</div>
+    <h1>Page Structure: <span>content marketing ROI calculator</span></h1>
+    <div class="meta-row">
+      <div class="meta-item">
+        <div class="meta-label">Keyword</div>
+        <div class="meta-value">content marketing ROI calculator</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Target Page</div>
+        <div class="meta-value"><a href="https://storychief.io/blog/roi-content-marketing">storychief.io/blog/roi-content-marketing</a></div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Date</div>
+        <div class="meta-value">2026-03-23</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Source</div>
+        <div class="meta-value">SXO Report</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ USER STORY ═══════════════ -->
+  <div class="user-story-banner">
+    <div class="us-label">User Story</div>
+    &ldquo;I see proving the ROI of our content marketing to leadership as a major challenge and want an interactive calculator I can plug my own numbers into, to get a credible ROI figure I can present in our next budget meeting and feel confident that our content investment is justified.&rdquo;
+  </div>
+
+  <!-- ═══════════════ PAGE TYPE RECOMMENDATION ═══════════════ -->
+  <div class="page-type-rec">
+    <div class="ptr-title">
+      Recommended Page Type
+      <span class="ptr-badge">Hybrid: Calculator + Guide</span>
+    </div>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+      10/10 top results are interactive calculators, but StoryChief&rsquo;s existing guide content is cited in Google&rsquo;s AI Overview. The hybrid format combines a tool above the fold (for rankings) with restructured guide content below (for AI citations and depth). This mirrors position 5 (Siege Media), which is the only hybrid in the top 10.
+    </p>
+    <div class="page-type-options">
+      <div class="pt-option pt-recommended">
+        <div class="pt-name">Hybrid: Calculator + Guide</div>
+        <div class="pt-desc">Interactive calculator above the fold for immediate ROI results. Existing article restructured as &ldquo;How It Works&rdquo; guide below. Best of both worlds: tool for rankings, content for AI citations.</div>
+        <span class="pt-tag pt-tag-rec">RECOMMENDED</span>
+      </div>
+      <div class="pt-option">
+        <div class="pt-name">Landing Page (Calculator Only)</div>
+        <div class="pt-desc">Pure calculator like HubSpot (#1) and Piwik PRO (#2). Risk: loses the AI Overview citation StoryChief currently has. Also harder to differentiate without guide content.</div>
+        <span class="pt-tag pt-tag-alt">ALTERNATIVE</span>
+      </div>
+      <div class="pt-option">
+        <div class="pt-name">Blog Post / Guide</div>
+        <div class="pt-desc">Current format. Provides depth and AI citability but 0/10 pure articles rank in the top 10. Cannot compete without an interactive tool component.</div>
+        <span class="pt-tag pt-tag-alt">CURRENT &mdash; NOT VIABLE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LEGEND ═══════════════ -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch swatch-ist"></div><span>Current state (before)</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-soll"></div><span>Optimized state (after)</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-high"></div><span>High priority</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-medium"></div><span>Medium priority</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-low"></div><span>Low priority</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-new"></div><span>New section</span></div>
+  </div>
+
+  <!-- ═══════════════ META OPTIMIZATIONS ═══════════════ -->
+  <div class="meta-comments">
+    <div class="mc-title">HTML Head &mdash; Meta Optimizations</div>
+    <code>&lt;!-- META: Title &quot;Content Marketing ROI Calculator | Free Tool &amp; Formula&quot; (55 chars) --&gt;</code>
+    <code>&lt;!-- META-DESC: &quot;Calculate your content marketing ROI in 60 seconds. Free interactive calculator with cost, revenue, and customer lifetime value inputs. Get a shareable report.&quot; (159 chars) --&gt;</code>
+    <code>&lt;!-- SCHEMA: Add FAQPage schema for guide section + WebApplication schema for calculator tool --&gt;</code>
+    <code>&lt;!-- CLS FIX: Set explicit width/height on all images to reduce CLS from 0.136 to &lt;0.1 --&gt;</code>
+  </div>
+
+  <!-- ═══════════════ BEFORE / AFTER ═══════════════ -->
+  <div class="comparison">
+
+    <!-- ══════ IST (CURRENT STATE) ══════ -->
+    <div class="col-ist">
+      <div class="col-header">&#x2718; Current State (Before)</div>
+
+      <div class="wf-block prio-medium">
+        <div class="block-label">HEADER</div>
+        <div class="block-content">StoryChief navigation bar + &ldquo;Try for free&rdquo; button (platform CTA, not ROI-related). Cookie consent banner takes significant screen space above the fold.</div>
+        <div class="problem-tag problem-weak">Cookie banner displaces content above the fold</div>
+      </div>
+
+      <div class="wf-block prio-high">
+        <div class="block-label">HERO SECTION</div>
+        <div class="block-content">H1: &ldquo;How to Prove the ROI of Content Marketing?&rdquo; &mdash; Article-style headline without the word &ldquo;calculator.&rdquo; Intro paragraph about content marketing growing in popularity. No interactive element, no tool, no calculator visible.</div>
+        <div class="problem-tag problem-missing">No calculator &mdash; 10/10 top results have one</div>
+        <div class="problem-tag problem-weak">H1 missing &ldquo;calculator&rdquo; keyword</div>
+      </div>
+
+      <div class="wf-block prio-low">
+        <div class="block-label">MAIN CONTENT &mdash; History</div>
+        <div class="block-content">H2: &ldquo;The Evolution of Content Marketing&rdquo; &mdash; General overview of advertising history (paper ads, radio, TV to digital). Content Distribution and SEO definitions. Not directly relevant to the calculator intent.</div>
+        <div class="problem-tag problem-weak">Filler content &mdash; doesn&rsquo;t serve the calculator intent</div>
+      </div>
+
+      <div class="wf-block prio-medium">
+        <div class="block-label">MAIN CONTENT &mdash; ROI Formula</div>
+        <div class="block-content">H2: &ldquo;Determining the ROI of Content Marketing&rdquo; + H3: &ldquo;Calculate the Cost of your Content Marketing&rdquo; &mdash; Explains the ROI formula textually with static example ($1,000 spend, $2,000 revenue = 100% ROI). Two calculation methods described in prose.</div>
+        <div class="problem-tag problem-weak">Good formula content but static &mdash; no interactivity</div>
+      </div>
+
+      <div class="wf-block prio-medium">
+        <div class="block-label">MAIN CONTENT &mdash; Calculation Methods</div>
+        <div class="block-content">H3: &ldquo;ROI Calculation #1&rdquo; (conversion rate method) + H3: &ldquo;ROI Calculation #2&rdquo; (revenue attribution method) + H3: &ldquo;The Customer&rsquo;s Value&rdquo; (lifetime value). Step-by-step text explanations with generic numbers.</div>
+        <div class="problem-tag problem-weak">Valuable methodology content but buried 1,000 words deep</div>
+      </div>
+
+      <div class="wf-block prio-low">
+        <div class="block-label">MAIN CONTENT &mdash; Summary</div>
+        <div class="block-content">H2: &ldquo;Your ROI of Content Marketing&rdquo; + H2: &ldquo;To Summarize&rdquo; &mdash; Repeats the formula and encourages calculating ROI. No downloadable template, no CTA tied to the calculator use case.</div>
+        <div class="problem-tag problem-missing">No lead magnet (Excel template, PDF export)</div>
+      </div>
+
+      <div class="wf-block">
+        <div class="block-label">SIDEBAR &mdash; Related Stories</div>
+        <div class="block-content">&ldquo;Related stories&rdquo; block with 3 internal links to other StoryChief blog posts (content marketing category). Standard blog sidebar pattern.</div>
+        <div class="problem-tag problem-ok">Internal linking present &mdash; adequate</div>
+      </div>
+
+      <div class="wf-block">
+        <div class="block-label">FOOTER</div>
+        <div class="block-content">Standard StoryChief footer with product links, resource links, legal. &ldquo;Try for free&rdquo; CTA repeated. No calculator-specific footer CTA.</div>
+        <div class="problem-tag problem-ok">Standard footer &mdash; functional</div>
+      </div>
+    </div>
+
+    <!-- ══════ SOLL (OPTIMIZED STATE) ══════ -->
+    <div class="col-soll">
+      <div class="col-header">&#x2714; Optimized State (After)</div>
+
+      <div class="wf-block prio-high">
+        <div class="block-label">HERO SECTION</div>
+        <div class="block-content">Keyword-optimized H1 with calculator CTA above the fold. Subheadline addressing the User Story pressure (&ldquo;prove ROI to leadership&rdquo;).</div>
+        <div class="placeholder">
+          <span class="ph-type">[KEYWORD]</span> &quot;Content Marketing ROI Calculator&quot; as H1 &mdash; 32px font-size, centered. Subheadline: &quot;Calculate your return in 60 seconds. Input your costs, see your ROI.&quot; &mdash; 18px, color #4a5168.
+          <div class="ph-detail">Current H1 &ldquo;How to Prove the ROI...&rdquo; reads as article. SERP demands tool-first language. All top-10 titles contain &ldquo;calculator.&rdquo;</div>
+        </div>
+        <div class="placeholder">
+          <span class="ph-type">[CTA]</span> &quot;Calculate My ROI &rarr;&quot; &mdash; green button (#16a34a), white text, min-height 52px, full-width on mobile, above the fold. Scrolls to calculator section.
+          <div class="ph-detail">Addresses barrier &ldquo;time&rdquo; from User Story. Top competitors deliver results in 30-60 seconds. CTA must promise immediacy.</div>
+        </div>
+        <div class="gap-ref">&rarr; Required Content Type + Primary Goal: Immediate ROI Number</div>
+      </div>
+
+      <div class="wf-block prio-new">
+        <div class="block-label">TRUST SIGNALS</div>
+        <div class="block-content">Horizontal trust bar directly below hero. Credibility markers specific to ROI calculation.</div>
+        <div class="placeholder">
+          <span class="ph-type">[TRUST]</span> &quot;Used by 10,000+ content marketers&quot; (or actual StoryChief customer count) + &quot;Based on real campaign data&quot; + &quot;Free &mdash; no signup required&quot; &mdash; 3 items horizontal, icons (&#128101; &#128200; &#10003;), 13px text, centered, light gray background (#f1f3f7).
+          <div class="ph-detail">Addresses emotional state &ldquo;pressure to justify.&rdquo; User needs credible output for leadership. &ldquo;Based on real data&rdquo; and social proof (&ldquo;10,000+ marketers&rdquo;) add weight to the calculator results.</div>
+        </div>
+        <div class="gap-ref">&rarr; Emotional State: Pressure to Justify</div>
+      </div>
+
+      <div class="wf-block prio-high">
+        <div class="block-label">TOOL / CALCULATOR</div>
+        <div class="block-content">Interactive ROI calculator &mdash; the core element that&rsquo;s completely missing from the current page. This is the #1 priority change.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT TYPE]</span> Interactive ROI Calculator with 5 input fields:
+          <br>1. &quot;Monthly content marketing spend ($)&quot; &mdash; number input, default $5,000
+          <br>2. &quot;Monthly leads from content&quot; &mdash; number input, default 500
+          <br>3. &quot;Lead-to-customer conversion rate (%)&quot; &mdash; slider 1-20%, default 10%
+          <br>4. &quot;Average customer lifetime value ($)&quot; &mdash; number input, default $2,000
+          <br>5. &quot;Sales cycle length (months)&quot; &mdash; dropdown 1-12, default 3
+          <br><br>Output: ROI percentage (large, green if positive), monthly revenue attributed, cost per customer, annual projection.
+          <br>Format: Card layout, white background, subtle shadow, 600px max-width centered. Real-time calculation (no submit button needed).
+          <br>Below output: &quot;Download as PDF&quot; button + &quot;Save to Excel&quot; button (lead capture: email required for download).
+          <div class="ph-detail">This is the defining gap. 10/10 top results are calculators. The entire User Story revolves around getting a concrete number. Without this element, the page cannot compete regardless of content quality.</div>
+        </div>
+        <div class="gap-ref">&rarr; Required Content Type + Personalization Need + Primary Goal</div>
+      </div>
+
+      <div class="wf-block prio-medium">
+        <div class="block-label">MAIN CONTENT</div>
+        <div class="block-content">Restructured guide section using existing article content. Reorganized as &ldquo;How It Works&rdquo; explainer below the calculator.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT TYPE]</span> Restructure existing article into 3 focused sections:
+          <br>H2: &quot;How the Content Marketing ROI Formula Works&quot; &mdash; keep the formula explanation (ROI = (Revenue - Costs) / Costs &times; 100) but shorten to 200 words max. Remove &ldquo;Evolution of Content Marketing&rdquo; history section entirely.
+          <br>H2: &quot;What to Include in Your Content Costs&quot; &mdash; keep the cost breakdown list (distribution, salaries, tools) from existing content. Add a visual: simple table with 3 columns (Cost Type | Example | Typical Range).
+          <br>H2: &quot;How to Track Content-Attributed Revenue&quot; &mdash; merge &ldquo;ROI Calculation #1&rdquo; and &ldquo;#2&rdquo; into one clear method. Add &ldquo;Pro tip: Use UTM parameters + CRM attribution to track content &rarr; lead &rarr; customer.&rdquo;
+          <div class="ph-detail">Existing content is good (Google AI Overview cites it) but needs restructuring. Move from narrative format to actionable reference. Users who already calculated their ROI above will scan this for methodology validation.</div>
+        </div>
+        <div class="gap-ref">&rarr; Barriers: Complexity</div>
+      </div>
+
+      <div class="wf-block prio-new">
+        <div class="block-label">IMAGE / INFOGRAPHIC</div>
+        <div class="block-content">Visual breakdown of the ROI formula &mdash; currently no visual elements support the calculator content.</div>
+        <div class="placeholder">
+          <span class="ph-type">[IMAGE]</span> Infographic: &quot;Content Marketing ROI Formula Breakdown&quot; &mdash; flowchart style:
+          <br>Left box: &quot;Content Costs&quot; (Staff $3K + Tools $500 + Distribution $1.5K = $5K/mo)
+          <br>Arrow: &quot;Generates&quot;
+          <br>Middle box: &quot;500 leads &rarr; 50 customers (10% conv.)&quot;
+          <br>Arrow: &quot;Worth&quot;
+          <br>Right box: &quot;50 &times; $2,000 CLV = $100K&quot;
+          <br>Bottom: &quot;ROI = ($100K - $5K) / $5K = 1,900%&quot;
+          <br>Format: SVG or PNG, 900px wide, alt=&quot;Content marketing ROI formula flowchart showing cost inputs, lead conversion, and revenue output&quot;
+          <div class="ph-detail">Visual learners need a graphic representation. Also improves AI citation readiness (structured visual = extractable data). Use same numbers as calculator defaults for consistency.</div>
+        </div>
+        <div class="gap-ref">&rarr; Barriers: Complexity + AI Citation Readiness</div>
+      </div>
+
+      <div class="wf-block prio-new">
+        <div class="block-label">SOCIAL PROOF</div>
+        <div class="block-content">Customer success data from StoryChief&rsquo;s own user base. Currently completely absent.</div>
+        <div class="placeholder">
+          <span class="ph-type">[TRUST]</span> &quot;How StoryChief Customers Measure ROI&quot; &mdash; 2-3 mini case studies:
+          <br>1. &quot;[Agency Name] reduced content cost per lead by 40% using StoryChief&rsquo;s workflow automation&quot; &mdash; with logo (60x30px)
+          <br>2. &quot;[SaaS Company] attributed $180K in pipeline to blog content tracked through StoryChief&quot; &mdash; with logo
+          <br>Format: Horizontal cards, light border, company logo left, quote right, 13px text. Max 3 cards.
+          <div class="ph-detail">Addresses emotional state &ldquo;pressure to justify.&rdquo; StoryChief has E-E-A-T as a content marketing platform but doesn&rsquo;t leverage it. Real customer data adds credibility the pure article lacks.</div>
+        </div>
+        <div class="gap-ref">&rarr; Emotional State: Pressure to Justify + E-E-A-T</div>
+      </div>
+
+      <div class="wf-block prio-medium">
+        <div class="block-label">FAQ (FROM PAA)</div>
+        <div class="block-content">FAQ section based on AI Overview questions and related searches. Add FAQPage schema.</div>
+        <div class="placeholder">
+          <span class="ph-type">[FAQ]</span> Accordion (&lt;details&gt;/&lt;summary&gt;) with FAQPage JSON-LD schema:
+          <br>Q1: &quot;What is a good ROI for content marketing?&quot; &mdash; A: &quot;A positive ROI means your content generates more revenue than it costs. Industry benchmarks suggest 300-500% ROI for mature content programs, but early-stage programs (0-6 months) often show negative ROI as SEO compounds over time.&quot;
+          <br>Q2: &quot;How long does it take to see ROI from content marketing?&quot; &mdash; A: &quot;Most content programs take 6-12 months to show positive ROI. SEO traffic compounds: a blog post published today may generate leads for 2-3 years.&quot;
+          <br>Q3: &quot;What costs should I include in my content marketing ROI calculation?&quot; &mdash; A: &quot;Include staff salaries, freelancer fees, tool subscriptions (CMS, SEO, analytics), paid distribution, and content production costs (design, video).&quot;
+          <br>Q4: &quot;How do I prove content marketing ROI to my CEO?&quot; &mdash; A: &quot;Use a calculator to generate concrete numbers. Present cost per lead, customer acquisition cost, and revenue attributed to content. Compare against paid ad CAC.&quot;
+          <div class="ph-detail">AI Overview already answers the formula question. FAQ captures long-tail traffic and provides structured data for featured snippets. Q4 directly addresses the User Story.</div>
+        </div>
+        <div class="gap-ref">&rarr; Secondary Goal: Reusable Framework + AI Citation Readiness</div>
+      </div>
+
+      <div class="wf-block prio-high">
+        <div class="block-label">CALL TO ACTION</div>
+        <div class="block-content">Dual CTA: lead magnet (Excel template) + StoryChief product trial. Currently no relevant CTA exists.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CTA]</span> Two-column CTA section:
+          <br>Left card: &quot;Download ROI Calculator Template&quot; &mdash; &quot;Get our Excel template to track content marketing ROI monthly. Includes pre-built formulas and dashboard.&quot; Button: &quot;Download Free Template &rarr;&quot; (#2563eb, white text). Lead capture: name + email form (2 fields only).
+          <br>Right card: &quot;Automate Your Content ROI Tracking&quot; &mdash; &quot;StoryChief tracks content performance across all channels automatically. See your ROI in real-time.&quot; Button: &quot;Start Free Trial &rarr;&quot; (#16a34a, white text). Link to StoryChief signup.
+          <br>Format: Equal-width cards, subtle shadow, 16px padding. Left card has dotted border (download feel), right card has solid border (product feel).
+          <div class="ph-detail">Related search &ldquo;Marketing roi calculator excel template&rdquo; proves demand for a downloadable artifact. The Excel template captures leads while the StoryChief trial converts high-intent users. Two CTAs serve two journey stages.</div>
+        </div>
+        <div class="gap-ref">&rarr; Secondary Goal: Reusable Framework + Lead Generation</div>
+      </div>
+
+      <div class="wf-block prio-low">
+        <div class="block-label">INTERNAL LINKS</div>
+        <div class="block-content">Contextual internal links to related StoryChief content and tools.</div>
+        <div class="placeholder">
+          <span class="ph-type">[INTERNAL LINKS]</span> &quot;Related Resources&quot; section with 4-6 cards:
+          <br>&bull; &quot;Content Distribution Guide&quot; &rarr; /content-distribution
+          <br>&bull; &quot;SEO Copywriting: Complete Guide&quot; &rarr; /seo-copywriting
+          <br>&bull; &quot;How to Create Engaging Content to Boost Conversions&quot; &rarr; /blog/how-to-create-engaging-content-to-boost-conversions
+          <br>&bull; &quot;Content Marketing Automation&quot; &rarr; relevant StoryChief feature page
+          <br>Format: Grid of link cards (2 columns), title + 1-line description, hover effect.
+          <div class="ph-detail">Existing page has 71 internal links but they&rsquo;re scattered throughout the article. Consolidate the most relevant ones into a structured section that supports topic cluster architecture.</div>
+        </div>
+        <div class="gap-ref">&rarr; SEO Hygiene: Internal Linking</div>
+      </div>
+
+      <div class="wf-block">
+        <div class="block-label">FOOTER</div>
+        <div class="block-content">Standard StoryChief footer. No changes needed &mdash; functional as-is.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="wf-footer">
+    SXO Wireframe generated with Claude Code &middot; sxo-builder Skill &middot; 2026-03-23
+  </footer>
+
+</div>
+</body>
+</html>

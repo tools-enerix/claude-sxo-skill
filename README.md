@@ -150,8 +150,8 @@ claude-sxo-skill/
 │   └── references/
 │       └── section-mapping.md            # Gap-to-section mapping
 └── examples/
-    ├── sxo-report-bifaziale-pv-module.html     # Analyzer example
-    └── sxo-wireframe-photovoltaik-repowering.html  # Builder example
+    ├── sxo-report-content-marketing-roi-calculator.html     # Analyzer example
+    └── sxo-wireframe-content-marketing-roi-calculator.html  # Builder example
 ```
 
 ### Requirements
@@ -161,8 +161,8 @@ claude-sxo-skill/
 
 ## Examples
 
-- **Analyzer**: [`examples/sxo-report-bifaziale-pv-module.html`](examples/sxo-report-bifaziale-pv-module.html) -- Full SXO analysis for "Bifaziale PV Module"
-- **Builder**: [`examples/sxo-wireframe-photovoltaik-repowering.html`](examples/sxo-wireframe-photovoltaik-repowering.html) -- Before/after wireframe for "Photovoltaik Repowering"
+- **Analyzer**: [`examples/sxo-report-content-marketing-roi-calculator.html`](examples/sxo-report-content-marketing-roi-calculator.html) -- Full SXO analysis for "Content Marketing ROI Calculator"
+- **Builder**: [`examples/sxo-wireframe-content-marketing-roi-calculator.html`](examples/sxo-wireframe-content-marketing-roi-calculator.html) -- Before/after wireframe for "Content Marketing ROI Calculator"
 
 ---
 
