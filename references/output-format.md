@@ -1,83 +1,70 @@
-# SXO-Report Output-Format
+# SXO-Report Output-Format: HTML
 
-Der finale Report wird in diesem Format ausgegeben:
+Der finale Report wird als **selbststaendige HTML-Datei** gespeichert.
 
-```markdown
-# SXO-Analyse: [KEYWORD]
-**Zielseite:** [URL]
-**Datum:** [DATUM]
-**Datenquelle:** DataForSEO MCP / Manuell (Fallback)
+## Ablauf
 
----
+1. Bestimme die Report-Sprache (siehe Spracherkennung in Schritt 0)
+2. Lies das passende Template fuer den **CSS-Block** (`<style>...</style>`):
+   - **Deutsch:** `assets/report-template.html`
+   - **English:** `assets/report-template-en.html`
+3. Kopiere den `<style>` Block (CSS) aus dem Template woertlich
+4. Generiere den `<body>` Inhalt direkt als HTML aus den Analyseergebnissen
+5. Speichere als `sxo-report-[KEYWORD-SLUG].html` im aktuellen Arbeitsverzeichnis
 
-## 1. SERP-Betrachtung
+**WICHTIG:** Versuche NICHT, die `{{PLATZHALTER}}` im Template zu ersetzen. Kopiere nur das CSS und generiere den Body-Inhalt direkt.
 
-### Autocomplete-Signale
-[Analyse]
+## CSS-Klassen Referenz
 
-### Google Ads Botschaften
-[Analyse]
+**SERP-Typ Tags:** `serp-type-ratgeber`, `serp-type-shop`, `serp-type-feature`, `serp-type-video`, `serp-type-vergleich`, `serp-type-guide`, `serp-type-comparison`, `serp-type-forum`, `serp-type-tool`, `serp-type-news`
 
-### Featured Snippet / AI Overview
-[Analyse]
+**Status Badges:** `badge-pass` (gruen), `badge-fail` (rot), `badge-warn` (gelb), `badge-info` (blau)
 
-### People Also Ask
-[Analyse]
+**Gap Prioritaet:** `gap-high` (rote Linie), `gap-medium` (gelbe Linie), `gap-low` (gruene Linie)
 
-### Bilder-Integration
-[Analyse]
+**Verdict:** `verdict-good`, `verdict-partial`, `verdict-bad`
 
-### Top-10 Seitentypen
-[Tabelle]
+**Empfehlungen:** `recommended` Klasse auf `.reco-card` fuer EMPFOHLEN-Banner (DE) / RECOMMENDED (EN)
 
-### Meta-Description Muster
-[Analyse]
+**Checkliste:** `check-pass` (Haekchen), `check-fail` (X), `check-warn` (!), `check-na` (?)
 
----
+**Aufwand/Impact Farben:** `text-accent` (Gering/Low), `text-muted` (Mittel/Medium), `priority-high` (Hoch/High)
 
-## 2. User Story
+## HTML-Struktur Kurzreferenz
 
-### Identifizierte Elemente
-[Tabelle]
-
-### User Story Statement
-> "[Statement]"
-
----
-
-## 3. Zielseiten-Abgleich
-
-### First Screen Check
-[Tabelle]
-
-### User Story Coverage
-[Gap-Analyse]
-
-### Gesamturteil
-[Bewertung + Begruendung]
-
----
-
-## 4. Optimierungsempfehlungen
-
-### Option A: [Titel]
-[Details]
-
-### Option B: [Titel]
-[Details]
-
-**Empfehlung:** [Begruendete Entscheidung]
-
----
-
-## 5. Checklisten
-
-### Layout Basics
-[Checkliste mit erfuellt / nicht erfuellt / teilweise]
-
-### SEO-Hygiene (Ziel-URL)
-[Checkliste mit erfuellt / nicht erfuellt / teilweise]
-
-### SEO-Hygiene (Domain)
-[Checkliste mit erfuellt / nicht erfuellt / teilweise]
+```html
+<!-- Header: .report-header mit .label, h1, .meta-grid -->
+<!-- Sektionen: .section > .section-header + .card(s) -->
+<!-- Tabellen: .card > .table-wrap > table -->
+<!-- Gap-Items: .gap-item.gap-{priority} > h4 + .gap-detail > 3x div -->
+<!-- Empfehlungen: .reco-grid > 2x .reco-card(.recommended) -->
+<!-- Checkliste: .checklist > li > .check-icon.check-{status} + span -->
+<!-- Bilder-Audit: .card > .img-audit-summary > .img-audit-stat(s) + .img-audit-items > code(s) -->
+<!-- CWV: .card > .score-row > .score-item(s) + table.cwv-table > tr > td + .badge.badge-{pass/warn/fail} -->
+<!-- Score-Farben: .cwv-good (gruen), .cwv-warn (gelb), .cwv-poor (rot) -->
 ```
+
+## Sprachspezifische Labels
+
+| Bereich | Deutsch | English |
+|---|---|---|
+| Header-Label | SXO-Analyse | SXO Analysis |
+| Datum | Datum | Date |
+| Datenquelle | Datenquelle | Data Source |
+| Sektions-Titel 1 | SERP-Betrachtung | SERP Analysis |
+| Beobachtung/Interpretation | Beobachtung / Interpretation | Observation / Interpretation |
+| Sektions-Titel 2 | User Story | User Story |
+| Sektions-Titel 3 | Zielseiten-Abgleich | Target Page Comparison |
+| Sektions-Titel 4 | Optimierungsempfehlungen | Optimization Recommendations |
+| Sektions-Titel 5 | Checklisten | Checklists |
+| Empfohlen-Banner | EMPFOHLEN | RECOMMENDED |
+| Aufwand | Aufwand | Effort |
+| Gesamturteil | Gesamturteil | Overall Verdict |
+
+## Wichtig
+
+- Schreibe echtes HTML, keine Markdown-Reste
+- Alle Texte in der erkannten Sprache (Deutsch oder Englisch)
+- Der Report wird ZUSAETZLICH zur Textausgabe als Datei geschrieben
+- Verwende `&mdash;` fuer Gedankenstriche, `&euro;` fuer Euro, `&amp;` fuer &
+- Nutze `&auml;` etc. fuer Umlaute im HTML (oder UTF-8 direkt)

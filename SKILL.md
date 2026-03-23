@@ -16,6 +16,7 @@ description: >
 argument-hint: "[keyword] [zielseite-url]"
 allowed-tools:
   - Read
+  - Write
   - Bash
   - WebFetch
   - Glob
@@ -83,24 +84,46 @@ ELSE:
 
 ### 1b -- Automatische Datenbeschaffung (MCP aktiv)
 
-Rufe folgende Datenpunkte ueber DataForSEO ab:
+**WICHTIG: Eine einzige SERP-Abfrage liefert ALLE Daten.**
 
-**SERP-Daten (Pflicht):**
-- `serp_organic_live_advanced` -> Top-10 organische Ergebnisse (URL, Title, Description, Position)
-- Autocomplete -> Suggest-Vorschlaege fuer das Keyword
-- Related Searches -> Verwandte Suchanfragen
-- People Also Ask -> "Aehnliche Fragen" / PAA-Box
+Rufe `serp_organic_live_advanced` mit diesen Parametern auf:
 
-**SERP-Features (wenn verfuegbar):**
-- Paid/Ads -> Google Ads (Headline, Description, Display URL)
-- Featured Snippet -> Featured Snippet Inhalt
-- Images -> Top-Bilder mit Alt-Tags / Quelldomain
-- Local Pack -> Lokale Ergebnisse (falls vorhanden)
+```
+keyword:                      Das Ziel-Keyword
+language_code:                "de" (oder "en" je nach Sprache)
+location_name:                "Germany" (oder je nach Markt)
+device:                       "desktop" (oder "mobile")
+depth:                        10
+people_also_ask_click_depth:  2    <- WICHTIG: liefert mehr PAA-Fragen
+```
 
-**Zielseiten-Daten (optional, fuer Abgleich):**
-- `on_page_content_parsing` -> Seiteninhalt der Zielseite parsen
+Diese EINE Abfrage liefert alle folgenden SERP-Elemente (als `type`-Feld in der Response):
 
-Lies `references/dataforseo-api.md` fuer MCP-Endpunkte und Parameter.
+| Response-Typ | Analyse-Bereich | Immer vorhanden? |
+|---|---|---|
+| `organic` | Top-10 Ergebnisse | Ja |
+| `related_searches` | Verwandte Suchanfragen (nutze fuer "Autocomplete/Related") | Ja |
+| `people_also_ask` | Aehnliche Fragen / PAA-Box | Meist |
+| `people_also_search` | Aehnliche Suchanfragen nach Klick | Manchmal |
+| `paid` | Google Ads (Headline, Description) | Manchmal |
+| `featured_snippet` | Featured Snippet Inhalt | Manchmal |
+| `knowledge_graph` | Knowledge Graph / Wikipedia-Definition | Manchmal |
+| `popular_products` | Google Shopping Produkte mit Preisen | Manchmal |
+| `compare_sites` | Vergleichsseiten (idealo, Check24 etc.) | Manchmal |
+| `local_pack` | Lokale Ergebnisse mit Bewertungen | Manchmal |
+| `images` | Top-Bilder mit Quelldomain | Manchmal |
+
+**Zusaetzlich (parallel, wenn Zielseite angegeben):**
+
+Rufe diese drei Tools **parallel** auf, um Wartezeit zu minimieren:
+
+1. `on_page_content_parsing` -> Zielseiten-Inhalt parsen (fuer Schritt 4)
+2. `on_page_lighthouse` -> Core Web Vitals + Accessibility inkl. Bilder-Alt-Check (fuer Schritt 6)
+   - Parameter: `url` = Zielseite, `full_data` = true
+3. `on_page_instant_pages` -> Detaillierte On-Page-Daten inkl. Bilder-Zaehlung (fuer Schritt 6)
+   - Parameter: `url` = Zielseite, `enable_javascript` = true
+
+**Handling grosser Zielseiten-Inhalte:** Wenn `on_page_content_parsing` grosse Ergebnisse liefert (>20KB), fokussiere auf: H1, H2-Struktur, erste 3 Absaetze, Tabellen, CTAs, interne Links. Ignoriere Footer-Navigation, Sidebar-Widgets und repetitive Boilerplate.
 
 ### 1c -- Fallback-Modus (MCP nicht verfuegbar)
 
@@ -133,6 +156,32 @@ Bitte gib mir folgende Informationen (so viele wie moeglich):
 Alternativ: Fuege Screenshots als Bilder ein -- ich analysiere sie direkt.
 ```
 
+**English fallback (if language = English):**
+
+```
+DataForSEO MCP is not available.
+I'll run the analysis in manual mode.
+
+Please provide the following information (as much as possible):
+
+1. AUTOCOMPLETE: What suggestions appear when you type the keyword into Google?
+2. GOOGLE ADS: What sponsored ads appear at the top? (headline + short description)
+3. PEOPLE ALSO ASK: What questions does the "People also ask" box show?
+4. TOP-5 RESULTS: Title + meta description of the first 5 organic results?
+5. SERP FEATURES: Any featured snippets, image packs, local results, AI Overviews?
+6. TARGET PAGE: Briefly describe the first screen of the target page.
+
+Alternatively: Paste screenshots -- I'll analyze them directly.
+```
+
+### 1d -- Lighthouse- und Instant-Pages-Daten aufbereiten
+
+Aus den Lighthouse- und Instant-Pages-Responses extrahiere Core Web Vitals, Performance Scores und Bilder-Accessibility-Daten.
+
+Lies `references/cwv-thresholds.md` fuer die vollstaendigen Schwellwerte, Feld-Pfade und Scoring-Logik.
+
+Lies `references/dataforseo-api.md` fuer weitere optionale Endpunkte (Backlinks).
+
 ---
 
 ## Schritt 2: SERP-Analyse
@@ -141,30 +190,56 @@ Analysiere jeden Datenpunkt systematisch. Extrahiere fuer jeden Bereich:
 - **Was ist zu sehen?** (faktische Beobachtung)
 - **Was bedeutet das?** (Interpretation fuer User Story)
 
-### 2a -- Autocomplete / Suggest
+**Hinweis:** Die SERP-Response enthaelt verschiedene `type`-Felder. Ordne sie wie folgt zu:
+- `related_searches` + `people_also_search` -> Abschnitt 2a (Autocomplete/Related)
+- `paid` -> Abschnitt 2b (Google Ads)
+- `popular_products` + `compare_sites` -> Abschnitt 2b (als Shopping-Signale)
+- `featured_snippet` + `knowledge_graph` -> Abschnitt 2c (Snippet/AI Overview)
+- `people_also_ask` -> Abschnitt 2d (PAA)
+- `images` -> Abschnitt 2e (Bilder)
+- `organic` -> Abschnitt 2f (Top-10)
+- `local_pack` -> erwaehne in 2f falls vorhanden (lokale Intent-Signal)
 
-Beobachtung: Welche Wortgruppen ergaenzen Nutzer?
-Interpretation: Welche Absichten stehen dahinter?
+### 2a -- Related Searches / Autocomplete
+
+Beobachtung: Welche verwandten Suchbegriffe zeigt Google?
+Interpretation: Welche Absichten und Themen-Cluster stehen dahinter?
+
+Nutze: `related_searches` Items + `people_also_search` Items aus der SERP-Response.
 
 **Leitfragen:**
 - Dominieren informationale Terme (was, wie, warum) oder transaktionale (kaufen, Preis, Angebot)?
 - Gibt es Tool-/Rechner-Terme ("berechnen", "Rechner", "Tabelle", "online")?
 - Gibt es lokale Modifikatoren ("in meiner Naehe", PLZ)?
 
-### 2b -- Google Ads
+### 2b -- Google Ads / Shopping-Signale
 
 Beobachtung: Welche Botschaften und USPs bewerben Anzeigenschaltende?
 Interpretation: Was haben A/B-Tests als konvertierend bewiesen?
+
+Nutze: `paid` Items (Textanzeigen) + `popular_products` (Shopping-Produkte mit Preisen) + `compare_sites` (Vergleichsportale wie idealo, Check24).
+
+**Wenn keine `paid`-Items vorhanden, aber `popular_products` / `compare_sites`:**
+Analysiere diese als Shopping-Signale. Sie zeigen, dass Google eine transaktionale Intention erkennt.
+- Welche Preispunkte werden gezeigt? (Preisspanne signalisiert Produktvielfalt)
+- Welche Plattformen dominieren? (idealo = Preisvergleich, Amazon = Convenience)
+- Gibt es Bewertungen/Sterne? (Trust-Signal)
 
 **Leitfragen:**
 - Welche Versprechen dominieren (Schnelligkeit / Sicherheit / Preis / Qualitaet)?
 - Werden Aengste adressiert ("risikolos", "kostenlos", "unverbindlich")?
 - Gibt es implizite Hinweise auf Kaufhuerden, die Ads gezielt abbauen?
 
-### 2c -- Featured Snippet / AI Overview
+### 2c -- Featured Snippet / AI Overview / Knowledge Graph
 
 Beobachtung: Welche Antwort liefert Google direkt?
 Interpretation: Das ist Googles Definition der "besten Antwort" auf dieses Keyword.
+
+Nutze: `featured_snippet` Items + `knowledge_graph` Items. Pruefe auch, ob PAA-Antworten als `people_also_ask_ai_overview_expanded_element` markiert sind (= AI Overview).
+
+**Bei `knowledge_graph`:** Google zeigt eine Definition/Zusammenfassung rechts neben den Ergebnissen -- das signalisiert, dass das Keyword auch eine informationelle Komponente hat.
+
+**Bei AI Overviews in PAA:** Google beantwortet bestimmte Fragen direkt per AI -- das zeigt, welche Teilfragen Google als "beantwortet" betrachtet (weniger Click-Potential fuer diese Fragen).
 
 **Leitfragen:**
 - In welchem Format (Text / Liste / Tabelle / Video)?
@@ -352,10 +427,20 @@ Diese Checklisten werden **immer** am Ende ausgegeben, unabhaengig vom User Stor
 [ ] Meta Description optimiert (150-160 Zeichen, CTA enthalten)?
 [ ] Strukturierte Daten vorhanden (Schema.org -- FAQPage, HowTo, etc.)?
 [ ] Interne Verlinkung zu thematisch relevanten Seiten?
-[ ] Bilder mit Alt-Tags versehen (Keyword-relevant)?
 [ ] JavaScript-Inhalte fuer Crawler indexierbar?
-[ ] Pagespeed: Core Web Vitals im gruenen Bereich?
 ```
+
+### Bilder-Alt-Tags (aus Lighthouse + Instant Pages)
+
+Nutze reale Daten aus `on_page_instant_pages` und `on_page_lighthouse`. Zeige Gesamtzahl Bilder, Bilder ohne Alt-Tag, betroffene Elemente (max. 10). Pruefe stichprobenartig Keyword-Relevanz der Alt-Tags. Wenn Daten nicht verfuegbar: `check-na` mit Verweis auf manuelle Pruefung.
+
+Lies `references/cwv-thresholds.md` fuer Scoring-Logik (check-pass/warn/fail Schwellwerte).
+
+### Core Web Vitals (aus Lighthouse)
+
+Nutze reale Daten aus `on_page_lighthouse`. Zeige als Tabelle mit Farbkodierung (`badge-pass`/`badge-warn`/`badge-fail`). Bei roten Metriken 1-2 konkrete Optimierungshinweise geben. Wenn Daten nicht verfuegbar: `check-na` mit Verweis auf pagespeed.web.dev.
+
+Lies `references/cwv-thresholds.md` fuer alle Schwellwerte, Feld-Pfade und Optimierungshinweise.
 
 ### SEO-Hygiene -- Domainuebergreifend
 
@@ -371,87 +456,16 @@ Diese Checklisten werden **immer** am Ende ausgegeben, unabhaengig vom User Stor
 
 ## Output-Format: HTML-Report
 
-Der finale Report wird als **HTML-Datei** gespeichert. Ablauf:
+Der finale Report wird als **selbststaendige HTML-Datei** gespeichert.
 
-1. Bestimme die Report-Sprache (siehe Spracherkennung in Schritt 0)
-2. Lies das passende Template:
-   - **Deutsch:** `assets/report-template.html`
-   - **English:** `assets/report-template-en.html`
-3. Ersetze alle `{{PLATZHALTER}}` durch die Analyseergebnisse
-4. Speichere die Datei als `sxo-report-[KEYWORD-SLUG].html` im aktuellen Arbeitsverzeichnis
-5. Informiere den User ueber den Dateipfad
+### Ablauf
 
-### Platzhalter-Referenz
+1. Bestimme die Report-Sprache (Schritt 0) und lies das passende Template: `assets/report-template.html` (DE) oder `assets/report-template-en.html` (EN)
+2. Kopiere den `<style>` Block (CSS) aus dem Template woertlich
+3. Generiere den `<body>` Inhalt direkt als HTML aus den Analyseergebnissen -- **NICHT** die `{{PLATZHALTER}}` im Template ersetzen
+4. Speichere als `sxo-report-[KEYWORD-SLUG].html` im aktuellen Arbeitsverzeichnis
 
-**Header:** `{{KEYWORD}}`, `{{URL}}`, `{{DATUM}}`, `{{MARKT}}`, `{{DATENQUELLE}}`
-
-**SERP-Betrachtung:**
-- Autocomplete: Ersetze `<!-- {{AUTOCOMPLETE_ROWS}} -->...<!-- {{/AUTOCOMPLETE_ROWS}} -->` durch echte `<tr>` Zeilen. `{{AUTOCOMPLETE_INTERPRETATION}}` mit Freitext.
-- Ads: `{{ADS_BEOBACHTUNG}}`, `{{ADS_INTERPRETATION}}`
-- Snippet: `{{SNIPPET_BEOBACHTUNG}}`, `{{SNIPPET_INTERPRETATION}}`
-- PAA: Ersetze `<!-- {{PAA_ITEMS}} -->...<!-- {{/PAA_ITEMS}} -->` durch echte `<li>` Zeilen. `{{PAA_INTERPRETATION}}` mit Freitext.
-- Bilder: `{{BILDER_BEOBACHTUNG}}`, `{{BILDER_INTERPRETATION}}`
-- Top-10: Ersetze `<!-- {{TOP10_ROWS}} -->...<!-- {{/TOP10_ROWS}} -->` durch echte `<tr>` Zeilen. Nutze CSS-Klassen: `serp-type-ratgeber`, `serp-type-shop`, `serp-type-feature`, `serp-type-video`, `serp-type-vergleich`. `{{TOP10_INTERPRETATION}}` mit Freitext.
-- Meta Patterns: Ersetze `<!-- {{META_PATTERNS}} -->...<!-- {{/META_PATTERNS}} -->` durch echte `<li>` Zeilen.
-
-**User Story:**
-- Ersetze `<!-- {{USERSTORY_ROWS}} -->...<!-- {{/USERSTORY_ROWS}} -->` durch echte `<tr>` Zeilen.
-- `{{USER_STORY_STATEMENT}}` mit dem formulierten Statement.
-
-**Zielseiten-Abgleich:**
-- First Screen: Ersetze `<!-- {{FIRSTSCREEN_ROWS}} -->...<!-- {{/FIRSTSCREEN_ROWS}} -->` durch echte `<tr>` Zeilen. Badge-Klassen: `badge-pass`, `badge-fail`, `badge-warn`.
-- Gaps: Ersetze `<!-- {{GAP_ITEMS}} -->...<!-- {{/GAP_ITEMS}} -->` durch echte `.gap-item` Divs. Klassen: `gap-high`, `gap-medium`, `gap-low`. Badge: `badge-fail` (Hoch), `badge-warn` (Mittel), `badge-pass` (Niedrig).
-- Verdict: `{{VERDICT_CLASS}}` = `verdict-good` | `verdict-partial` | `verdict-bad`. `{{VERDICT_TITLE}}`, `{{VERDICT_TEXT}}`.
-
-**Empfehlungen:**
-- `{{RECO_A_CLASS}}` / `{{RECO_B_CLASS}}` = leer oder `recommended` (fuer die empfohlene Option).
-- `{{RECO_A_TITLE}}`, `{{RECO_A_BESCHREIBUNG}}`, Items als `<li>`, Aufwand/Impact.
-- Farb-Klassen: `text-accent` (Gering), `text-muted` (Mittel), `priority-high` (Hoch) -- fuer Aufwand umgekehrt.
-- `{{EMPFEHLUNG_TEXT}}` mit begruendeter Empfehlung.
-
-**Checklisten:**
-- Ersetze `<!-- {{LAYOUT_CHECKS}} -->`, `<!-- {{SEO_URL_CHECKS}} -->`, `<!-- {{SEO_DOMAIN_CHECKS}} -->` durch echte `<li>` Zeilen.
-- Check-Icons: `check-pass` + Haekchen, `check-fail` + X, `check-warn` + !, `check-na` + ?.
-
-### EN-Platzhalter-Referenz (English Template)
-
-Das englische Template (`report-template-en.html`) verwendet diese Platzhalter:
-
-**Header:** `{{KEYWORD}}`, `{{URL}}`, `{{DATE}}`, `{{MARKET}}`, `{{DATA_SOURCE}}`
-
-**SERP Analysis:**
-- Autocomplete: `{{AUTOCOMPLETE_ROWS}}` (gleiche Struktur), `{{AUTOCOMPLETE_INTERPRETATION}}`
-- Ads: `{{ADS_OBSERVATION}}`, `{{ADS_INTERPRETATION}}`
-- Snippet: `{{SNIPPET_OBSERVATION}}`, `{{SNIPPET_INTERPRETATION}}`
-- PAA: `{{PAA_ITEMS}}` (gleiche Struktur), `{{PAA_INTERPRETATION}}`
-- Images: `{{IMAGES_OBSERVATION}}`, `{{IMAGES_INTERPRETATION}}`
-- Top-10: `{{TOP10_ROWS}}` (gleiche Struktur, zusaetzliche CSS-Klassen: `serp-type-guide`, `serp-type-comparison`, `serp-type-forum`, `serp-type-tool`, `serp-type-news`), `{{TOP10_INTERPRETATION}}`
-- Meta Patterns: `{{META_PATTERNS}}` (gleiche Struktur)
-
-**User Story:**
-- `{{USERSTORY_ROWS}}` mit `{{ELEMENT}}` und `{{VALUE}}`
-- `{{USER_STORY_STATEMENT}}`
-- EN-Elemente: Knowledge Level, Content Type Needed, Personalization Need, Journey Phase, Emotional State, Primary Goal, Secondary Goal, Barriers
-
-**Target Page Comparison:**
-- First Screen: `{{FIRSTSCREEN_ROWS}}` mit `{{FS_ELEMENT}}`, `{{FS_STATUS}}` (Pass/Fail/Partial), `{{FS_ASSESSMENT}}`
-- Gaps: `{{GAP_ITEMS}}` mit `{{GAP_TARGET}}` und `{{GAP_DESCRIPTION}}`
-- Verdict: `{{VERDICT_CLASS}}`, `{{VERDICT_TITLE}}`, `{{VERDICT_TEXT}}`
-
-**Recommendations:**
-- `{{RECO_A_DESCRIPTION}}` / `{{RECO_B_DESCRIPTION}}` (statt BESCHREIBUNG)
-- `{{RECO_A_EFFORT}}` / `{{RECO_B_EFFORT}}` (statt AUFWAND), Farb-Klasse `{{RECO_A_EFFORT_COLOR}}`
-- `{{RECOMMENDATION_TEXT}}` (statt EMPFEHLUNG_TEXT)
-- Effort/Impact-Werte: Low / Medium / High
-
-**Checklisten:** Gleiche Struktur, Check-Status auf Englisch: Pass / Fail / Partial / N/A
-
-### Wichtig
-
-- Entferne beim Befuellen ALLE Template-Kommentare (`<!-- {{...}} -->`)
-- Schreibe echtes HTML, keine Markdown-Reste
-- Texte in der erkannten Sprache (Deutsch oder Englisch)
-- Der Report wird ZUSAETZLICH zur Textausgabe als Datei geschrieben -- der User sieht beides
+Lies `references/output-format.md` fuer CSS-Klassen Referenz, HTML-Struktur Kurzreferenz und sprachspezifische Labels (DE/EN).
 
 ## Fehlerbehandlung
 
