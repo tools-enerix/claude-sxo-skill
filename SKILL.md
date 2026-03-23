@@ -6,10 +6,13 @@ description: >
   Ads, Featured Snippets, PAA, Bilder, Top-10), leitet die User Story ab und
   gleicht sie mit der Zielseite ab. Gibt konkrete Optimierungsempfehlungen und
   SEO-Hygiene-Checklisten aus. Fallback auf manuelle SERP-Eingabe wenn DataForSEO
-  nicht verfuegbar. Use when user says "SXO-Analyse", "Search Experience
-  Optimization", "analysiere die Search Experience", "was zeigen die SERPs",
-  "SXO-Report", "SERP-Analyse fuer", "User Story aus SERPs", "Zielseiten-Abgleich",
-  or "SXO Check".
+  nicht verfuegbar. Supports German and English -- auto-detects language from
+  keyword, URL TLD, and market. Use when user says "SXO-Analyse", "SXO analysis",
+  "Search Experience Optimization", "analysiere die Search Experience",
+  "analyze search experience", "was zeigen die SERPs", "what do the SERPs show",
+  "SXO-Report", "SXO report", "SERP-Analyse fuer", "SERP analysis for",
+  "User Story aus SERPs", "user story from SERPs", "Zielseiten-Abgleich",
+  "target page comparison", or "SXO Check".
 argument-hint: "[keyword] [zielseite-url]"
 allowed-tools:
   - Read
@@ -42,6 +45,27 @@ KEYWORD:          [z.B. "PV Ausrichtung Rechner"]
 ZIELSEITE-URL:    [z.B. "https://www.enerix.de/photovoltaik-rechner/"]
 MARKT/SPRACHE:    [z.B. Deutschland / de]  <- Standard: Deutschland
 DEVICE:           [Desktop / Mobile]       <- Standard: Desktop
+```
+
+### Spracherkennung / Language Detection
+
+Erkenne die Report-Sprache automatisch anhand folgender Signale (in Prioritaetsreihenfolge):
+
+1. **Explizite Angabe:** User gibt Sprache/Markt vor (z.B. "US / en", "UK / en")
+2. **URL-TLD:** `.com`, `.co.uk`, `.io`, `.org` -> Englisch; `.de`, `.at`, `.ch` -> Deutsch
+3. **Keyword-Sprache:** Englische Keywords -> Englischer Report; deutsche Keywords -> Deutscher Report
+4. **Location Code:** 2840 (USA), 2826 (UK), 2036 (Australien) -> Englisch; 2276 (DE), 2040 (AT), 2756 (CH) -> Deutsch
+
+```
+IF Sprache = Englisch:
+  -> Verwende Template `assets/report-template-en.html`
+  -> Schreibe ALLE Analysetexte auf Englisch
+  -> Verwende englische SERP-Typ-Labels: Guide, Shop, Feature, Video, Comparison, Forum, Tool, News
+  -> Verwende englische Platzhalter-Namen (siehe EN-Platzhalter-Referenz unten)
+  -> DataForSEO: language_code = "en", location_code je nach Markt
+ELSE:
+  -> Verwende Template `assets/report-template.html` (Deutsch)
+  -> Standardverhalten wie bisher
 ```
 
 ---
@@ -224,6 +248,7 @@ Fuelle diese Tabelle aus den SERP-Daten:
 
 Formuliere ein klares Statement nach diesem Muster:
 
+**Deutsch:**
 ```
 Ich sehe [KONKRETE HERAUSFORDERUNG] als grosse Herausforderung
 und wuensche mir [ART DER UNTERSTUETZUNG],
@@ -231,8 +256,19 @@ um [PRIMAERES ZIEL] zu erreichen
 und [EMOTIONALES BEDUERFNIS] dabei zu haben.
 ```
 
-**Beispiel:**
+**English:**
+```
+I see [SPECIFIC CHALLENGE] as a major challenge
+and want [TYPE OF SUPPORT],
+to achieve [PRIMARY GOAL]
+and feel [EMOTIONAL NEED] while doing so.
+```
+
+**Beispiel (DE):**
 > *"Ich sehe die konkrete Berechnung des individuellen Ertrags als grosse Herausforderung und wuensche mir datenbasierte Unterstuetzung, um die richtige Entscheidung zu treffen und ein beruhigendes Gefuehl dabei zu haben."*
+
+**Example (EN):**
+> *"I see finding reliable performance data for my specific setup as a major challenge and want data-driven guidance, to make the right purchasing decision and feel confident I'm not overpaying or underperforming."*
 
 ---
 
@@ -337,10 +373,13 @@ Diese Checklisten werden **immer** am Ende ausgegeben, unabhaengig vom User Stor
 
 Der finale Report wird als **HTML-Datei** gespeichert. Ablauf:
 
-1. Lies das Template aus `assets/report-template.html`
-2. Ersetze alle `{{PLATZHALTER}}` durch die Analyseergebnisse
-3. Speichere die Datei als `sxo-report-[KEYWORD-SLUG].html` im aktuellen Arbeitsverzeichnis
-4. Informiere den User ueber den Dateipfad
+1. Bestimme die Report-Sprache (siehe Spracherkennung in Schritt 0)
+2. Lies das passende Template:
+   - **Deutsch:** `assets/report-template.html`
+   - **English:** `assets/report-template-en.html`
+3. Ersetze alle `{{PLATZHALTER}}` durch die Analyseergebnisse
+4. Speichere die Datei als `sxo-report-[KEYWORD-SLUG].html` im aktuellen Arbeitsverzeichnis
+5. Informiere den User ueber den Dateipfad
 
 ### Platzhalter-Referenz
 
@@ -374,11 +413,44 @@ Der finale Report wird als **HTML-Datei** gespeichert. Ablauf:
 - Ersetze `<!-- {{LAYOUT_CHECKS}} -->`, `<!-- {{SEO_URL_CHECKS}} -->`, `<!-- {{SEO_DOMAIN_CHECKS}} -->` durch echte `<li>` Zeilen.
 - Check-Icons: `check-pass` + Haekchen, `check-fail` + X, `check-warn` + !, `check-na` + ?.
 
+### EN-Platzhalter-Referenz (English Template)
+
+Das englische Template (`report-template-en.html`) verwendet diese Platzhalter:
+
+**Header:** `{{KEYWORD}}`, `{{URL}}`, `{{DATE}}`, `{{MARKET}}`, `{{DATA_SOURCE}}`
+
+**SERP Analysis:**
+- Autocomplete: `{{AUTOCOMPLETE_ROWS}}` (gleiche Struktur), `{{AUTOCOMPLETE_INTERPRETATION}}`
+- Ads: `{{ADS_OBSERVATION}}`, `{{ADS_INTERPRETATION}}`
+- Snippet: `{{SNIPPET_OBSERVATION}}`, `{{SNIPPET_INTERPRETATION}}`
+- PAA: `{{PAA_ITEMS}}` (gleiche Struktur), `{{PAA_INTERPRETATION}}`
+- Images: `{{IMAGES_OBSERVATION}}`, `{{IMAGES_INTERPRETATION}}`
+- Top-10: `{{TOP10_ROWS}}` (gleiche Struktur, zusaetzliche CSS-Klassen: `serp-type-guide`, `serp-type-comparison`, `serp-type-forum`, `serp-type-tool`, `serp-type-news`), `{{TOP10_INTERPRETATION}}`
+- Meta Patterns: `{{META_PATTERNS}}` (gleiche Struktur)
+
+**User Story:**
+- `{{USERSTORY_ROWS}}` mit `{{ELEMENT}}` und `{{VALUE}}`
+- `{{USER_STORY_STATEMENT}}`
+- EN-Elemente: Knowledge Level, Content Type Needed, Personalization Need, Journey Phase, Emotional State, Primary Goal, Secondary Goal, Barriers
+
+**Target Page Comparison:**
+- First Screen: `{{FIRSTSCREEN_ROWS}}` mit `{{FS_ELEMENT}}`, `{{FS_STATUS}}` (Pass/Fail/Partial), `{{FS_ASSESSMENT}}`
+- Gaps: `{{GAP_ITEMS}}` mit `{{GAP_TARGET}}` und `{{GAP_DESCRIPTION}}`
+- Verdict: `{{VERDICT_CLASS}}`, `{{VERDICT_TITLE}}`, `{{VERDICT_TEXT}}`
+
+**Recommendations:**
+- `{{RECO_A_DESCRIPTION}}` / `{{RECO_B_DESCRIPTION}}` (statt BESCHREIBUNG)
+- `{{RECO_A_EFFORT}}` / `{{RECO_B_EFFORT}}` (statt AUFWAND), Farb-Klasse `{{RECO_A_EFFORT_COLOR}}`
+- `{{RECOMMENDATION_TEXT}}` (statt EMPFEHLUNG_TEXT)
+- Effort/Impact-Werte: Low / Medium / High
+
+**Checklisten:** Gleiche Struktur, Check-Status auf Englisch: Pass / Fail / Partial / N/A
+
 ### Wichtig
 
 - Entferne beim Befuellen ALLE Template-Kommentare (`<!-- {{...}} -->`)
 - Schreibe echtes HTML, keine Markdown-Reste
-- Alle Texte in normalem Deutsch (Umlaute erlaubt im HTML-Output, da UTF-8)
+- Texte in der erkannten Sprache (Deutsch oder Englisch)
 - Der Report wird ZUSAETZLICH zur Textausgabe als Datei geschrieben -- der User sieht beides
 
 ## Fehlerbehandlung

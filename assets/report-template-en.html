@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SXO-Analyse: {{KEYWORD}}</title>
+<title>SXO Analysis: {{KEYWORD}}</title>
 <style>
   /* ── Reset & Base ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -320,16 +320,16 @@
     box-shadow: 0 0 20px rgba(96, 165, 250, 0.05);
   }
   .reco-card.recommended::before {
-    content: 'EMPFOHLEN';
+    content: 'RECOMMENDED';
     position: absolute;
     top: 12px;
-    right: -28px;
+    right: -32px;
     background: var(--accent);
     color: var(--bg);
     font-size: 9px;
     font-weight: 700;
     letter-spacing: 1px;
-    padding: 3px 32px;
+    padding: 3px 36px;
     transform: rotate(45deg);
   }
   .reco-card h3 {
@@ -471,7 +471,6 @@
   .mt-16 { margin-top: 16px; }
   .mb-8  { margin-bottom: 8px; }
   .text-accent { color: var(--accent); }
-  .text-white  { color: #fff; }
   .text-muted  { color: var(--text-muted); }
   .fw-600 { font-weight: 600; }
   .fs-13  { font-size: 13px; }
@@ -496,43 +495,43 @@
 
   <!-- ═══════════════ HEADER ═══════════════ -->
   <header class="report-header">
-    <div class="label">SXO-Analyse</div>
-    <h1>SXO-Analyse: <span>{{KEYWORD}}</span></h1>
+    <div class="label">SXO Analysis</div>
+    <h1>SXO Analysis: <span>{{KEYWORD}}</span></h1>
     <div class="meta-grid">
       <div class="meta-item">
-        <span class="meta-label">Zielseite</span>
+        <span class="meta-label">Target Page</span>
         <span class="meta-value"><a href="{{URL}}" target="_blank">{{URL}}</a></span>
       </div>
       <div class="meta-item">
-        <span class="meta-label">Datum</span>
-        <span class="meta-value">{{DATUM}}</span>
+        <span class="meta-label">Date</span>
+        <span class="meta-value">{{DATE}}</span>
       </div>
       <div class="meta-item">
-        <span class="meta-label">Markt</span>
-        <span class="meta-value">{{MARKT}}</span>
+        <span class="meta-label">Market</span>
+        <span class="meta-value">{{MARKET}}</span>
       </div>
       <div class="meta-item">
-        <span class="meta-label">Datenquelle</span>
-        <span class="meta-value">{{DATENQUELLE}}</span>
+        <span class="meta-label">Data Source</span>
+        <span class="meta-value">{{DATA_SOURCE}}</span>
       </div>
     </div>
   </header>
 
-  <!-- ═══════════════ 1. SERP-BETRACHTUNG ═══════════════ -->
+  <!-- ═══════════════ 1. SERP ANALYSIS ═══════════════ -->
   <div class="section">
     <div class="section-header">
       <div class="section-number">1</div>
-      <h2>SERP-Betrachtung</h2>
+      <h2>SERP Analysis</h2>
     </div>
 
     <!-- 1a Autocomplete -->
     <div class="card">
       <h3><span class="icon">&#128269;</span> Autocomplete / Related Searches</h3>
-      <div class="sub-label">Beobachtung</div>
+      <div class="sub-label">Observation</div>
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Suchbegriff</th><th>Intention</th></tr>
+            <tr><th>Search Term</th><th>Intent</th></tr>
           </thead>
           <tbody>
             <!-- {{AUTOCOMPLETE_ROWS}} -->
@@ -547,9 +546,9 @@
 
     <!-- 1b Google Ads -->
     <div class="card">
-      <h3><span class="icon">&#128176;</span> Google Ads Botschaften</h3>
-      <div class="sub-label">Beobachtung</div>
-      <p>{{ADS_BEOBACHTUNG}}</p>
+      <h3><span class="icon">&#128176;</span> Google Ads Messages</h3>
+      <div class="sub-label">Observation</div>
+      <p>{{ADS_OBSERVATION}}</p>
       <div class="sub-label mt-16">Interpretation</div>
       <p>{{ADS_INTERPRETATION}}</p>
     </div>
@@ -557,8 +556,8 @@
     <!-- 1c Featured Snippet / AI Overview -->
     <div class="card">
       <h3><span class="icon">&#9889;</span> Featured Snippet / AI Overview</h3>
-      <div class="sub-label">Beobachtung</div>
-      <p>{{SNIPPET_BEOBACHTUNG}}</p>
+      <div class="sub-label">Observation</div>
+      <p>{{SNIPPET_OBSERVATION}}</p>
       <div class="sub-label mt-16">Interpretation</div>
       <p>{{SNIPPET_INTERPRETATION}}</p>
     </div>
@@ -566,7 +565,7 @@
     <!-- 1d PAA -->
     <div class="card">
       <h3><span class="icon">&#10067;</span> People Also Ask</h3>
-      <div class="sub-label">Beobachtung</div>
+      <div class="sub-label">Observation</div>
       <ol>
         <!-- {{PAA_ITEMS}} -->
         <li>{{PAA_QUESTION}}</li>
@@ -576,22 +575,22 @@
       <p>{{PAA_INTERPRETATION}}</p>
     </div>
 
-    <!-- 1e Bilder -->
+    <!-- 1e Images -->
     <div class="card">
-      <h3><span class="icon">&#128444;</span> Bilder-Integration</h3>
-      <div class="sub-label">Beobachtung</div>
-      <p>{{BILDER_BEOBACHTUNG}}</p>
+      <h3><span class="icon">&#128444;</span> Image Integration</h3>
+      <div class="sub-label">Observation</div>
+      <p>{{IMAGES_OBSERVATION}}</p>
       <div class="sub-label mt-16">Interpretation</div>
-      <p>{{BILDER_INTERPRETATION}}</p>
+      <p>{{IMAGES_INTERPRETATION}}</p>
     </div>
 
     <!-- 1f Top-10 -->
     <div class="card">
-      <h3><span class="icon">&#127942;</span> Top-10 Seitentypen</h3>
+      <h3><span class="icon">&#127942;</span> Top-10 Page Types</h3>
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Pos.</th><th>Domain</th><th>Titel</th><th>Typ</th></tr>
+            <tr><th>Pos.</th><th>Domain</th><th>Title</th><th>Type</th></tr>
           </thead>
           <tbody>
             <!-- {{TOP10_ROWS}} -->
@@ -611,7 +610,7 @@
 
     <!-- 1g Meta Descriptions -->
     <div class="card">
-      <h3><span class="icon">&#128203;</span> Meta-Description Muster</h3>
+      <h3><span class="icon">&#128203;</span> Meta Description Patterns</h3>
       <ol>
         <!-- {{META_PATTERNS}} -->
         <li><strong>{{PATTERN_NAME}}:</strong> {{PATTERN_DESC}}</li>
@@ -628,15 +627,15 @@
     </div>
 
     <div class="card">
-      <h3>Identifizierte Elemente</h3>
+      <h3>Identified Elements</h3>
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Element</th><th>Aus den SERPs abgeleitet</th></tr>
+            <tr><th>Element</th><th>Derived from SERPs</th></tr>
           </thead>
           <tbody>
             <!-- {{USERSTORY_ROWS}} -->
-            <tr><td class="fw-600 text-white">{{ELEMENT}}</td><td>{{WERT}}</td></tr>
+            <tr><td class="fw-600">{{ELEMENT}}</td><td>{{VALUE}}</td></tr>
             <!-- {{/USERSTORY_ROWS}} -->
           </tbody>
         </table>
@@ -651,27 +650,27 @@
     </div>
   </div>
 
-  <!-- ═══════════════ 3. ZIELSEITEN-ABGLEICH ═══════════════ -->
+  <!-- ═══════════════ 3. TARGET PAGE COMPARISON ═══════════════ -->
   <div class="section">
     <div class="section-header">
       <div class="section-number">3</div>
-      <h2>Zielseiten-Abgleich</h2>
+      <h2>Target Page Comparison</h2>
     </div>
 
     <!-- 3a First Screen -->
     <div class="card">
-      <h3>First Screen Check (3-Sekunden-Test)</h3>
+      <h3>First Screen Check (3-Second Test)</h3>
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>User Story Element</th><th>Status</th><th>Bewertung</th></tr>
+            <tr><th>User Story Element</th><th>Status</th><th>Assessment</th></tr>
           </thead>
           <tbody>
             <!-- {{FIRSTSCREEN_ROWS}} -->
             <tr>
               <td>{{FS_ELEMENT}}</td>
               <td><span class="badge {{FS_BADGE_CLASS}}">{{FS_STATUS}}</span></td>
-              <td>{{FS_BEWERTUNG}}</td>
+              <td>{{FS_ASSESSMENT}}</td>
             </tr>
             <!-- {{/FIRSTSCREEN_ROWS}} -->
           </tbody>
@@ -681,7 +680,7 @@
 
     <!-- 3b User Story Coverage -->
     <div class="card">
-      <h3>User Story Coverage (Gap-Analyse)</h3>
+      <h3>User Story Coverage (Gap Analysis)</h3>
 
       <!-- {{GAP_ITEMS}} -->
       <div class="gap-item {{GAP_PRIORITY_CLASS}}">
@@ -691,25 +690,25 @@
         </h4>
         <div class="gap-detail">
           <div>
-            <div class="gd-label">SERP-Signal</div>
+            <div class="gd-label">SERP Signal</div>
             {{GAP_SERP}}
           </div>
           <div>
-            <div class="gd-label">Zielseite</div>
-            {{GAP_ZIELSEITE}}
+            <div class="gd-label">Target Page</div>
+            {{GAP_TARGET}}
           </div>
           <div>
             <div class="gd-label">Gap</div>
-            {{GAP_BESCHREIBUNG}}
+            {{GAP_DESCRIPTION}}
           </div>
         </div>
       </div>
       <!-- {{/GAP_ITEMS}} -->
     </div>
 
-    <!-- 3c Gesamturteil -->
+    <!-- 3c Overall Verdict -->
     <div class="card">
-      <h3>Gesamturteil</h3>
+      <h3>Overall Verdict</h3>
       <!--
         Use class: verdict-good | verdict-partial | verdict-bad
       -->
@@ -720,18 +719,18 @@
     </div>
   </div>
 
-  <!-- ═══════════════ 4. OPTIMIERUNGSEMPFEHLUNGEN ═══════════════ -->
+  <!-- ═══════════════ 4. OPTIMIZATION RECOMMENDATIONS ═══════════════ -->
   <div class="section">
     <div class="section-header">
       <div class="section-number">4</div>
-      <h2>Optimierungsempfehlungen</h2>
+      <h2>Optimization Recommendations</h2>
     </div>
 
     <div class="reco-grid">
       <!-- Option A -->
       <div class="reco-card {{RECO_A_CLASS}}">
         <h3>Option A: {{RECO_A_TITLE}}</h3>
-        <p class="fs-13 text-muted">{{RECO_A_BESCHREIBUNG}}</p>
+        <p class="fs-13 text-muted">{{RECO_A_DESCRIPTION}}</p>
         <ul class="mt-8">
           <!-- {{RECO_A_ITEMS}} -->
           <li class="fs-13 text-muted">{{RECO_A_ITEM}}</li>
@@ -739,8 +738,8 @@
         </ul>
         <div class="reco-meta">
           <div class="reco-meta-item">
-            <div class="reco-meta-label">Aufwand</div>
-            <div class="reco-meta-value {{RECO_A_AUFWAND_COLOR}}">{{RECO_A_AUFWAND}}</div>
+            <div class="reco-meta-label">Effort</div>
+            <div class="reco-meta-value {{RECO_A_EFFORT_COLOR}}">{{RECO_A_EFFORT}}</div>
           </div>
           <div class="reco-meta-item">
             <div class="reco-meta-label">Impact</div>
@@ -752,7 +751,7 @@
       <!-- Option B -->
       <div class="reco-card {{RECO_B_CLASS}}">
         <h3>Option B: {{RECO_B_TITLE}}</h3>
-        <p class="fs-13 text-muted">{{RECO_B_BESCHREIBUNG}}</p>
+        <p class="fs-13 text-muted">{{RECO_B_DESCRIPTION}}</p>
         <ul class="mt-8">
           <!-- {{RECO_B_ITEMS}} -->
           <li class="fs-13 text-muted">{{RECO_B_ITEM}}</li>
@@ -760,8 +759,8 @@
         </ul>
         <div class="reco-meta">
           <div class="reco-meta-item">
-            <div class="reco-meta-label">Aufwand</div>
-            <div class="reco-meta-value {{RECO_B_AUFWAND_COLOR}}">{{RECO_B_AUFWAND}}</div>
+            <div class="reco-meta-label">Effort</div>
+            <div class="reco-meta-value {{RECO_B_EFFORT_COLOR}}">{{RECO_B_EFFORT}}</div>
           </div>
           <div class="reco-meta-item">
             <div class="reco-meta-label">Impact</div>
@@ -772,16 +771,16 @@
     </div>
 
     <div class="card mt-16">
-      <h3>Empfehlung</h3>
-      <p>{{EMPFEHLUNG_TEXT}}</p>
+      <h3>Recommendation</h3>
+      <p>{{RECOMMENDATION_TEXT}}</p>
     </div>
   </div>
 
-  <!-- ═══════════════ 5. CHECKLISTEN ═══════════════ -->
+  <!-- ═══════════════ 5. CHECKLISTS ═══════════════ -->
   <div class="section">
     <div class="section-header">
       <div class="section-number">5</div>
-      <h2>Checklisten</h2>
+      <h2>Checklists</h2>
     </div>
 
     <!-- Layout Basics -->
@@ -791,10 +790,10 @@
         <!-- {{LAYOUT_CHECKS}} -->
         <li>
           <!--
-            check-pass = erfuellt
-            check-fail = nicht erfuellt
-            check-warn = teilweise
-            check-na   = nicht geprueft
+            check-pass = pass
+            check-fail = fail
+            check-warn = partial
+            check-na   = not checked
           -->
           <span class="check-icon {{CHECK_CLASS}}">{{CHECK_SYMBOL}}</span>
           <span>{{CHECK_TEXT}}</span>
@@ -803,9 +802,9 @@
       </ul>
     </div>
 
-    <!-- SEO Ziel-URL -->
+    <!-- SEO Target URL -->
     <div class="card">
-      <h3>SEO-Hygiene &mdash; Ziel-URL</h3>
+      <h3>SEO Hygiene &mdash; Target URL</h3>
       <ul class="checklist">
         <!-- {{SEO_URL_CHECKS}} -->
         <li>
@@ -818,7 +817,7 @@
 
     <!-- SEO Domain -->
     <div class="card">
-      <h3>SEO-Hygiene &mdash; Domain</h3>
+      <h3>SEO Hygiene &mdash; Domain</h3>
       <ul class="checklist">
         <!-- {{SEO_DOMAIN_CHECKS}} -->
         <li>
@@ -832,7 +831,7 @@
 
   <!-- ═══════════════ FOOTER ═══════════════ -->
   <footer class="report-footer">
-    SXO-Analyse erstellt mit Claude Code &middot; sxo-analyzer Skill &middot; {{DATUM}}
+    SXO Analysis generated with Claude Code &middot; sxo-analyzer Skill &middot; {{DATE}}
   </footer>
 
 </div>
