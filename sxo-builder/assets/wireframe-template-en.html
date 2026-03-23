@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SXO Wireframe: {{KEYWORD}}</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f7;
+    --surface-3: #e8ebf0;
+    --border: #d1d5de;
+    --border-light: #e2e5ec;
+    --text: #1a1f2e;
+    --text-muted: #4a5168;
+    --text-dim: #7a8198;
+    --accent: #2563eb;
+    --accent-glow: rgba(37, 99, 235, 0.08);
+    --green: #16a34a;
+    --green-bg: rgba(22, 163, 74, 0.08);
+    --green-border: rgba(22, 163, 74, 0.25);
+    --red: #dc2626;
+    --red-bg: rgba(220, 38, 38, 0.07);
+    --red-border: rgba(220, 38, 38, 0.25);
+    --yellow: #b45309;
+    --yellow-bg: rgba(180, 83, 9, 0.07);
+    --yellow-border: rgba(180, 83, 9, 0.25);
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.07);
+    --ist-bg: #fafafa;
+    --ist-border: #d4d4d8;
+    --soll-bg: #f0f7ff;
+    --soll-border: rgba(37, 99, 235, 0.3);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .wireframe-report {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .wf-header {
+    position: relative;
+    padding: 40px 36px 32px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .wf-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+  }
+  .wf-header .label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #93c5fd;
+    background: rgba(147, 197, 253, 0.15);
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .wf-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    color: #f1f5f9;
+  }
+  .wf-header h1 span { color: #93c5fd; }
+  .wf-header .meta-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+  .wf-header .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .wf-header .meta-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+  .wf-header .meta-value {
+    color: #e2e8f0;
+    font-size: 13px;
+  }
+  .wf-header .meta-value a { color: #93c5fd; text-decoration: none; }
+
+  /* ── User Story Banner ── */
+  .user-story-banner {
+    position: relative;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+    border-left: 3px solid var(--purple);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 32px;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .user-story-banner .us-label {
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 6px;
+  }
+
+  /* ── Page Type Recommendation ── */
+  .page-type-rec {
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .page-type-rec .ptr-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .page-type-rec .ptr-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: #fff;
+  }
+  .page-type-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .pt-option {
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    background: var(--surface-2);
+    transition: border-color 0.15s;
+  }
+  .pt-option.pt-recommended {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+  }
+  .pt-option .pt-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .pt-option .pt-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .pt-option .pt-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-top: 6px;
+  }
+  .pt-tag.pt-tag-rec { background: var(--accent); color: #fff; }
+  .pt-tag.pt-tag-alt { background: var(--surface-3); color: var(--text-dim); }
+
+  /* ── Comparison Container (stacked / full-width) ── */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+
+  /* ── Column Headers ── */
+  .col-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .col-ist .col-header {
+    background: var(--red-bg);
+    color: var(--red);
+    border: 1px solid var(--red-border);
+  }
+  .col-soll .col-header {
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid var(--green-border);
+  }
+
+  /* ── Wireframe Blocks ── */
+  .wf-block {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+    min-height: 60px;
+  }
+  .wf-block .block-label {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .wf-block .block-content {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .col-ist .wf-block {
+    background: var(--ist-bg);
+    border-color: var(--ist-border);
+  }
+  .col-ist .block-label {
+    background: var(--surface-3);
+    color: var(--text-dim);
+  }
+  .col-soll .wf-block {
+    background: var(--soll-bg);
+    border-color: var(--soll-border);
+  }
+  .col-soll .block-label {
+    background: var(--accent-glow);
+    color: var(--accent);
+  }
+
+  /* ── Priority indicators ── */
+  .wf-block.prio-high { border-left: 4px solid var(--red); }
+  .wf-block.prio-medium { border-left: 4px solid var(--yellow); }
+  .wf-block.prio-low { border-left: 4px solid var(--green); }
+  .wf-block.prio-new { border-left: 4px solid var(--accent); border-style: solid; }
+
+  /* ── Problem annotations (IST) ── */
+  .problem-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  .problem-tag.problem-missing { background: var(--red-bg); color: var(--red); }
+  .problem-tag.problem-weak { background: var(--yellow-bg); color: var(--yellow); }
+  .problem-tag.problem-ok { background: var(--green-bg); color: var(--green); }
+
+  /* ── Placeholder boxes (SOLL) ── */
+  .placeholder {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+  .placeholder .ph-type { font-weight: 700; color: var(--text); }
+  .placeholder .ph-detail {
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 11px;
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* ── Gap reference tag ── */
+  .gap-ref {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--purple-bg);
+    color: var(--purple);
+    margin-top: 6px;
+  }
+
+  /* ── Image placeholder ── */
+  .img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-3);
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 8px;
+    color: var(--text-dim);
+    font-size: 12px;
+    text-align: center;
+    min-height: 80px;
+  }
+
+  /* ── Meta comments block ── */
+  .meta-comments {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .meta-comments .mc-title {
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .meta-comments code { display: block; padding: 3px 0; color: var(--accent); }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch {
+    width: 16px; height: 16px;
+    border-radius: 4px; border: 2px solid; flex-shrink: 0;
+  }
+  .legend-swatch.swatch-high { border-color: var(--red); background: var(--red-bg); }
+  .legend-swatch.swatch-medium { border-color: var(--yellow); background: var(--yellow-bg); }
+  .legend-swatch.swatch-low { border-color: var(--green); background: var(--green-bg); }
+  .legend-swatch.swatch-new { border-color: var(--accent); background: var(--accent-glow); }
+  .legend-swatch.swatch-ist { border-color: var(--ist-border); background: var(--ist-bg); border-style: dashed; }
+  .legend-swatch.swatch-soll { border-color: var(--soll-border); background: var(--soll-bg); }
+
+  /* ── Footer ── */
+  .wf-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 800px) {
+    .wf-header { padding: 24px 20px 20px; }
+    .wf-header h1 { font-size: 20px; }
+    .legend { flex-direction: column; gap: 8px; }
+  }
+
+  @media print {
+    body { background: #fff; font-size: 11px; }
+    .wireframe-report { max-width: 100%; padding: 0; }
+    .wf-header { background: #f0f0f0; border: 1px solid #ccc; color: #1a1a1a; }
+    .wf-header::before { display: none; }
+    .wf-header h1, .wf-header .meta-value { color: #1a1a1a; }
+    .comparison { grid-template-columns: 1fr; gap: 16px; }
+    .wf-block { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wireframe-report">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="wf-header">
+    <div class="label">SXO Wireframe</div>
+    <h1>Page Structure: <span>{{KEYWORD}}</span></h1>
+    <div class="meta-row">
+      <div class="meta-item">
+        <div class="meta-label">Keyword</div>
+        <div class="meta-value">{{KEYWORD}}</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Target Page</div>
+        <div class="meta-value"><a href="{{URL}}">{{URL}}</a></div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Date</div>
+        <div class="meta-value">{{DATE}}</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Source</div>
+        <div class="meta-value">SXO Report</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ USER STORY ═══════════════ -->
+  <div class="user-story-banner">
+    <div class="us-label">User Story</div>
+    {{USER_STORY}}
+  </div>
+
+  <!-- ═══════════════ LEGEND ═══════════════ -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch swatch-ist"></div><span>Current state (before)</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-soll"></div><span>Optimized state (after)</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-high"></div><span>High priority</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-medium"></div><span>Medium priority</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-low"></div><span>Low priority</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-new"></div><span>New section</span></div>
+  </div>
+
+  <!-- ═══════════════ META / HEAD ═══════════════ -->
+  <div class="meta-comments">
+    <div class="mc-title">HTML Head &mdash; Meta Optimizations</div>
+    <!-- {{META_COMMENTS}} -->
+    <code>&lt;!-- {{META_COMMENT}} --&gt;</code>
+    <!-- {{/META_COMMENTS}} -->
+  </div>
+
+  <!-- ═══════════════ BEFORE / AFTER ═══════════════ -->
+  <div class="comparison">
+    <div class="col-ist">
+      <div class="col-header">&#x2718; Current State (Before)</div>
+      <!-- {{IST_BLOCKS}} -->
+      <div class="wf-block {{PRIO_CLASS}}">
+        <div class="block-label">{{SECTION_LABEL}}</div>
+        <div class="block-content">{{IST_CONTENT}}</div>
+        <div class="problem-tag {{PROBLEM_CLASS}}">{{PROBLEM_TEXT}}</div>
+      </div>
+      <!-- {{/IST_BLOCKS}} -->
+    </div>
+    <div class="col-soll">
+      <div class="col-header">&#x2714; Optimized State (After)</div>
+      <!-- {{SOLL_BLOCKS}} -->
+      <div class="wf-block {{PRIO_CLASS}}">
+        <div class="block-label">{{SECTION_LABEL}}</div>
+        <div class="block-content">{{SOLL_CONTENT}}</div>
+        <div class="placeholder">
+          <span class="ph-type">[{{PLACEHOLDER_TYPE}}]</span> {{PLACEHOLDER_TEXT}}
+          <div class="ph-detail">{{PLACEHOLDER_DETAIL}}</div>
+        </div>
+        <div class="gap-ref">&#x2192; {{GAP_REF}}</div>
+      </div>
+      <!-- {{/SOLL_BLOCKS}} -->
+    </div>
+  </div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="wf-footer">
+    SXO Wireframe generated with Claude Code &middot; sxo-builder Skill &middot; {{DATE}}
+  </footer>
+
+</div>
+</body>
+</html>

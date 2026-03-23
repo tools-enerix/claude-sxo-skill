@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SXO Wireframe: Photovoltaik Repowering</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f7;
+    --surface-3: #e8ebf0;
+    --border: #d1d5de;
+    --border-light: #e2e5ec;
+    --text: #1a1f2e;
+    --text-muted: #4a5168;
+    --text-dim: #7a8198;
+    --accent: #2563eb;
+    --accent-glow: rgba(37, 99, 235, 0.08);
+    --green: #16a34a;
+    --green-bg: rgba(22, 163, 74, 0.08);
+    --green-border: rgba(22, 163, 74, 0.25);
+    --red: #dc2626;
+    --red-bg: rgba(220, 38, 38, 0.07);
+    --red-border: rgba(220, 38, 38, 0.25);
+    --yellow: #b45309;
+    --yellow-bg: rgba(180, 83, 9, 0.07);
+    --yellow-border: rgba(180, 83, 9, 0.25);
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.07);
+    --ist-bg: #fafafa;
+    --ist-border: #d4d4d8;
+    --soll-bg: #f0f7ff;
+    --soll-border: rgba(37, 99, 235, 0.3);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .wireframe-report {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .wf-header {
+    position: relative;
+    padding: 40px 36px 32px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .wf-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+  }
+  .wf-header .label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #93c5fd;
+    background: rgba(147, 197, 253, 0.15);
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .wf-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    color: #f1f5f9;
+  }
+  .wf-header h1 span { color: #93c5fd; }
+  .wf-header .meta-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+  .wf-header .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .wf-header .meta-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+  .wf-header .meta-value {
+    color: #e2e8f0;
+    font-size: 13px;
+  }
+  .wf-header .meta-value a { color: #93c5fd; text-decoration: none; }
+
+  /* ── User Story Banner ── */
+  .user-story-banner {
+    position: relative;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+    border-left: 3px solid var(--purple);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 32px;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .user-story-banner .us-label {
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 6px;
+  }
+
+  /* ── Page Type Recommendation ── */
+  .page-type-rec {
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .page-type-rec .ptr-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .page-type-rec .ptr-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: #fff;
+  }
+  .page-type-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .pt-option {
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    background: var(--surface-2);
+    transition: border-color 0.15s;
+  }
+  .pt-option.pt-recommended {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+  }
+  .pt-option .pt-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .pt-option .pt-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .pt-option .pt-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-top: 6px;
+  }
+  .pt-tag.pt-tag-rec { background: var(--accent); color: #fff; }
+  .pt-tag.pt-tag-alt { background: var(--surface-3); color: var(--text-dim); }
+
+  /* ── Comparison Container (stacked / full-width) ── */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+
+  /* ── Column Headers ── */
+  .col-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .col-ist .col-header {
+    background: var(--red-bg);
+    color: var(--red);
+    border: 1px solid var(--red-border);
+  }
+  .col-soll .col-header {
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid var(--green-border);
+  }
+
+  /* ── Wireframe Blocks ── */
+  .wf-block {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+    min-height: 60px;
+  }
+  .wf-block .block-label {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .wf-block .block-content {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* IST blocks */
+  .col-ist .wf-block {
+    background: var(--ist-bg);
+    border-color: var(--ist-border);
+  }
+  .col-ist .block-label {
+    background: var(--surface-3);
+    color: var(--text-dim);
+  }
+
+  /* SOLL blocks */
+  .col-soll .wf-block {
+    background: var(--soll-bg);
+    border-color: var(--soll-border);
+  }
+  .col-soll .block-label {
+    background: var(--accent-glow);
+    color: var(--accent);
+  }
+
+  /* ── Priority indicators ── */
+  .wf-block.prio-high {
+    border-left: 4px solid var(--red);
+  }
+  .wf-block.prio-medium {
+    border-left: 4px solid var(--yellow);
+  }
+  .wf-block.prio-low {
+    border-left: 4px solid var(--green);
+  }
+  .wf-block.prio-new {
+    border-left: 4px solid var(--accent);
+    border-style: solid;
+  }
+
+  /* ── Problem annotations (IST) ── */
+  .problem-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  .problem-tag.problem-missing {
+    background: var(--red-bg);
+    color: var(--red);
+  }
+  .problem-tag.problem-weak {
+    background: var(--yellow-bg);
+    color: var(--yellow);
+  }
+  .problem-tag.problem-ok {
+    background: var(--green-bg);
+    color: var(--green);
+  }
+
+  /* ── Placeholder boxes (SOLL) ── */
+  .placeholder {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+  .placeholder .ph-type {
+    font-weight: 700;
+    color: var(--text);
+  }
+  .placeholder .ph-detail {
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 11px;
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* ── Gap reference tag ── */
+  .gap-ref {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--purple-bg);
+    color: var(--purple);
+    margin-top: 6px;
+  }
+
+  /* ── Image placeholder ── */
+  .img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-3);
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 8px;
+    color: var(--text-dim);
+    font-size: 12px;
+    text-align: center;
+    min-height: 80px;
+  }
+
+  /* ── Section divider ── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Meta comments block ── */
+  .meta-comments {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .meta-comments .mc-title {
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+  .meta-comments code {
+    display: block;
+    padding: 3px 0;
+    color: var(--accent);
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 2px solid;
+    flex-shrink: 0;
+  }
+  .legend-swatch.swatch-high { border-color: var(--red); background: var(--red-bg); }
+  .legend-swatch.swatch-medium { border-color: var(--yellow); background: var(--yellow-bg); }
+  .legend-swatch.swatch-low { border-color: var(--green); background: var(--green-bg); }
+  .legend-swatch.swatch-new { border-color: var(--accent); background: var(--accent-glow); }
+  .legend-swatch.swatch-ist { border-color: var(--ist-border); background: var(--ist-bg); border-style: dashed; }
+  .legend-swatch.swatch-soll { border-color: var(--soll-border); background: var(--soll-bg); }
+
+  /* ── Footer ── */
+  .wf-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 800px) {
+    .wf-header { padding: 24px 20px 20px; }
+    .wf-header h1 { font-size: 20px; }
+    .legend { flex-direction: column; gap: 8px; }
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; font-size: 11px; }
+    .wireframe-report { max-width: 100%; padding: 0; }
+    .wf-header { background: #f0f0f0; border: 1px solid #ccc; color: #1a1a1a; }
+    .wf-header::before { display: none; }
+    .wf-header h1, .wf-header .meta-value { color: #1a1a1a; }
+    .wf-header .label { background: #e0e0e0; color: #333; }
+    .comparison { grid-template-columns: 1fr; gap: 16px; }
+    .wf-block { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wireframe-report">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="wf-header">
+    <div class="label">SXO Wireframe</div>
+    <h1>Seitenstruktur: <span>Photovoltaik Repowering</span></h1>
+    <div class="meta-row">
+      <div class="meta-item">
+        <div class="meta-label">Keyword</div>
+        <div class="meta-value">Photovoltaik Repowering</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Zielseite</div>
+        <div class="meta-value"><a href="https://www.enerix.de/photovoltaikanlage/photovoltaik-repowering/" target="_blank">enerix.de/photovoltaikanlage/photovoltaik-repowering/</a></div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Datum</div>
+        <div class="meta-value">23.03.2026</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Basis</div>
+        <div class="meta-value">SXO-Report</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ USER STORY ═══════════════ -->
+  <div class="user-story-banner">
+    <div class="us-label">User Story</div>
+    &bdquo;Ich sehe die rechtliche und wirtschaftliche Bewertung meiner alten PV-Anlage als gro&szlig;e Herausforderung und w&uuml;nsche mir eine klare, datenbasierte Einordnung mit konkreten Zahlen f&uuml;r meine Situation, um eine fundierte Entscheidung &uuml;ber das Repowering zu treffen und dabei die Sicherheit zu haben, dass ich meine bestehende Einspeiseverg&uuml;tung nicht verliere.&ldquo;
+  </div>
+
+  <!-- ═══════════════ SEITENTYP-EMPFEHLUNG ═══════════════ -->
+  <div class="page-type-rec">
+    <div class="ptr-title">
+      Empfohlener Seitentyp
+      <span class="ptr-badge">Hybrid: Landing-Page + Ratgeber</span>
+    </div>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+      Die SERPs werden zu 100&nbsp;% von Ratgeber-Content dominiert &mdash; ohne umfassenden informativen Content ist kein Ranking m&ouml;glich. Gleichzeitig ist der interaktive Repowering-Rechner das st&auml;rkste Differenzierungsmerkmal gegen&uuml;ber dem AI Overview (individuelle Berechnung vs. generische Antwort). Ein Hybrid-Seitentyp vereint beides: Conversion-Elemente (Rechner, CTA) above-the-fold f&uuml;r maximale CTR, umfassender Ratgeber-Content darunter f&uuml;r Rankings und E-E-A-T.
+    </p>
+    <div class="page-type-options">
+      <div class="pt-option pt-recommended">
+        <div class="pt-name">Hybrid (Landing-Page + Ratgeber)</div>
+        <div class="pt-desc">Vereint den von Google geforderten Ratgeber-Content (100&nbsp;% Ratgeber in Top-10) mit prominenten Conversion-Elementen. Rechner above-the-fold als Differenzierungsmerkmal gegen AI Overview, umfassender Ratgeber-Teil f&uuml;r E-E-A-T und PAA-Abdeckung.</div>
+        <span class="pt-tag pt-tag-rec">EMPFOHLEN</span>
+      </div>
+      <div class="pt-option">
+        <div class="pt-name">Blog-Beitrag / Ratgeber</div>
+        <div class="pt-desc">Passt zum SERP-Bild (alle Top-10 sind Ratgeber). Risiko: Kein Differenzierungsmerkmal gegen AI Overview, schwache Conversion-Rate ohne prominenten Rechner und CTA.</div>
+        <span class="pt-tag pt-tag-alt">ALTERNATIVE</span>
+      </div>
+      <div class="pt-option">
+        <div class="pt-name">Landing-Page</div>
+        <div class="pt-desc">Rechner und CTA k&ouml;nnten maximal prominent platziert werden. Risiko: Zu wenig informativer Content f&uuml;r E-E-A-T, widerspricht den 100&nbsp;% Ratgeber-SERPs, PAA-Abdeckung leidet.</div>
+        <span class="pt-tag pt-tag-alt">ALTERNATIVE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LEGENDE ═══════════════ -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch swatch-ist"></div>
+      <span>IST-Zustand (aktuell)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch swatch-soll"></div>
+      <span>SOLL-Zustand (optimiert)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch swatch-high"></div>
+      <span>Hohe Priorit&auml;t</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch swatch-medium"></div>
+      <span>Mittlere Priorit&auml;t</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch swatch-low"></div>
+      <span>Niedrige Priorit&auml;t</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch swatch-new"></div>
+      <span>Neue Sektion</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════ META / HEAD ═══════════════ -->
+  <div class="meta-comments">
+    <div class="mc-title">HTML Head &mdash; Meta-Optimierungen</div>
+    <code>&lt;!-- META: Title &quot;Photovoltaik Repowering 2026 &mdash; Lohnt sich das? Kostenloser Rechner&quot; (62 Zeichen) &mdash; Aktuelles Jahr + USP &quot;Rechner&quot; als Differenzierungsmerkmal --&gt;</code>
+    <code>&lt;!-- META-DESC: &quot;Berechne in 60 Sekunden, ob PV-Repowering f&uuml;r deine Anlage lohnt. Kosten, EEG-Verg&uuml;tung, ROI &mdash; mit kostenlosem Rechner. &#10003; 50.000+ Kunden&quot; (142 Zeichen) --&gt;</code>
+    <code>&lt;!-- SCHEMA: FAQPage Schema f&uuml;r FAQ-Sektion + VideoObject Schema f&uuml;r YouTube-Embed + Article Schema mit author-Property --&gt;</code>
+    <code>&lt;!-- E-E-A-T: Autorenbox (Name, Qualifikation, Foto) direkt unter H1 einf&uuml;gen &mdash; erh&ouml;ht Trust-Signals f&uuml;r Google --&gt;</code>
+  </div>
+
+  <!-- ═══════════════ VORHER / NACHHER ═══════════════ -->
+  <div class="comparison">
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!-- ── IST-Zustand (Vorher) ── -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="col-ist">
+      <div class="col-header">&#x2718; IST-Zustand (Vorher)</div>
+
+      <!-- IST 1: HERO -->
+      <div class="wf-block prio-low">
+        <div class="block-label">HERO-BEREICH</div>
+        <div class="block-content">
+          H1 &bdquo;Photovoltaik Repowering&ldquo; trifft das Keyword exakt. Darunter eine starke Performance-Vergleichstabelle (Module 2010 vs. 2025: Leistung, Wirkungsgrad, Degradation, Technologie). Guter informativer Einstieg &mdash; aber kein CTA und keine Trust-Signale im First Screen.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; CTA und Trust-Signale fehlen above-the-fold</div>
+      </div>
+
+      <!-- IST 2: HAUPTINHALT OBEN -->
+      <div class="wf-block prio-low">
+        <div class="block-label">HAUPTINHALT (OBERER TEIL)</div>
+        <div class="block-content">
+          Stromspeicher-Integration beim Repowering (Tabelle: Eigenverbrauch mit/ohne Speicher). Unterschiede-Tabelle: Reparatur vs. Repowering vs. Erweiterung. Wechselrichter-Lebensdauer nach Baujahr. Solider Content mit konkreten Zahlen und klaren Tabellen.
+        </div>
+        <div class="problem-tag problem-ok">&#10003; Inhaltlich stark, klare Struktur mit Vergleichstabellen</div>
+      </div>
+
+      <!-- IST 3: CTA-BEREICH -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">CTA-BEREICH</div>
+        <div class="block-content">
+          &bdquo;Darum ist genau jetzt der richtige Zeitpunkt&ldquo; mit drei Bullet-Points (weniger Ertrag, Einspeiseverg&uuml;tung kein Hindernis, Modernisierung lohnt sich). Button &bdquo;Kostenloser Check in 60 Sekunden&ldquo; verlinkt zum Rechner weiter unten.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; CTA erst nach 2&ndash;3 Scroll-Screens sichtbar &mdash; Nutzer mit hoher Absprungrate sehen ihn nie</div>
+      </div>
+
+      <!-- IST 4: RECHNER -->
+      <div class="wf-block prio-high">
+        <div class="block-label">TOOL / RECHNER</div>
+        <div class="block-content">
+          PV PowerCheck Repowering-Rechner vorhanden &mdash; &bdquo;Lohnt sich Photovoltaik Repowering f&uuml;r deine Anlage?&ldquo;. Interaktives Tool mit individueller Berechnung. St&auml;rkstes Differenzierungsmerkmal der Seite gegen&uuml;ber dem AI Overview.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; Rechner erst nach ~50&nbsp;% der Seitenl&auml;nge erreichbar &mdash; das beste Asset wird versteckt</div>
+      </div>
+
+      <!-- IST 5: RATGEBER -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">RATGEBER-INHALT</div>
+        <div class="block-content">
+          Umfassender Content: Was ist PV Repowering? &rarr; Rechtslage EEG 2024 &amp; Solarpaket I (Aktives Repowering, Mischverg&uuml;tung, MaStR) &rarr; Kosten-Nutzen-Analyse (8.000&ndash;10.000&nbsp;&euro;, ROI 11&ndash;14 Jahre) &rarr; Wechselrichter-Upgrade (Wirkungsgrad, Hybrid) &rarr; Schritt-f&uuml;r-Schritt-Prozess (4 Schritte). Einer der besten Ratgeber im deutschsprachigen Raum.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; Kein Bezug auf &bdquo;Solarpaket 2&ldquo; (Related Search). Kein sichtbares Aktualit&auml;tsdatum. Keine Autorenschaft.</div>
+      </div>
+
+      <!-- IST 6: TRUST -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">TRUST-SIGNALE</div>
+        <div class="block-content">
+          Starke Trust-Signale vorhanden: &bdquo;50.000+ installierte Anlagen&ldquo;, &bdquo;18 Jahre Solar-Expertise&ldquo;, &bdquo;4,85/5 Sterne Kundenmeinung&ldquo;, &bdquo;&uuml;ber 100 Standorte in DE &amp; AT&ldquo;, &bdquo;T&Uuml;V-zertifizierte Fachberater&ldquo;, &bdquo;Alles aus einer Hand&ldquo;.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; Trust-Signale erst im unteren Drittel der Seite &mdash; im First Screen komplett unsichtbar</div>
+      </div>
+
+      <!-- IST 7: FAQ -->
+      <div class="wf-block prio-low">
+        <div class="block-label">FAQ</div>
+        <div class="block-content">
+          14 ausf&uuml;hrliche FAQ-Antworten. Decken inhaltlich alle PAA-Fragen ab (Wann lohnt sich Repowering?, Kosten, Vorteile, Rechtslage, Garantie, ROI, Ablauf). Klare Frage-Antwort-Struktur.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; &bdquo;Was &auml;ndert sich f&uuml;r PV-Anlagen 2026?&ldquo; (PAA-Frage 3) fehlt. FAQPage-Schema nicht verifiziert.</div>
+      </div>
+
+      <!-- IST 8: CTA FINAL -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">CTA FINAL</div>
+        <div class="block-content">
+          &bdquo;Jetzt pers&ouml;nliche Beratung anfordern &mdash; kostenlos &amp; unverbindlich&ldquo;. Formular mit Kontaktdaten. Peter Knuth Zitat mit Foto. T&Uuml;V-zertifizierte Fachberater, ma&szlig;geschneiderte Planung. R&uuml;ckmeldung innerhalb 48h.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; Einziger vollst&auml;ndiger Conversion-Punkt ganz am Ende der Seite &mdash; Nutzer mit hoher Absprungrate erreichen ihn nie</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!-- ── SOLL-Zustand (Nachher) ── -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="col-soll">
+      <div class="col-header">&#x2714; SOLL-Zustand (Nachher)</div>
+
+      <!-- SOLL 1: HERO -->
+      <div class="wf-block prio-high">
+        <div class="block-label">HERO-BEREICH</div>
+        <div class="block-content">H1 mit Keyword + Rechner-CTA above-the-fold. Der First Screen muss sofort kommunizieren: &bdquo;Hier bekommst du eine individuelle Berechnung f&uuml;r deine Anlage.&ldquo;</div>
+        <div class="placeholder">
+          <span class="ph-type">[KEYWORD]</span> &bdquo;Photovoltaik Repowering: Lohnt sich das f&uuml;r deine Anlage?&ldquo; als H1 &mdash; 28&ndash;32px, zentriert. Subheadline: &bdquo;Finde in 60 Sekunden heraus, ob sich der Modultausch rechnet &mdash; mit unserem kostenlosen PV PowerCheck.&ldquo; &mdash; 16px, Farbe #94a3b8. Performance-Vergleichstabelle (2010 vs. 2025) beibehalten &mdash; sie liefert sofort konkreten Mehrwert.
+          <div class="ph-detail">Die aktuelle H1 ist gut, aber die Subheadline muss direkt auf den Rechner verweisen. Der Nutzer soll in 3 Sekunden verstehen: &bdquo;Hier kann ich meine Situation berechnen.&ldquo;</div>
+        </div>
+        <div class="placeholder">
+          <span class="ph-type">[CTA]</span> &bdquo;Jetzt kostenlos berechnen &rarr;&ldquo; &mdash; gr&uuml;ner Button (#16a34a), min. 48px H&ouml;he, 18px Schrift, min-width 220px, above-the-fold direkt unter der Subheadline. Scrollt per Anchor zum Rechner-Tool (href=&quot;#rechner&quot;). Zus&auml;tzlich: kleiner Hinweis &bdquo;Keine Anmeldung n&ouml;tig&ldquo; in 11px unter dem Button.
+          <div class="ph-detail">Adressiert Barriere &bdquo;Komplexit&auml;t&ldquo; aus der User Story &mdash; der Nutzer will sofort wissen, ob sich Repowering f&uuml;r SEINE Anlage rechnet. Der CTA reduziert die wahrgenommene H&uuml;rde.</div>
+        </div>
+        <div class="placeholder">
+          <span class="ph-type">[E-E-A-T]</span> Autorenbox direkt unter H1: &bdquo;Von [Name], T&Uuml;V-zertifizierter Solar-Fachberater bei enerix&ldquo; &mdash; rundes Profilfoto (48x48px), Datum &bdquo;Aktualisiert: M&auml;rz 2026&ldquo;, Link zum Autorenprofil. Inline, linksorientiert, 12px Schriftgr&ouml;&szlig;e.
+          <div class="ph-detail">Adressiert Gap &bdquo;keine sichtbare Autorenschaft&ldquo; &mdash; institutionelle Seiten dominieren die Top-3 (Clearingstelle, Solarwatt), sichtbare Expertise ist Ranking-Faktor.</div>
+        </div>
+        <div class="gap-ref">&rarr; Prim&auml;res Ziel: Individuelle Berechnung + Barriere: Komplexit&auml;t</div>
+      </div>
+
+      <!-- SOLL 2: TRUST-BAR -->
+      <div class="wf-block prio-new">
+        <div class="block-label">TRUST-SIGNALE</div>
+        <div class="block-content">Neue Sektion: Trust-Bar direkt unterhalb des Hero-Bereichs. Die vorhandenen Trust-Signale (aktuell im unteren Drittel) m&uuml;ssen above-the-fold sichtbar werden.</div>
+        <div class="placeholder">
+          <span class="ph-type">[TRUST]</span> Horizontale Leiste mit 4 Items: &bdquo;50.000+ installierte Anlagen&ldquo; (Icon: Checkmark-Kreis, 24x24px) + &bdquo;18 Jahre Solar-Expertise&ldquo; (Icon: Kalender) + &bdquo;T&Uuml;V-zertifizierte Fachberater&ldquo; (Icon: T&Uuml;V-Siegel, 40x40px) + &bdquo;4,85 &#9733; bei Google&ldquo; (Icon: Stern). Layout: Flex horizontal, zentriert, Hintergrund #f1f5f9, Padding 12px 24px, border-radius 8px. Jedes Item als Flex-Container mit Icon links (24px) und Text rechts (13px, font-weight 600).
+          <div class="ph-detail">Die Trust-Signale existieren bereits auf der Seite (IST: unterer Bereich), m&uuml;ssen aber nach oben verschoben werden. Institutionelle Seiten dominieren die Top-3 &mdash; enerix muss seine praktische Expertise (50.000 Anlagen, T&Uuml;V) sofort sichtbar machen.</div>
+        </div>
+        <div class="gap-ref">&rarr; Barriere: Fehlendes Vertrauen in Wirtschaftlichkeitsberechnung</div>
+      </div>
+
+      <!-- SOLL 3: RECHNER -->
+      <div class="wf-block prio-high">
+        <div class="block-label">TOOL / RECHNER</div>
+        <div class="block-content">PV PowerCheck als prominentes Kernelement &mdash; nicht mehr nach 50&nbsp;% Scroll-Tiefe versteckt, sondern als drittes Element der Seite. Das st&auml;rkste Differenzierungsmerkmal gegen das AI Overview.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT-TYP]</span> PV PowerCheck Repowering-Rechner &mdash; Eingabefelder: (1) Anlagengr&ouml;&szlig;e in kWp (Slider 1&ndash;30, Standard: 5), (2) Installationsjahr (Dropdown 2000&ndash;2020), (3) Modultyp (Radio: poly/mono), (4) Eigenverbrauchsanteil (Slider 20&ndash;80&nbsp;%, Standard: 30&nbsp;%). Ergebniskarte: Erwarteter Mehrertrag kWh/Jahr (gr&uuml;ne Zahl, 28px fett), gesch&auml;tzte j&auml;hrliche Ersparnis in &euro; (22px), Amortisationszeit in Jahren (Fortschrittsbalken), EEG-Verg&uuml;tungsstatus (alt bleibt / neu f&uuml;r Mehrleistung). Container: Vollbreite, wei&szlig;, 2px Rahmen #2563eb, border-radius 12px, Schatten 0 4px 12px rgba(0,0,0,0.08). Anchor: id=&quot;rechner&quot;.
+          <div class="ph-detail">Der Rechner ist das einzige Element, das ein AI Overview nicht liefern kann: eine individuelle Berechnung f&uuml;r MEINE Anlage. In einer SERP mit Zero-Click-Potenzial ist das der Hauptgrund, warum Nutzer noch klicken.</div>
+        </div>
+        <div class="gap-ref">&rarr; Prim&auml;res Ziel: Herausfinden, ob sich Repowering f&uuml;r die eigene Anlage rechnet</div>
+      </div>
+
+      <!-- SOLL 4: RATGEBER -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">HAUPTINHALT (RATGEBER)</div>
+        <div class="block-content">Bestehender Ratgeber-Content bleibt erhalten &mdash; er ist einer der besten im deutschsprachigen Raum. Gezielte Erg&auml;nzungen: Solarpaket 2, Aktualit&auml;tsdatum, MaStR-Prozess als eigener Abschnitt.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT-TYP]</span> Neuer Abschnitt nach &bdquo;Rechtslage EEG 2024 &amp; Solarpaket I&ldquo;: &bdquo;Update 2026: Was &auml;ndert Solarpaket 2 f&uuml;r dein Repowering?&ldquo; &mdash; Vergleichstabelle 2 Spalten: Solarpaket I (2024) vs. Solarpaket 2 (2026). Zeilen: Aktives Repowering erlaubt?, Verg&uuml;tungsregelung, Meldepflichten MaStR, Speicher-Integration, Vereinfachte Netzanmeldung. Datum-Badge &bdquo;Stand: M&auml;rz 2026&ldquo; als Pill (#16a34a, wei&szlig;e Schrift, 11px, padding 2px 10px, border-radius 12px) am Abschnittanfang.
+          <div class="ph-detail">5 von 8 Related Searches beziehen sich auf EEG/Solarpaket/Gesetz. &bdquo;Repowering Photovoltaik Solarpaket 2&ldquo; ist ein expliziter Suchbegriff, der auf der Seite nicht vorkommt. Die zeitbezogenen Suchanfragen (2024, 2025) zeigen: Aktualit&auml;t ist Ranking-Faktor.</div>
+        </div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT-TYP]</span> MaStR-Anmeldung als eigener Unterabschnitt: &bdquo;Repowering anmelden &mdash; so geht&rsquo;s&ldquo; mit 3-Schritte-Anleitung: 1) Leistungs&auml;nderung im Marktstammdatenregister melden, 2) Netzbetreiber &uuml;ber Leistungserh&ouml;hung informieren, 3) Best&auml;tigung abwarten. Gr&uuml;ner Hinweiskasten: &bdquo;Dein enerix Fachbetrieb &uuml;bernimmt die komplette Anmeldung f&uuml;r dich &mdash; du musst dich um nichts k&uuml;mmern.&ldquo; Related Search: &bdquo;Repowering PV-Anlage anmelden&ldquo;.
+          <div class="ph-detail">Adressiert Barriere &bdquo;b&uuml;rokratischer Aufwand&ldquo; und den Related-Search-Term &bdquo;PV-Anlage anmelden&ldquo;. Die Vereinfachung durch enerix reduziert die wahrgenommene Hemmschwelle.</div>
+        </div>
+        <div class="gap-ref">&rarr; Rechtliche Unsicherheit &amp; Aktualit&auml;t + Barriere: B&uuml;rokratischer Aufwand</div>
+      </div>
+
+      <!-- SOLL 5: VIDEO -->
+      <div class="wf-block prio-new">
+        <div class="block-label">VIDEO / ERKL&Auml;RVIDEO</div>
+        <div class="block-content">Neue Sektion: YouTube-Erkl&auml;rvideo zum Thema Repowering. Aktuell besetzt enerix das Video-Karussell in den SERPs nicht &mdash; dort stehen 3 Konkurrenz-Videos (Solar Volt, Solar Akademie, Leben mit der Energiewende).</div>
+        <div class="placeholder">
+          <span class="ph-type">[VIDEO]</span> &bdquo;Photovoltaik Repowering 2026 &mdash; Lohnt sich der Modultausch?&ldquo; &mdash; 3&ndash;5 Min. Erkl&auml;rvideo mit enerix-Fachberater (Gesicht sichtbar = Vertrauen). Kapitelmarken: 1) Was ist Repowering? (0:00) 2) Wann lohnt es sich? (0:45) 3) EEG-Verg&uuml;tung: Was passiert? (1:30) 4) Kosten &amp; ROI-Rechnung (2:30) 5) So l&auml;uft es ab (3:30). YouTube-Embed, 16:9, max-width 800px zentriert, Untertitel aktiviert. VideoObject Schema JSON-LD: name, description, thumbnailUrl, uploadDate, duration=&quot;PT4M&quot;, contentUrl. Kapitelmarken als Clip-Schema.
+          <div class="ph-detail">Video-Karussell mit 3 YouTube-Videos erscheint prominent nach Position 3 in den SERPs. Das AI Overview bettet bereits ein Konkurrenz-Video (Solar Akademie, 59s) ein. Ohne eigenes Video verpasst enerix ein komplettes SERP-Feature &mdash; und eine Chance auf AI-Overview-Zitation.</div>
+        </div>
+        <div class="img-placeholder">
+          &#127909; YouTube-Video-Embed (16:9, max-width 800px) &mdash; &bdquo;Photovoltaik Repowering 2026&ldquo;<br>
+          Thumbnail: enerix-Fachberater vor PV-Dachanlage, Text-Overlay &bdquo;Lohnt sich Repowering? Rechner + Experten-Einsch&auml;tzung&ldquo;
+        </div>
+        <div class="gap-ref">&rarr; Video-Content f&uuml;r SERP-Features (Hohe Priorit&auml;t)</div>
+      </div>
+
+      <!-- SOLL 6: SOCIAL PROOF -->
+      <div class="wf-block prio-new">
+        <div class="block-label">SOCIAL PROOF / CASE STUDY</div>
+        <div class="block-content">Neue Sektion: Echtes Repowering-Projekt als Case Study mit Vorher/Nachher-Daten. Aktuell fehlt jeder soziale Beweis &mdash; die Beispielrechnung ist generisch.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT-TYP]</span> Case Study Karte &mdash; &bdquo;Repowering-Projekt Familie [Name], [Ort]: 5,2 kWp Altanlage (Baujahr 2010, polykristallin) &rarr; Modulwechsel auf 9,4 kWp (2025, TopCon). Vorher: 4.200 kWh/Jahr. Nachher: 8.800 kWh/Jahr (+110&nbsp;%). Investition: 8.500&nbsp;&euro; (inkl. Wechselrichter). Gesch&auml;tzte Amortisation: 12 Jahre.&ldquo; Layout: Zweispaltig &mdash; links Vorher/Nachher-Balkendiagramm (SVG inline, grauer Balken #d4d4d8 = 4.200 kWh vs. gr&uuml;ner Balken #16a34a = 8.800 kWh, H&ouml;he proportional), rechts Kennzahlen als gro&szlig;e Zahlen (Ertrag 28px fett, Investition 22px, ROI 22px). Darunter: Kundenzitat 2&ndash;3 S&auml;tze (kursiv, 14px) mit Foto (60x60px rund, DSGVO-konform). Container: Wei&szlig;, 1px solid #d1d5de, border-radius 12px, Padding 24px.
+          <div class="ph-detail">Adressiert Barriere &bdquo;Investitionsrisiko&ldquo; &mdash; der Nutzer hat Angst vor 8.000&ndash;10.000&nbsp;&euro; Investition. Eine echte Case Study mit verifizierbaren Zahlen ist &uuml;berzeugender als die generische Beispielrechnung im Ratgeber-Teil.</div>
+        </div>
+        <div class="gap-ref">&rarr; Barriere: Investitionsrisiko &amp; fehlendes Vertrauen</div>
+      </div>
+
+      <!-- SOLL 7: FAQ -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">FAQ (AUS PAA)</div>
+        <div class="block-content">Bestehende 14 FAQ-Antworten bleiben. Zus&auml;tzlich: Die 4 exakten PAA-Fragen als priorisierte Elemente an den Anfang setzen. Neue Frage &bdquo;Was &auml;ndert sich 2026?&ldquo; erg&auml;nzen. FAQPage-Schema implementieren.</div>
+        <div class="placeholder">
+          <span class="ph-type">[FAQ]</span> 4 PAA-Fragen als priorisierte Accordion-Elemente ganz oben in der FAQ-Sektion: 1) &bdquo;Was bedeutet Repowering bei einer PV-Anlage?&ldquo; (exakter PAA-Text) 2) &bdquo;Wann lohnt sich Repowering?&ldquo; (exakter PAA-Text) 3) &bdquo;Was &auml;ndert sich f&uuml;r PV-Anlagen 2026?&ldquo; (NEU &mdash; fehlt aktuell komplett!) 4) &bdquo;Was versteht man unter Repowering in der Solarenergie?&ldquo; (exakter PAA-Text). Format: &lt;details&gt;/&lt;summary&gt; Accordion, summary-Element 15px fett, Antworten max. 40&ndash;60 W&ouml;rter (Featured-Snippet-L&auml;nge). FAQPage Schema JSON-LD f&uuml;r alle Frage-Antwort-Paare (inkl. der bestehenden 14 FAQs).
+          <div class="ph-detail">PAA-Frage 3 (&bdquo;Was &auml;ndert sich 2026?&ldquo;) wird aktuell per AI Overview beantwortet &mdash; mit eigenem Content kann enerix diese Position erobern. FAQPage-Schema erm&ouml;glicht Rich Results in den SERPs und erh&ouml;ht die CTR.</div>
+        </div>
+        <div class="gap-ref">&rarr; FAQ-Abdeckung der PAA-Fragen</div>
+      </div>
+
+      <!-- SOLL 8: CTA -->
+      <div class="wf-block prio-high">
+        <div class="block-label">CALL-TO-ACTION</div>
+        <div class="block-content">Conversion-Element mit Beratungsformular und pers&ouml;nlichem Kontakt. Prominenter Abschluss des Ratgeber-Teils &mdash; nicht ganz am Ende versteckt.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CTA]</span> Zweispalten-Layout &mdash; Links: Headline &bdquo;Kostenlose Repowering-Beratung in 48h&ldquo; (H2, 22px), Formular mit 4 Feldern (Name, E-Mail, PLZ, Anlagengr&ouml;&szlig;e kWp als Dropdown), Submit-Button &bdquo;Beratung anfordern &rarr;&ldquo; (Hintergrund #16a34a, wei&szlig;e Schrift, 48px H&ouml;he, volle Breite der linken Spalte). Rechts: Rundes Foto von Peter Knuth (enerix-Gr&uuml;nder, 100x100px), Zitat kursiv: &bdquo;Wir begleiten dich von der Beratung bis zur fertigen Anlage.&ldquo; Darunter: &bdquo;Oder direkt anrufen: 0800-XXX-XXXX&ldquo; + 3 Checkmarks vertikal: &bdquo;&#10003; Keine Verkaufsgespr&auml;che&ldquo;, &bdquo;&#10003; Unverbindlich &amp; kostenlos&ldquo;, &bdquo;&#10003; Antwort in 48 Stunden&ldquo;. Container: Wei&szlig;, 2px solid #2563eb, border-radius 12px, Padding 32px.
+          <div class="ph-detail">Adressiert Sekund&auml;res Ziel &bdquo;unverbindlich beraten lassen&ldquo;. Die Checkmarks reduzieren die Hemmschwelle (&bdquo;keine Verkaufsgespr&auml;che&ldquo;). Das Foto des Gr&uuml;nders schafft pers&ouml;nliches Vertrauen &mdash; wichtig in einem Markt mit hoher Verunsicherung.</div>
+        </div>
+        <div class="gap-ref">&rarr; Sekund&auml;res Ziel: Schritte verstehen &amp; unverbindlich beraten lassen</div>
+      </div>
+
+      <!-- SOLL 9: INTERNE VERLINKUNG -->
+      <div class="wf-block prio-low">
+        <div class="block-label">INTERNE VERLINKUNG</div>
+        <div class="block-content">Themen-Cluster-Links als Karten-Grid. Adressiert Related-Search-Cluster und st&auml;rkt die topische Autorit&auml;t von enerix.de zum Thema Repowering.</div>
+        <div class="placeholder">
+          <span class="ph-type">[INTERNAL LINKS]</span> Karten-Grid, 3 Spalten (responsive: 1 Spalte mobil), 6 Links: 1) &bdquo;Repowering nach 20 Jahren &mdash; Was tun nach EEG-Auslauf?&ldquo; (NEUE SEITE &mdash; Related Search &bdquo;nach 20 Jahren&ldquo;) 2) &bdquo;Einspeiseverg&uuml;tung 2026&ldquo; (/ratgeber/einspeiseverguetung-pv/) 3) &bdquo;Stromspeicher nachr&uuml;sten&ldquo; (/ratgeber/stromspeicher-nachruesten/) 4) &bdquo;Wechselrichter Ratgeber&ldquo; (/ratgeber/wechselrichter/) 5) &bdquo;Solarpaket I Neuerungen&ldquo; (/blog/solarpaket-neuerungen/) 6) &bdquo;PV-Anlage anmelden &mdash; MaStR-Leitfaden&ldquo; (NEUE SEITE &mdash; Related Search &bdquo;anmelden&ldquo;). Jede Karte: Titel 14px fett + 1-Satz-Teaser 12px #4a5168, Hintergrund #f8f9fb, Hover: border-color #2563eb, border-radius 8px, Padding 16px.
+          <div class="ph-detail">Adressiert das Related-Search-Cluster (&bdquo;nach 20 Jahren&ldquo;, &bdquo;anmelden&ldquo;, &bdquo;Einspeiseverg&uuml;tung&ldquo;). Zwei neue Unterseiten (#1 und #6) st&auml;rken die topische Autorit&auml;t und schaffen interne Link-Equity f&uuml;r die Hauptseite.</div>
+        </div>
+        <div class="gap-ref">&rarr; Related-Search-Cluster &amp; topische Autorit&auml;t</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="wf-footer">
+    SXO Wireframe erstellt mit Claude Code &middot; sxo-builder Skill &middot; 23.03.2026
+  </footer>
+
+</div>
+</body>
+</html>
