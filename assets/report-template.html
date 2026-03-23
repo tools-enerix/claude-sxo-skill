@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SXO-Analyse: {{KEYWORD}}</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0f1a;
+    --surface: #131825;
+    --surface-2: #1a2035;
+    --surface-3: #212842;
+    --border: #2a3354;
+    --border-light: #353f65;
+    --text: #e2e8f0;
+    --text-muted: #8892b0;
+    --text-dim: #5a6480;
+    --accent: #60a5fa;
+    --accent-glow: rgba(96, 165, 250, 0.15);
+    --green: #34d399;
+    --green-bg: rgba(52, 211, 153, 0.1);
+    --red: #f87171;
+    --red-bg: rgba(248, 113, 113, 0.1);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251, 191, 36, 0.1);
+    --purple: #a78bfa;
+    --purple-bg: rgba(167, 139, 250, 0.1);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .report {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .report-header {
+    position: relative;
+    padding: 48px 40px 40px;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+  .report-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+  }
+  .report-header .label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .report-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 24px;
+    color: #fff;
+  }
+  .report-header h1 span {
+    color: var(--accent);
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-item .meta-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .meta-item .meta-value {
+    font-size: 14px;
+    color: var(--text);
+    word-break: break-all;
+  }
+  .meta-item .meta-value a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .meta-item .meta-value a:hover {
+    text-decoration: underline;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 32px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--accent-glow);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h3 .icon {
+    font-size: 16px;
+  }
+  .card p, .card li {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .card p + p { margin-top: 8px; }
+  .card ul, .card ol {
+    padding-left: 20px;
+    margin-top: 8px;
+  }
+  .card li + li { margin-top: 4px; }
+
+  /* ── Subsection title inside cards ── */
+  .sub-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  /* ── Tables ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+  thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  thead th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+  tbody td {
+    padding: 10px 14px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--surface-2); }
+
+  /* ── Status badges ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .badge-pass    { color: var(--green);  background: var(--green-bg); }
+  .badge-fail    { color: var(--red);    background: var(--red-bg); }
+  .badge-warn    { color: var(--yellow); background: var(--yellow-bg); }
+  .badge-info    { color: var(--accent); background: var(--accent-glow); }
+  .badge-neutral { color: var(--text-muted); background: var(--surface-3); }
+
+  /* Priority badges */
+  .priority-high   { color: var(--red);    font-weight: 600; }
+  .priority-medium { color: var(--yellow); font-weight: 600; }
+  .priority-low    { color: var(--green);  font-weight: 600; }
+
+  /* ── Verdict box ── */
+  .verdict {
+    padding: 20px 24px;
+    border-radius: var(--radius);
+    margin: 16px 0;
+    font-weight: 500;
+  }
+  .verdict-partial {
+    background: var(--yellow-bg);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    color: var(--yellow);
+  }
+  .verdict-good {
+    background: var(--green-bg);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    color: var(--green);
+  }
+  .verdict-bad {
+    background: var(--red-bg);
+    border: 1px solid rgba(248, 113, 113, 0.25);
+    color: var(--red);
+  }
+  .verdict .verdict-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .verdict p {
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+
+  /* ── User Story quote ── */
+  .user-story-quote {
+    position: relative;
+    padding: 24px 28px;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+    border-left: 3px solid var(--purple);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 16px 0;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.8;
+  }
+
+  /* ── Recommendation cards ── */
+  .reco-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  @media (max-width: 700px) {
+    .reco-grid { grid-template-columns: 1fr; }
+  }
+  .reco-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .reco-card.recommended {
+    border-color: rgba(96, 165, 250, 0.4);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.05);
+  }
+  .reco-card.recommended::before {
+    content: 'EMPFOHLEN';
+    position: absolute;
+    top: 12px;
+    right: -28px;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 32px;
+    transform: rotate(45deg);
+  }
+  .reco-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .reco-card .reco-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .reco-card .reco-meta-item .reco-meta-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .reco-card .reco-meta-item .reco-meta-value {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* ── Checklist ── */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+  .check-pass { background: var(--green-bg); color: var(--green); }
+  .check-fail { background: var(--red-bg); color: var(--red); }
+  .check-warn { background: var(--yellow-bg); color: var(--yellow); }
+  .check-na   { background: var(--surface-3); color: var(--text-dim); }
+
+  /* ── Gap analysis ── */
+  .gap-item {
+    padding: 16px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    border-left: 3px solid var(--border-light);
+  }
+  .gap-item.gap-high   { border-left-color: var(--red); }
+  .gap-item.gap-medium { border-left-color: var(--yellow); }
+  .gap-item.gap-low    { border-left-color: var(--green); }
+  .gap-item h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .gap-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  @media (max-width: 600px) {
+    .gap-detail { grid-template-columns: 1fr; }
+  }
+  .gap-detail > div {
+    padding: 8px 10px;
+    background: var(--surface);
+    border-radius: 6px;
+  }
+  .gap-detail .gd-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 3px;
+  }
+
+  /* ── SERP type tag ── */
+  .serp-type {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--surface-3);
+    color: var(--text-muted);
+  }
+  .serp-type-ratgeber  { background: var(--accent-glow); color: var(--accent); }
+  .serp-type-shop      { background: var(--green-bg); color: var(--green); }
+  .serp-type-feature   { background: var(--purple-bg); color: var(--purple); }
+  .serp-type-video     { background: var(--red-bg); color: var(--red); }
+  .serp-type-vergleich { background: var(--yellow-bg); color: var(--yellow); }
+
+  /* ── Footer ── */
+  .report-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* ── Utility ── */
+  .mt-8  { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-8  { margin-bottom: 8px; }
+  .text-accent { color: var(--accent); }
+  .text-white  { color: #fff; }
+  .text-muted  { color: var(--text-muted); }
+  .fw-600 { font-weight: 600; }
+  .fs-13  { font-size: 13px; }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; color: #1a1a1a; font-size: 12px; }
+    .report { max-width: 100%; padding: 0; }
+    .report-header { background: #f5f5f5; border: 1px solid #ddd; }
+    .report-header::before { display: none; }
+    .report-header h1, .section-header h2, .card h3, .reco-card h3, .gap-item h4 { color: #1a1a1a; }
+    .card, .reco-card, .gap-item { background: #fafafa; border-color: #ddd; }
+    .label, .section-number { background: #eee; color: #333; border-color: #ccc; }
+    thead th { background: #eee; }
+    tbody td, .card p, .card li, .checklist li { color: #333; }
+    .reco-card.recommended::before { background: #333; color: #fff; }
+  }
+</style>
+</head>
+<body>
+<div class="report">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="report-header">
+    <div class="label">SXO-Analyse</div>
+    <h1>SXO-Analyse: <span>{{KEYWORD}}</span></h1>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Zielseite</span>
+        <span class="meta-value"><a href="{{URL}}" target="_blank">{{URL}}</a></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Datum</span>
+        <span class="meta-value">{{DATUM}}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Markt</span>
+        <span class="meta-value">{{MARKT}}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Datenquelle</span>
+        <span class="meta-value">{{DATENQUELLE}}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ 1. SERP-BETRACHTUNG ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2>SERP-Betrachtung</h2>
+    </div>
+
+    <!-- 1a Autocomplete -->
+    <div class="card">
+      <h3><span class="icon">&#128269;</span> Autocomplete / Related Searches</h3>
+      <div class="sub-label">Beobachtung</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Suchbegriff</th><th>Intention</th></tr>
+          </thead>
+          <tbody>
+            <!-- {{AUTOCOMPLETE_ROWS}} -->
+            <tr><td>{{TERM}}</td><td><span class="badge badge-info">{{INTENT}}</span></td></tr>
+            <!-- {{/AUTOCOMPLETE_ROWS}} -->
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>{{AUTOCOMPLETE_INTERPRETATION}}</p>
+    </div>
+
+    <!-- 1b Google Ads -->
+    <div class="card">
+      <h3><span class="icon">&#128176;</span> Google Ads Botschaften</h3>
+      <div class="sub-label">Beobachtung</div>
+      <p>{{ADS_BEOBACHTUNG}}</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>{{ADS_INTERPRETATION}}</p>
+    </div>
+
+    <!-- 1c Featured Snippet / AI Overview -->
+    <div class="card">
+      <h3><span class="icon">&#9889;</span> Featured Snippet / AI Overview</h3>
+      <div class="sub-label">Beobachtung</div>
+      <p>{{SNIPPET_BEOBACHTUNG}}</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>{{SNIPPET_INTERPRETATION}}</p>
+    </div>
+
+    <!-- 1d PAA -->
+    <div class="card">
+      <h3><span class="icon">&#10067;</span> People Also Ask</h3>
+      <div class="sub-label">Beobachtung</div>
+      <ol>
+        <!-- {{PAA_ITEMS}} -->
+        <li>{{PAA_QUESTION}}</li>
+        <!-- {{/PAA_ITEMS}} -->
+      </ol>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>{{PAA_INTERPRETATION}}</p>
+    </div>
+
+    <!-- 1e Bilder -->
+    <div class="card">
+      <h3><span class="icon">&#128444;</span> Bilder-Integration</h3>
+      <div class="sub-label">Beobachtung</div>
+      <p>{{BILDER_BEOBACHTUNG}}</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>{{BILDER_INTERPRETATION}}</p>
+    </div>
+
+    <!-- 1f Top-10 -->
+    <div class="card">
+      <h3><span class="icon">&#127942;</span> Top-10 Seitentypen</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Pos.</th><th>Domain</th><th>Titel</th><th>Typ</th></tr>
+          </thead>
+          <tbody>
+            <!-- {{TOP10_ROWS}} -->
+            <tr>
+              <td class="fw-600">{{POS}}</td>
+              <td>{{DOMAIN}}</td>
+              <td>{{TITLE}}</td>
+              <td><span class="serp-type {{TYPE_CLASS}}">{{TYPE}}</span></td>
+            </tr>
+            <!-- {{/TOP10_ROWS}} -->
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>{{TOP10_INTERPRETATION}}</p>
+    </div>
+
+    <!-- 1g Meta Descriptions -->
+    <div class="card">
+      <h3><span class="icon">&#128203;</span> Meta-Description Muster</h3>
+      <ol>
+        <!-- {{META_PATTERNS}} -->
+        <li><strong>{{PATTERN_NAME}}:</strong> {{PATTERN_DESC}}</li>
+        <!-- {{/META_PATTERNS}} -->
+      </ol>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 2. USER STORY ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2>User Story</h2>
+    </div>
+
+    <div class="card">
+      <h3>Identifizierte Elemente</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Element</th><th>Aus den SERPs abgeleitet</th></tr>
+          </thead>
+          <tbody>
+            <!-- {{USERSTORY_ROWS}} -->
+            <tr><td class="fw-600 text-white">{{ELEMENT}}</td><td>{{WERT}}</td></tr>
+            <!-- {{/USERSTORY_ROWS}} -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>User Story Statement</h3>
+      <div class="user-story-quote">
+        {{USER_STORY_STATEMENT}}
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 3. ZIELSEITEN-ABGLEICH ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2>Zielseiten-Abgleich</h2>
+    </div>
+
+    <!-- 3a First Screen -->
+    <div class="card">
+      <h3>First Screen Check (3-Sekunden-Test)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>User Story Element</th><th>Status</th><th>Bewertung</th></tr>
+          </thead>
+          <tbody>
+            <!-- {{FIRSTSCREEN_ROWS}} -->
+            <tr>
+              <td>{{FS_ELEMENT}}</td>
+              <td><span class="badge {{FS_BADGE_CLASS}}">{{FS_STATUS}}</span></td>
+              <td>{{FS_BEWERTUNG}}</td>
+            </tr>
+            <!-- {{/FIRSTSCREEN_ROWS}} -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3b User Story Coverage -->
+    <div class="card">
+      <h3>User Story Coverage (Gap-Analyse)</h3>
+
+      <!-- {{GAP_ITEMS}} -->
+      <div class="gap-item {{GAP_PRIORITY_CLASS}}">
+        <h4>
+          {{GAP_ELEMENT}}
+          <span class="badge {{GAP_BADGE_CLASS}}">{{GAP_PRIORITY}}</span>
+        </h4>
+        <div class="gap-detail">
+          <div>
+            <div class="gd-label">SERP-Signal</div>
+            {{GAP_SERP}}
+          </div>
+          <div>
+            <div class="gd-label">Zielseite</div>
+            {{GAP_ZIELSEITE}}
+          </div>
+          <div>
+            <div class="gd-label">Gap</div>
+            {{GAP_BESCHREIBUNG}}
+          </div>
+        </div>
+      </div>
+      <!-- {{/GAP_ITEMS}} -->
+    </div>
+
+    <!-- 3c Gesamturteil -->
+    <div class="card">
+      <h3>Gesamturteil</h3>
+      <!--
+        Use class: verdict-good | verdict-partial | verdict-bad
+      -->
+      <div class="verdict {{VERDICT_CLASS}}">
+        <div class="verdict-title">{{VERDICT_TITLE}}</div>
+        <p>{{VERDICT_TEXT}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 4. OPTIMIERUNGSEMPFEHLUNGEN ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2>Optimierungsempfehlungen</h2>
+    </div>
+
+    <div class="reco-grid">
+      <!-- Option A -->
+      <div class="reco-card {{RECO_A_CLASS}}">
+        <h3>Option A: {{RECO_A_TITLE}}</h3>
+        <p class="fs-13 text-muted">{{RECO_A_BESCHREIBUNG}}</p>
+        <ul class="mt-8">
+          <!-- {{RECO_A_ITEMS}} -->
+          <li class="fs-13 text-muted">{{RECO_A_ITEM}}</li>
+          <!-- {{/RECO_A_ITEMS}} -->
+        </ul>
+        <div class="reco-meta">
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Aufwand</div>
+            <div class="reco-meta-value {{RECO_A_AUFWAND_COLOR}}">{{RECO_A_AUFWAND}}</div>
+          </div>
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Impact</div>
+            <div class="reco-meta-value {{RECO_A_IMPACT_COLOR}}">{{RECO_A_IMPACT}}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Option B -->
+      <div class="reco-card {{RECO_B_CLASS}}">
+        <h3>Option B: {{RECO_B_TITLE}}</h3>
+        <p class="fs-13 text-muted">{{RECO_B_BESCHREIBUNG}}</p>
+        <ul class="mt-8">
+          <!-- {{RECO_B_ITEMS}} -->
+          <li class="fs-13 text-muted">{{RECO_B_ITEM}}</li>
+          <!-- {{/RECO_B_ITEMS}} -->
+        </ul>
+        <div class="reco-meta">
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Aufwand</div>
+            <div class="reco-meta-value {{RECO_B_AUFWAND_COLOR}}">{{RECO_B_AUFWAND}}</div>
+          </div>
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Impact</div>
+            <div class="reco-meta-value {{RECO_B_IMPACT_COLOR}}">{{RECO_B_IMPACT}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-16">
+      <h3>Empfehlung</h3>
+      <p>{{EMPFEHLUNG_TEXT}}</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 5. CHECKLISTEN ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2>Checklisten</h2>
+    </div>
+
+    <!-- Layout Basics -->
+    <div class="card">
+      <h3>Layout Basics</h3>
+      <ul class="checklist">
+        <!-- {{LAYOUT_CHECKS}} -->
+        <li>
+          <!--
+            check-pass = erfuellt
+            check-fail = nicht erfuellt
+            check-warn = teilweise
+            check-na   = nicht geprueft
+          -->
+          <span class="check-icon {{CHECK_CLASS}}">{{CHECK_SYMBOL}}</span>
+          <span>{{CHECK_TEXT}}</span>
+        </li>
+        <!-- {{/LAYOUT_CHECKS}} -->
+      </ul>
+    </div>
+
+    <!-- SEO Ziel-URL -->
+    <div class="card">
+      <h3>SEO-Hygiene &mdash; Ziel-URL</h3>
+      <ul class="checklist">
+        <!-- {{SEO_URL_CHECKS}} -->
+        <li>
+          <span class="check-icon {{CHECK_CLASS}}">{{CHECK_SYMBOL}}</span>
+          <span>{{CHECK_TEXT}}</span>
+        </li>
+        <!-- {{/SEO_URL_CHECKS}} -->
+      </ul>
+    </div>
+
+    <!-- SEO Domain -->
+    <div class="card">
+      <h3>SEO-Hygiene &mdash; Domain</h3>
+      <ul class="checklist">
+        <!-- {{SEO_DOMAIN_CHECKS}} -->
+        <li>
+          <span class="check-icon {{CHECK_CLASS}}">{{CHECK_SYMBOL}}</span>
+          <span>{{CHECK_TEXT}}</span>
+        </li>
+        <!-- {{/SEO_DOMAIN_CHECKS}} -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="report-footer">
+    SXO-Analyse erstellt mit Claude Code &middot; sxo-analyzer Skill &middot; {{DATUM}}
+  </footer>
+
+</div>
+</body>
+</html>
