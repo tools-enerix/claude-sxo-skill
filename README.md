@@ -1,6 +1,6 @@
 # SXO Skills for Claude Code
 
-Two Claude Code skills for **Search Experience Optimization (SXO)** -- combining SEO with UX to align your pages with what Google's SERPs actually reward.
+Three Claude Code skills for **Search Experience Optimization (SXO)** -- combining SEO with UX to align your pages with what Google's SERPs actually reward.
 
 ## Core Thesis
 
@@ -16,6 +16,7 @@ Two Claude Code skills for **Search Experience Optimization (SXO)** -- combining
 |-------|---------|---------|
 | **SXO Analyzer** | `/sxo-analyzer <keyword> <url>` | SERP analysis, User Story derivation, gap analysis, HTML report |
 | **SXO Builder** | `/sxo-builder <report.html>` | Before/after wireframe from SXO report with concrete placeholders |
+| **SXO Page** | `/sxo-page` | Production-ready HTML/MD page from SXO report + wireframe |
 
 ### Recommended Workflow
 
@@ -25,9 +26,12 @@ Two Claude Code skills for **Search Experience Optimization (SXO)** -- combining
 
 2. /sxo-builder sxo-report-keyword.html
    → Generates sxo-wireframe-keyword.html
+
+3. /sxo-page
+   → Generates sxo-page-keyword.html (production-ready page)
 ```
 
-SXO Analyzer tells you **what's wrong**. SXO Builder shows you **how to fix it**.
+SXO Analyzer tells you **what's wrong**. SXO Builder shows you **how to fix it**. SXO Page **builds the finished page**.
 
 ---
 
@@ -100,9 +104,49 @@ A self-contained **HTML wireframe** (`sxo-wireframe-<keyword>.html`) with:
 
 ---
 
+## SXO Page
+
+### How It Works
+
+```
+/sxo-page
+```
+
+The skill auto-detects SXO report and wireframe files in the current directory and produces a finished page:
+
+| Step | What Happens |
+|------|-------------|
+| **0. Input Detection** | Finds `sxo-report-*.html` and `sxo-wireframe-*.html` in the working directory, detects language (DE/EN) |
+| **1. Data Extraction** | Parses wireframe sections (SOLL structure, placeholders, gap references) and report data (keyword, User Story, PAA questions, SERP top-10) |
+| **2. Content Research** | Spawns a blog-researcher agent for statistics (Tier 1-3 sources), royalty-free images, and competitive gaps |
+| **3. Content Production** | Writes each section following Answer-First, E-E-A-T, readability targets (Flesch 60-70), and citation capsules |
+| **4. Page Assembly** | Generates HTML (with schema, OG tags, meta) or Markdown with YAML frontmatter |
+| **5. Quality Check** | Verifies wireframe coverage, gap coverage, content quality, and technical requirements |
+
+### Key Features
+
+- **Wireframe-Driven**: The SOLL structure from SXO Builder defines the page architecture -- no deviation
+- **Blog-Quality Content**: Applies blog-write techniques (Answer-First, statistics with sources, Citation Capsules, visual pacing)
+- **Placeholder Resolution**: Every wireframe placeholder (`[CTA]`, `[FAQ]`, `[KEYWORD]`) becomes real, production-ready HTML
+- **User Story Tone**: Content tone adapts to knowledge level, emotional state, and journey phase from the User Story
+- **Dual Format**: Output as HTML (with Tailwind CSS, schema markup, OG tags) or Markdown (with YAML frontmatter)
+- **Automatic Language Detection**: German or English based on report/wireframe language
+
+### Output
+
+A production-ready **HTML page** (`sxo-page-<keyword>.html`) or **Markdown file** with:
+- Answer-First content with researched statistics and source citations
+- FAQ section from PAA questions with FAQPage schema
+- Schema markup (WebPage/BlogPosting, FAQ, Breadcrumb)
+- Meta tags (title, description, OG, Twitter Card)
+- Citation Capsules for AI citability
+- Quality verification checklist
+
+---
+
 ## Installation
 
-### Option A: Install Both Skills
+### Option A: Install All Three Skills
 
 ```bash
 # Clone the repository
@@ -117,6 +161,9 @@ cp references/*.md ~/.claude/skills/sxo-analyzer/references/
 
 # Copy SXO Builder
 cp -r sxo-builder ~/.claude/skills/sxo-builder
+
+# Copy SXO Page
+cp -r sxo-page ~/.claude/skills/sxo-page
 ```
 
 ### Option B: Install Only SXO Analyzer
@@ -149,9 +196,18 @@ claude-sxo-skill/
 │   │   └── wireframe-template-en.html    # English wireframe template
 │   └── references/
 │       └── section-mapping.md            # Gap-to-section mapping
+├── sxo-page/                             # SXO Page skill
+│   ├── SKILL.md                          # Page builder skill instructions
+│   ├── assets/
+│   │   ├── page-template.html            # German page template (CSS)
+│   │   └── page-template-en.html         # English page template (CSS)
+│   └── references/
+│       ├── content-production.md          # Wireframe-to-content conversion rules
+│       └── quality-gates.md              # Combined quality criteria
 └── examples/
     ├── sxo-report-content-marketing-roi-calculator.html     # Analyzer example
-    └── sxo-wireframe-content-marketing-roi-calculator.html  # Builder example
+    ├── sxo-wireframe-content-marketing-roi-calculator.html  # Builder example
+    └── sxo-page-content-marketing-roi-calculator.html       # Page example
 ```
 
 ### Requirements
@@ -163,6 +219,7 @@ claude-sxo-skill/
 
 - **Analyzer**: [`examples/sxo-report-content-marketing-roi-calculator.html`](examples/sxo-report-content-marketing-roi-calculator.html) -- Full SXO analysis for "Content Marketing ROI Calculator"
 - **Builder**: [`examples/sxo-wireframe-content-marketing-roi-calculator.html`](examples/sxo-wireframe-content-marketing-roi-calculator.html) -- Before/after wireframe for "Content Marketing ROI Calculator"
+- **Page**: [`examples/sxo-page-content-marketing-roi-calculator.html`](examples/sxo-page-content-marketing-roi-calculator.html) -- Production-ready page for "Content Marketing ROI Calculator"
 
 ---
 
@@ -262,19 +319,21 @@ Blog Analyze starts from the **content itself** and scores it against a fixed qu
 | "Score all 50 blog posts and find the weakest ones" | **Blog Analyze** |
 | "Why do competitors rank above me?" | **SXO Analyzer** |
 | "Give my designer a concrete restructuring plan" | **SXO Builder** |
+| "Build the finished page from my wireframe" | **SXO Page** |
 | "Does this post have AI content detection issues?" | **Blog Analyze** |
 | "Should my page be a guide, a tool, or a shop page?" | **SXO Analyzer** + **SXO Builder** |
+| "End-to-end: analyze, plan, and produce the page" | **SXO Analyzer** + **SXO Builder** + **SXO Page** |
 
-### Using All Three Together
+### Using All Four Together
 
 The skills complement each other in sequence:
 
 1. **SXO Analyzer first** -- understand what the market wants for your target keyword
 2. **SXO Builder second** -- get a concrete restructuring plan with page type recommendation
-3. **Write or rewrite** your content based on the wireframe and User Story
+3. **SXO Page third** -- produce the finished page with researched content, schema, and meta tags
 4. **Blog Analyze last** -- verify the content meets quality standards before publishing
 
-SXO Analyzer tells you *what's wrong*. SXO Builder shows you *how to fix it*. Blog Analyze tells you *if you fixed it well*.
+SXO Analyzer tells you *what's wrong*. SXO Builder shows you *how to fix it*. SXO Page *builds the finished page*. Blog Analyze tells you *if you built it well*.
 
 ---
 

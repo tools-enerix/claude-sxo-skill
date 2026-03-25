@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Marketing ROI Calculator | Free Tool &amp; Formula</title>
+<meta name="description" content="Calculate your content marketing ROI in 60 seconds. Free interactive calculator with cost, revenue, and customer lifetime value inputs. Get a shareable report.">
+<link rel="canonical" href="https://storychief.io/blog/roi-content-marketing">
+<!-- Open Graph -->
+<meta property="og:title" content="Content Marketing ROI Calculator | Free Tool &amp; Formula">
+<meta property="og:description" content="Calculate your content marketing ROI in 60 seconds. Free interactive calculator with cost, revenue, and customer lifetime value inputs. Get a shareable report.">
+<meta property="og:image" content="https://storychief.io/images/og-roi-calculator.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://storychief.io/blog/roi-content-marketing">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Content Marketing ROI Calculator | Free Tool &amp; Formula">
+<meta name="twitter:description" content="Calculate your content marketing ROI in 60 seconds. Free interactive calculator with cost, revenue, and customer lifetime value inputs.">
+<meta name="twitter:image" content="https://storychief.io/images/og-roi-calculator.jpg">
+<style>
+  /* -- Reset & Base -- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f8f9fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f7;
+    --surface-3: #e8ebf0;
+    --border: #e2e5ec;
+    --border-light: #eef0f4;
+    --text: #1a1f2e;
+    --text-muted: #4a5168;
+    --text-dim: #7a8198;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-light: rgba(37, 99, 235, 0.08);
+    --green: #16a34a;
+    --green-bg: rgba(22, 163, 74, 0.06);
+    --green-hover: #15803d;
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.06);
+    --red: #dc2626;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --max-w: 760px;
+    --max-w-wide: 1100px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* -- Article Container -- */
+  .page-content {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* -- Hero Section -- */
+  .hero {
+    max-width: var(--max-w-wide);
+    margin: 0 auto;
+    padding: 60px 24px 48px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+  }
+
+  /* -- CTA Buttons -- */
+  .cta-primary {
+    display: inline-block;
+    padding: 14px 32px;
+    background: var(--green);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+    border: none;
+    cursor: pointer;
+  }
+  .cta-primary:hover {
+    background: var(--green-hover);
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+  .cta-blue {
+    background: var(--accent);
+  }
+  .cta-blue:hover {
+    background: var(--accent-hover);
+  }
+
+  /* -- Trust Bar -- */
+  .trust-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 20px 24px;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 48px;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .trust-icon {
+    font-size: 18px;
+  }
+
+  /* -- Key Takeaways -- */
+  .key-takeaways {
+    background: var(--accent-light);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .key-takeaways h2 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    margin-top: 0;
+  }
+  .key-takeaways ul { list-style: none; padding: 0; }
+  .key-takeaways li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 6px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .key-takeaways li::before {
+    content: '\2713';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* -- Headings -- */
+  h2 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 48px 0 16px;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 32px 0 12px;
+    color: var(--text);
+  }
+
+  /* -- Paragraphs -- */
+  p { margin-bottom: 16px; color: var(--text); }
+  .answer-first { font-size: 17px; line-height: 1.7; }
+
+  /* -- Citation Capsule -- */
+  blockquote.citation-capsule {
+    border-left: 3px solid var(--purple);
+    background: var(--purple-bg);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* -- Images -- */
+  figure.content-image { margin: 32px 0; }
+  figure.content-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
+    display: block;
+  }
+  figcaption {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* -- Tables -- */
+  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+  th {
+    background: var(--bg-alt);
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--border);
+    color: var(--text);
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-muted);
+  }
+  tr:last-child td { border-bottom: none; }
+
+  /* -- Calculator -- */
+  .calculator-section {
+    max-width: 600px;
+    margin: 0 auto 48px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  }
+  .calculator-section h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 22px;
+  }
+  .calc-intro {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .calc-field {
+    margin-bottom: 16px;
+  }
+  .calc-field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .calc-field input[type="number"],
+  .calc-field select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color 0.15s;
+  }
+  .calc-field input:focus,
+  .calc-field select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+  .calc-range-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .calc-range-row input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent);
+  }
+  .calc-range-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 40px;
+    text-align: right;
+  }
+
+  .calc-results {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 2px solid var(--border);
+  }
+  .calc-roi-display {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .calc-roi-number {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .calc-roi-number.positive { color: var(--green); }
+  .calc-roi-number.negative { color: var(--red); }
+  .calc-roi-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .calc-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .calc-metric {
+    background: var(--bg-alt);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .calc-metric-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .calc-metric-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .calc-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .calc-actions button {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg-alt);
+    color: var(--text-muted);
+    font-family: var(--font);
+    transition: background 0.15s;
+  }
+  .calc-actions button:hover {
+    background: var(--surface-3);
+  }
+
+  /* -- Infographic SVG -- */
+  .infographic-container {
+    margin: 40px 0;
+    text-align: center;
+  }
+  .infographic-container svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* -- FAQ Accordion -- */
+  .faq-section details {
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .faq-section summary {
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    background: var(--bg-alt);
+    color: var(--text);
+    list-style: none;
+  }
+  .faq-section summary::-webkit-details-marker { display: none; }
+  .faq-section summary::before {
+    content: '+';
+    display: inline-block;
+    width: 20px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .faq-section details[open] summary::before { content: '\2212'; }
+  .faq-section details > div {
+    padding: 16px 20px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  /* -- CTA Section (Dual) -- */
+  .cta-dual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 48px 0;
+  }
+  .cta-card {
+    border-radius: var(--radius);
+    padding: 28px;
+    text-align: center;
+  }
+  .cta-card-download {
+    background: var(--bg-alt);
+    border: 2px dashed var(--border);
+  }
+  .cta-card-trial {
+    background: var(--bg-alt);
+    border: 2px solid var(--border);
+  }
+  .cta-card h3 {
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  .cta-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  /* -- Social Proof -- */
+  .social-proof {
+    padding: 40px 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    margin: 40px 0;
+  }
+  .social-proof h2 {
+    margin-top: 0;
+  }
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .testimonial {
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    padding: 24px;
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .testimonial-author {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 12px;
+    font-size: 13px;
+  }
+  .testimonial-metric {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--green);
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  /* -- Related Content -- */
+  .related-content {
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin: 40px 0;
+  }
+  .related-content h2 { font-size: 18px; margin: 0 0 16px; }
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .related-link {
+    display: block;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .related-link:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+    text-decoration: none;
+  }
+  .related-link-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .related-link-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* -- Inline Links -- */
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* -- Lists -- */
+  ul, ol { padding-left: 24px; margin-bottom: 16px; }
+  li { margin-bottom: 4px; }
+
+  /* -- Source Citations -- */
+  .source-cite { font-size: 14px; color: var(--text-dim); }
+
+  /* -- Footer -- */
+  .page-footer {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* -- Responsive -- */
+  @media (max-width: 640px) {
+    .hero { padding: 40px 16px 32px; }
+    .hero h1 { font-size: 26px; }
+    .trust-bar { gap: 16px; flex-direction: column; align-items: center; }
+    .page-content { padding: 0 16px 60px; }
+    h2 { font-size: 22px; }
+    .calculator-section { padding: 20px; }
+    .calc-metrics { grid-template-columns: 1fr; }
+    .calc-roi-number { font-size: 42px; }
+    .cta-dual { grid-template-columns: 1fr; }
+    .testimonial-grid { grid-template-columns: 1fr; }
+    .related-grid { grid-template-columns: 1fr; }
+    .calc-actions { flex-direction: column; }
+  }
+
+  /* -- Print -- */
+  @media print {
+    body { font-size: 12px; line-height: 1.5; }
+    .hero { padding: 20px 0; }
+    .cta-primary, .calc-actions { display: none; }
+    .trust-bar { border: 1px solid #ccc; }
+    a { color: #000; text-decoration: underline; }
+  }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://storychief.io#organization",
+      "name": "StoryChief",
+      "url": "https://storychief.io",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://storychief.io/images/logo.png",
+        "width": 300,
+        "height": 60
+      },
+      "sameAs": [
+        "https://twitter.com/StoryChiefIO",
+        "https://linkedin.com/company/storychief"
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://storychief.io/blog/roi-content-marketing",
+      "name": "Content Marketing ROI Calculator | Free Tool & Formula",
+      "description": "Calculate your content marketing ROI in 60 seconds. Free interactive calculator with cost, revenue, and customer lifetime value inputs. Get a shareable report.",
+      "url": "https://storychief.io/blog/roi-content-marketing",
+      "publisher": {
+        "@id": "https://storychief.io#organization"
+      },
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [".key-takeaways", ".calc-intro", "h1"]
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://storychief.io/blog/roi-content-marketing#calculator",
+      "name": "Content Marketing ROI Calculator",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Free interactive calculator that computes content marketing ROI from monthly spend, leads, conversion rate, and customer lifetime value inputs."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://storychief.io/blog/roi-content-marketing#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://storychief.io"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://storychief.io/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Content Marketing ROI Calculator",
+          "item": "https://storychief.io/blog/roi-content-marketing"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://storychief.io/blog/roi-content-marketing#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a good ROI for content marketing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A good content marketing ROI is 3:1 to 5:1, returning $3-$5 for every $1 invested. Top-performing programs achieve much higher returns. First Page Sage data shows 3-year ROI ranging from 844% to 1,486% across industries for high-quality thought leadership content."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take to see ROI from content marketing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most B2B companies reach break-even on content investment at 9 months. Expect 3-6 months for initial traction and 12-18 months for full compounding returns. The most important variable is content quality and distribution strategy, not volume."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What costs should I include in my content marketing ROI calculation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Include all direct and indirect costs: content creation (writers, designers, videographers), strategy and planning time, SEO tools, CMS costs, distribution spend, internal team time, and freelancer or agency fees. Excluding internal labor understates true investment by 30-50%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I prove content marketing ROI to my CEO?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Lead with revenue impact, not traffic metrics. Present cost per acquisition versus paid channels, payback period, and customer lifetime value of content-acquired customers. Use a calculator to generate concrete numbers and compare content ROI against paid advertising costs."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+  <!-- =========== HERO =========== -->
+  <section class="hero">
+    <h1>Content Marketing ROI Calculator</h1>
+    <p class="hero-sub">Calculate your return in 60 seconds. Input your costs, see your ROI.</p>
+    <a href="#calculator" class="cta-primary">Calculate My ROI &#8594;</a>
+  </section>
+
+  <!-- =========== TRUST BAR =========== -->
+  <div class="trust-bar">
+    <div class="trust-item"><span class="trust-icon">&#128101;</span> Used by 10,000+ content marketers</div>
+    <div class="trust-item"><span class="trust-icon">&#128200;</span> Based on real campaign data</div>
+    <div class="trust-item"><span class="trust-icon">&#10003;</span> Free, no signup required</div>
+  </div>
+
+  <!-- =========== CONTENT =========== -->
+  <article class="page-content">
+
+    <!-- Key Takeaways -->
+    <div class="key-takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Content marketing delivers 3-year ROI of 844-1,486% across industries (<a href="https://firstpagesage.com/reports/content-marketing-roi-statistics-by-industry-fc/">First Page Sage</a>, 2023)</li>
+        <li>Organic content costs 30-50% less per lead than paid channels (<a href="https://firstpagesage.com/reports/average-cost-per-lead-by-industry/">First Page Sage</a>, 2026)</li>
+        <li>Most B2B companies reach break-even on content investment at 9 months</li>
+        <li>56% of B2B marketers struggle to attribute ROI to content efforts (<a href="https://contentmarketinginstitute.com/b2b-research/b2b-content-marketing-trends-research-2025">CMI</a>, 2025)</li>
+      </ul>
+    </div>
+
+    <!-- =========== CALCULATOR =========== -->
+    <div class="calculator-section" id="calculator">
+      <h2>Calculate Your Content Marketing ROI</h2>
+      <p class="calc-intro">Enter your numbers below. Results update automatically.</p>
+
+      <div class="calc-field">
+        <label for="calc-spend">Monthly content marketing spend ($)</label>
+        <input type="number" id="calc-spend" value="5000" min="0" step="100">
+      </div>
+
+      <div class="calc-field">
+        <label for="calc-leads">Monthly leads from content</label>
+        <input type="number" id="calc-leads" value="500" min="0" step="10">
+      </div>
+
+      <div class="calc-field">
+        <label for="calc-rate">Lead-to-customer conversion rate (%)</label>
+        <div class="calc-range-row">
+          <input type="range" id="calc-rate" min="1" max="20" value="10" step="0.5">
+          <span class="calc-range-value" id="calc-rate-display">10%</span>
+        </div>
+      </div>
+
+      <div class="calc-field">
+        <label for="calc-clv">Average customer lifetime value ($)</label>
+        <input type="number" id="calc-clv" value="2000" min="0" step="100">
+      </div>
+
+      <div class="calc-field">
+        <label for="calc-cycle">Sales cycle length (months)</label>
+        <select id="calc-cycle">
+          <option value="1">1 month</option>
+          <option value="2">2 months</option>
+          <option value="3" selected>3 months</option>
+          <option value="4">4 months</option>
+          <option value="5">5 months</option>
+          <option value="6">6 months</option>
+          <option value="9">9 months</option>
+          <option value="12">12 months</option>
+        </select>
+      </div>
+
+      <div class="calc-results">
+        <div class="calc-roi-display">
+          <div class="calc-roi-number positive" id="calc-roi">1,900%</div>
+          <div class="calc-roi-label">Content Marketing ROI</div>
+        </div>
+        <div class="calc-metrics">
+          <div class="calc-metric">
+            <div class="calc-metric-value" id="calc-revenue">$100,000</div>
+            <div class="calc-metric-label">Monthly revenue attributed</div>
+          </div>
+          <div class="calc-metric">
+            <div class="calc-metric-value" id="calc-cpc">$100</div>
+            <div class="calc-metric-label">Cost per customer</div>
+          </div>
+          <div class="calc-metric">
+            <div class="calc-metric-value" id="calc-annual">$1,200,000</div>
+            <div class="calc-metric-label">Annual revenue projection</div>
+          </div>
+          <div class="calc-metric">
+            <div class="calc-metric-value" id="calc-payback">3 mo</div>
+            <div class="calc-metric-label">Time to first revenue</div>
+          </div>
+        </div>
+        <div class="calc-actions">
+          <button onclick="downloadResults()" type="button">Download as PDF</button>
+          <button onclick="downloadResults()" type="button">Save to Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========== H2: ROI Formula =========== -->
+    <h2>How Does the Content Marketing ROI Formula Work?</h2>
+
+    <p class="answer-first">Content marketing delivers a 3-year average ROI between 844% and 1,486% across industries (<a href="https://firstpagesage.com/reports/content-marketing-roi-statistics-by-industry-fc/">First Page Sage</a>, 2023). The core formula is straightforward: <strong>ROI = ((Revenue from Content - Content Costs) / Content Costs) &times; 100</strong>. A result above 0% means your content generates more revenue than it costs to produce.</p>
+
+    <p>Most marketers overcomplicate this calculation. The formula itself is simple. The real challenge lies in accurately measuring two inputs: total content costs and revenue attributable to content. Only 29% of B2B marketers rate their content strategy as "extremely or very effective" (<a href="https://contentmarketinginstitute.com/b2b-research/b2b-content-marketing-trends-research-2025">CMI</a>, 2025). The gap often comes down to poor measurement, not poor content.</p>
+
+    <p>Here is a worked example. You spend $5,000 per month on content and generate 50 customers worth $2,000 each in lifetime value. Your monthly content revenue is $100,000. The ROI: (($100,000 - $5,000) / $5,000) &times; 100 = <strong>1,900%</strong>. The calculator above runs this exact formula with your own numbers.</p>
+
+    <blockquote class="citation-capsule">
+      Content marketing delivers 3-year ROI ranging from 844% to 1,486% depending on industry. The core formula is ROI = ((Revenue - Costs) / Costs) &times; 100. Programs typically reach break-even at 9 months and show 200%+ returns by month 12 (First Page Sage, 2023; Siege Media, 2025).
+    </blockquote>
+
+    <!-- =========== INFOGRAPHIC SVG =========== -->
+    <div class="infographic-container">
+      <svg viewBox="0 0 780 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Content marketing ROI formula flowchart showing cost inputs, lead conversion, and revenue output" width="780" height="220">
+        <!-- Background -->
+        <rect width="780" height="220" rx="12" fill="#f8f9fb" stroke="#e2e5ec" stroke-width="1"/>
+
+        <!-- Box 1: Content Costs -->
+        <rect x="20" y="30" width="200" height="120" rx="8" fill="#ffffff" stroke="#e2e5ec" stroke-width="1.5"/>
+        <text x="120" y="55" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#7a8198" letter-spacing="0.5">CONTENT COSTS</text>
+        <text x="120" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#4a5168">Staff: $3,000/mo</text>
+        <text x="120" y="100" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#4a5168">Tools: $500/mo</text>
+        <text x="120" y="120" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#4a5168">Distribution: $1,500/mo</text>
+        <text x="120" y="143" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="#1a1f2e">= $5,000/mo</text>
+
+        <!-- Arrow 1 -->
+        <path d="M225 90 L275 90" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+        <text x="250" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#2563eb" font-weight="600">Generates</text>
+
+        <!-- Box 2: Conversion -->
+        <rect x="280" y="30" width="200" height="120" rx="8" fill="#ffffff" stroke="#e2e5ec" stroke-width="1.5"/>
+        <text x="380" y="55" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#7a8198" letter-spacing="0.5">CONVERSION</text>
+        <text x="380" y="82" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#4a5168">500 leads/mo</text>
+        <text x="380" y="105" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#4a5168">10% conversion rate</text>
+        <text x="380" y="143" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="#1a1f2e">= 50 customers</text>
+
+        <!-- Arrow 2 -->
+        <path d="M485 90 L535 90" stroke="#16a34a" stroke-width="2" fill="none" marker-end="url(#arrowhead-green)"/>
+        <text x="510" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#16a34a" font-weight="600">Worth</text>
+
+        <!-- Box 3: Revenue -->
+        <rect x="540" y="30" width="220" height="120" rx="8" fill="#ffffff" stroke="#e2e5ec" stroke-width="1.5"/>
+        <text x="650" y="55" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#7a8198" letter-spacing="0.5">REVENUE</text>
+        <text x="650" y="82" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#4a5168">50 &times; $2,000 CLV</text>
+        <text x="650" y="143" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700" fill="#16a34a">= $100,000</text>
+
+        <!-- Bottom ROI bar -->
+        <rect x="20" y="170" width="740" height="36" rx="8" fill="#2563eb"/>
+        <text x="390" y="194" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#ffffff">ROI = ($100,000 - $5,000) / $5,000 &times; 100 = 1,900%</text>
+
+        <!-- Arrow markers -->
+        <defs>
+          <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2563eb"/>
+          </marker>
+          <marker id="arrowhead-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#16a34a"/>
+          </marker>
+        </defs>
+      </svg>
+      <figcaption style="font-size: 13px; color: #7a8198; margin-top: 8px; text-align: center;">Content marketing ROI formula: from cost inputs through lead conversion to revenue output.</figcaption>
+    </div>
+
+    <!-- =========== H2: Content Costs =========== -->
+    <h2>What Should You Include in Your Content Marketing Costs?</h2>
+
+    <p class="answer-first">Organic content marketing costs 30-50% less per lead than paid channels. B2B SaaS companies pay $164 per organic lead versus $310 per paid lead (<a href="https://firstpagesage.com/reports/average-cost-per-lead-by-industry/">First Page Sage</a>, 2026). These savings only appear when you track every cost accurately. Excluding internal labor understates true investment by 30-50%.</p>
+
+    <p>Six cost categories belong in your calculation:</p>
+
+    <table>
+      <thead>
+        <tr><th>Cost Category</th><th>Examples</th><th>Typical Share</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Content Creation</strong></td><td>Writers, designers, videographers, freelancers</td><td>~35%</td></tr>
+        <tr><td><strong>Strategy &amp; Planning</strong></td><td>Editorial calendar, keyword research, briefs</td><td>~15%</td></tr>
+        <tr><td><strong>Design &amp; Visuals</strong></td><td>Graphics, photography, infographics, video editing</td><td>~15%</td></tr>
+        <tr><td><strong>SEO &amp; Analytics Tools</strong></td><td>Semrush, Ahrefs, CMS, Google Analytics setup</td><td>~10%</td></tr>
+        <tr><td><strong>Distribution</strong></td><td>Paid amplification, email platform, social scheduling</td><td>~15%</td></tr>
+        <tr><td><strong>Management Overhead</strong></td><td>Project management, editing, approvals, meetings</td><td>~10%</td></tr>
+      </tbody>
+    </table>
+
+    <p>Marketing budgets have flatlined at 7.7% of overall company revenue, and 59% of CMOs say they lack sufficient budget to execute their strategy (<a href="https://www.gartner.com/en/newsroom/press-releases/2025-05-12-gartner-2025-cmo-spend-survey-reveals-marketing-budgets-have-flatlined-at-seven-percent-of-overall-company-revenue">Gartner</a>, 2025). Accurate cost tracking is not optional when budgets are tight. It is your proof that content earns its share.</p>
+
+    <blockquote class="citation-capsule">
+      Content marketing costs span six categories: creation (35%), strategy (15%), design (15%), tools (10%), distribution (15%), and overhead (10%). Organic content generates leads at $164 per lead in B2B SaaS versus $310 for paid channels, a 47% cost advantage (First Page Sage, 2026).
+    </blockquote>
+
+    <!-- =========== H2: Revenue Attribution =========== -->
+    <h2>How Do You Track Content-Attributed Revenue?</h2>
+
+    <p class="answer-first">56% of B2B marketers cite difficulty attributing ROI to content efforts as their primary measurement challenge (<a href="https://contentmarketinginstitute.com/b2b-research/b2b-content-marketing-trends-research-2025">CMI</a>, 2025). The fix starts with connecting content touchpoints to revenue using UTM parameters, CRM attribution, and multi-touch tracking models.</p>
+
+    <p>Three attribution models work for content marketing:</p>
+
+    <ol>
+      <li><strong>First-touch attribution</strong> credits the first content piece a customer engaged with. Best for measuring top-of-funnel awareness content like blog posts and guides.</li>
+      <li><strong>Last-touch attribution</strong> credits the final content piece before conversion. Best for evaluating bottom-funnel content like case studies and comparison pages.</li>
+      <li><strong>Linear attribution</strong> distributes credit equally across all content touchpoints. Best for understanding how the full content journey drives conversions.</li>
+    </ol>
+
+    <p><strong>Pro tip:</strong> Tag every content link with UTM parameters, then connect UTM data to your CRM. This lets you trace the full path from first blog visit to closed deal.</p>
+
+    <p>61% of B2B marketers are increasing overall content spend in 2026 (<a href="https://contentmarketinginstitute.com/b2b-research/b2b-content-marketing-trends-research">CMI</a>, 2026). As budgets grow, accurate attribution separates "we think content works" from "content generated $X in pipeline last quarter." Blog posts alone deliver 22.26% ROI for marketers, and small businesses are 23% more likely than average to see returns from blogging (<a href="https://www.hubspot.com/marketing-statistics">HubSpot</a>, 2026).</p>
+
+    <blockquote class="citation-capsule">
+      Content revenue attribution requires connecting touchpoints to CRM data through UTM parameters. Three models serve different needs: first-touch for awareness, last-touch for bottom-funnel, and linear for full journey analysis. 56% of B2B marketers cite attribution difficulty as their primary challenge (CMI, 2025).
+    </blockquote>
+
+    <!-- =========== SOCIAL PROOF =========== -->
+    <div class="social-proof">
+      <h2>How StoryChief Customers Measure ROI</h2>
+      <div class="testimonial-grid">
+        <div class="testimonial">
+          <div class="testimonial-metric">40% lower CPL</div>
+          "After switching to StoryChief's workflow automation, our content cost per lead dropped by 40%. We now track every piece of content from publication to pipeline in one dashboard."
+          <div class="testimonial-author">&mdash; Content Director, B2B Marketing Agency</div>
+        </div>
+        <div class="testimonial">
+          <div class="testimonial-metric">$180K pipeline attributed</div>
+          "We attributed $180K in pipeline to blog content tracked through StoryChief in one quarter. Before that, leadership questioned every content budget request."
+          <div class="testimonial-author">&mdash; VP Marketing, SaaS Company</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========== FAQ =========== -->
+    <section class="faq-section">
+      <h2>Frequently Asked Questions About Content Marketing ROI</h2>
+
+      <details>
+        <summary>What is a good ROI for content marketing?</summary>
+        <div>
+          <p>A good content marketing ROI is 3:1 to 5:1, returning $3-$5 for every $1 invested. Top-performing programs achieve much higher returns. First Page Sage data shows 3-year ROI ranging from 844% to 1,486% across industries for high-quality thought leadership content. For a realistic first-year target, aim for 300-700% ROI with consistent execution.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>How long does it take to see ROI from content marketing?</summary>
+        <div>
+          <p>Most B2B companies reach break-even on content investment at 9 months. Expect 3-6 months for initial traction and 12-18 months for full compounding returns. SEO traffic compounds over time: a blog post published today may generate leads for 2-3 years. The most important variable is content quality and distribution, not volume.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>What costs should I include in my content marketing ROI calculation?</summary>
+        <div>
+          <p>Include all direct and indirect costs: content creation (writers, designers, videographers), strategy and planning time, SEO tools and software subscriptions, CMS costs, distribution and promotion spend, internal team time for project management and approvals, and freelancer or agency fees. Excluding internal labor understates your true investment by 30-50%.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>How do I prove content marketing ROI to my CEO?</summary>
+        <div>
+          <p>Lead with revenue impact, not traffic metrics. Present cost per acquisition versus paid channels, payback period, and customer lifetime value of content-acquired customers. Use a calculator to generate concrete numbers. Compare content ROI against paid advertising costs. Translate results into language executives understand: revenue growth, risk reduction, and scalability.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- =========== DUAL CTA =========== -->
+    <div class="cta-dual">
+      <div class="cta-card cta-card-download">
+        <h3>Download ROI Calculator Template</h3>
+        <p>Get our Excel template to track content marketing ROI monthly. Includes pre-built formulas and a reporting dashboard.</p>
+        <a href="#download-template" class="cta-primary cta-blue">Get My Free Template &#8594;</a>
+      </div>
+      <div class="cta-card cta-card-trial">
+        <h3>Automate Your Content ROI Tracking</h3>
+        <p>StoryChief tracks content performance across all channels automatically. See your ROI in real-time, without spreadsheets.</p>
+        <a href="https://storychief.io/signup" class="cta-primary">Start My Free Trial &#8594;</a>
+      </div>
+    </div>
+
+    <!-- =========== INTERNAL LINKS =========== -->
+    <section class="related-content">
+      <h2>Related Resources</h2>
+      <div class="related-grid">
+        <a href="https://storychief.io/content-distribution" class="related-link">
+          <div class="related-link-title">Content Distribution Guide</div>
+          <div class="related-link-desc">Maximize reach across channels and boost content ROI</div>
+        </a>
+        <a href="https://storychief.io/seo-copywriting" class="related-link">
+          <div class="related-link-title">SEO Copywriting: Complete Guide</div>
+          <div class="related-link-desc">Write content that ranks and converts organic traffic</div>
+        </a>
+        <a href="https://storychief.io/blog/how-to-create-engaging-content-to-boost-conversions" class="related-link">
+          <div class="related-link-title">How to Create Engaging Content</div>
+          <div class="related-link-desc">Boost conversions with content that keeps readers on page</div>
+        </a>
+        <a href="https://storychief.io/content-marketing-automation" class="related-link">
+          <div class="related-link-title">Content Marketing Automation</div>
+          <div class="related-link-desc">Save time and scale content workflows with automation</div>
+        </a>
+      </div>
+    </section>
+
+  </article>
+
+  <footer class="page-footer">
+    Generated with Claude Code &middot; SXO-Page Skill &middot; 2026-03-23
+  </footer>
+
+  <!-- =========== CALCULATOR JAVASCRIPT =========== -->
+  <script>
+    (function() {
+      var spend = document.getElementById('calc-spend');
+      var leads = document.getElementById('calc-leads');
+      var rate = document.getElementById('calc-rate');
+      var rateDisplay = document.getElementById('calc-rate-display');
+      var clv = document.getElementById('calc-clv');
+      var cycle = document.getElementById('calc-cycle');
+
+      var roiEl = document.getElementById('calc-roi');
+      var revenueEl = document.getElementById('calc-revenue');
+      var cpcEl = document.getElementById('calc-cpc');
+      var annualEl = document.getElementById('calc-annual');
+      var paybackEl = document.getElementById('calc-payback');
+
+      function formatCurrency(n) {
+        if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+        if (n >= 1000) return '$' + n.toLocaleString('en-US', {maximumFractionDigits: 0});
+        return '$' + n.toFixed(0);
+      }
+
+      function calculate() {
+        var s = parseFloat(spend.value) || 0;
+        var l = parseFloat(leads.value) || 0;
+        var r = parseFloat(rate.value) || 0;
+        var c = parseFloat(clv.value) || 0;
+        var cy = parseInt(cycle.value) || 1;
+
+        rateDisplay.textContent = r + '%';
+
+        var customers = l * (r / 100);
+        var monthlyRevenue = customers * c;
+        var roi = s > 0 ? ((monthlyRevenue - s) / s) * 100 : 0;
+        var costPerCustomer = customers > 0 ? s / customers : 0;
+        var annualRevenue = monthlyRevenue * 12;
+
+        roiEl.textContent = roi.toLocaleString('en-US', {maximumFractionDigits: 0}) + '%';
+        roiEl.className = 'calc-roi-number ' + (roi >= 0 ? 'positive' : 'negative');
+
+        revenueEl.textContent = formatCurrency(monthlyRevenue);
+        cpcEl.textContent = formatCurrency(costPerCustomer);
+        annualEl.textContent = formatCurrency(annualRevenue);
+        paybackEl.textContent = cy + ' mo';
+      }
+
+      [spend, leads, rate, clv, cycle].forEach(function(el) {
+        el.addEventListener('input', calculate);
+        el.addEventListener('change', calculate);
+      });
+
+      calculate();
+    })();
+
+    function downloadResults() {
+      alert('To download your results, enter your email address. This feature will be enabled once backend integration is complete.');
+    }
+  </script>
+
+</body>
+</html>
