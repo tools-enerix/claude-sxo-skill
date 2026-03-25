@@ -105,7 +105,7 @@ Diese EINE Abfrage liefert alle folgenden SERP-Elemente (als `type`-Feld in der 
 | `related_searches` | Verwandte Suchanfragen (nutze fuer "Autocomplete/Related") | Ja |
 | `people_also_ask` | Aehnliche Fragen / PAA-Box | Meist |
 | `people_also_search` | Aehnliche Suchanfragen nach Klick | Manchmal |
-| `paid` | Google Ads (Headline, Description) | Manchmal |
+| `paid` | Google Ads (Headline, Description) — selten bei API-Crawlern, Fallback: Google Ads Keyword-Daten | Selten |
 | `featured_snippet` | Featured Snippet Inhalt | Manchmal |
 | `knowledge_graph` | Knowledge Graph / Wikipedia-Definition | Manchmal |
 | `popular_products` | Google Shopping Produkte mit Preisen | Manchmal |
@@ -113,14 +113,21 @@ Diese EINE Abfrage liefert alle folgenden SERP-Elemente (als `type`-Feld in der 
 | `local_pack` | Lokale Ergebnisse mit Bewertungen | Manchmal |
 | `images` | Top-Bilder mit Quelldomain | Manchmal |
 
+**Zusaetzlich (parallel):**
+
+Rufe diese Tools **parallel** zur SERP-Abfrage auf, um Wartezeit zu minimieren:
+
+1. `kw_data_google_ads_search_volume` -> Google Ads Keyword-Daten (fuer Schritt 2b)
+   - Parameter: `keywords` = [Das Ziel-Keyword], `language_code` = "de"/"en", `location_name` = "Germany" (oder je nach Markt)
+   - Liefert: CPC, Competition (Low/Medium/High), Competition Index (0-100), Search Volume
+   - **WICHTIG:** Diese Daten kommen direkt aus der Google Ads API und sind unabhaengig vom SERP-Crawling. Sie beweisen zuverlaessig, ob fuer das Keyword Ads geschaltet werden.
+
 **Zusaetzlich (parallel, wenn Zielseite angegeben):**
 
-Rufe diese drei Tools **parallel** auf, um Wartezeit zu minimieren:
-
-1. `on_page_content_parsing` -> Zielseiten-Inhalt parsen (fuer Schritt 4)
-2. `on_page_lighthouse` -> Core Web Vitals + Accessibility inkl. Bilder-Alt-Check (fuer Schritt 6)
+2. `on_page_content_parsing` -> Zielseiten-Inhalt parsen (fuer Schritt 4)
+3. `on_page_lighthouse` -> Core Web Vitals + Accessibility inkl. Bilder-Alt-Check (fuer Schritt 6)
    - Parameter: `url` = Zielseite, `full_data` = true
-3. `on_page_instant_pages` -> Detaillierte On-Page-Daten inkl. Bilder-Zaehlung (fuer Schritt 6)
+4. `on_page_instant_pages` -> Detaillierte On-Page-Daten inkl. Bilder-Zaehlung (fuer Schritt 6)
    - Parameter: `url` = Zielseite, `enable_javascript` = true
 
 **Handling grosser Zielseiten-Inhalte:** Wenn `on_page_content_parsing` grosse Ergebnisse liefert (>20KB), fokussiere auf: H1, H2-Struktur, erste 3 Absaetze, Tabellen, CTAs, interne Links. Ignoriere Footer-Navigation, Sidebar-Widgets und repetitive Boilerplate.
@@ -217,9 +224,36 @@ Nutze: `related_searches` Items + `people_also_search` Items aus der SERP-Respon
 Beobachtung: Welche Botschaften und USPs bewerben Anzeigenschaltende?
 Interpretation: Was haben A/B-Tests als konvertierend bewiesen?
 
-Nutze: `paid` Items (Textanzeigen) + `popular_products` (Shopping-Produkte mit Preisen) + `compare_sites` (Vergleichsportale wie idealo, Check24).
+Nutze: `paid` Items (Textanzeigen) + `popular_products` (Shopping-Produkte mit Preisen) + `compare_sites` (Vergleichsportale wie idealo, Check24) + Google Ads Keyword-Daten aus Schritt 1b.
 
-**Wenn keine `paid`-Items vorhanden, aber `popular_products` / `compare_sites`:**
+**Primaere Analyse (wenn `paid`-Items vorhanden):**
+Analysiere Headline, Description und angezeigte URLs der Textanzeigen. Diese Daten sind goldwert -- sie zeigen, was A/B-getestet konvertiert.
+
+**Fallback (wenn keine `paid`-Items im SERP):**
+
+> **Hinweis:** SERP-API-Crawler nutzen Datacenter-IPs. Google unterdrueckt haeufig Anzeigen fuer nicht-residential Traffic. Das Fehlen von `paid`-Items bedeutet **nicht**, dass keine Ads geschaltet werden.
+
+Nutze stattdessen die **Google Ads Keyword-Daten** aus `kw_data_google_ads_search_volume`:
+
+```
+IF CPC > 0 UND Competition != null:
+  -> Ads werden aktiv geschaltet (auch wenn der SERP-Crawler sie nicht sieht)
+  -> Zeige im Report:
+     - CPC: [Wert] EUR/USD -> signalisiert kommerziellen Wert des Keywords
+     - Competition: [Low/Medium/High] -> Wettbewerbsintensitaet bei Ads
+     - Competition Index: [0-100] -> numerische Einordnung
+     - Search Volume: [Wert] -> monatliches Suchvolumen
+  -> Interpretation: Hohes CPC = hoher kommerzieller Wert, Werbetreibende investieren
+     in dieses Keyword. Competition High = viele Anbieter kaempfen um diese Suchanfrage.
+  -> Hinweis im Report: "Keine Anzeigen im SERP-Crawl erfasst (API-Limitation).
+     Google Ads Daten zeigen jedoch aktive Werbeschaltung (CPC: X, Competition: Y)."
+
+IF CPC = 0 UND Competition = null:
+  -> Tatsaechlich keine Ads fuer dieses Keyword
+  -> Vermerke: "Keine Google Ads aktiv -- rein organischer Wettbewerb"
+```
+
+**Wenn `popular_products` / `compare_sites` vorhanden (zusaetzlich oder als Fallback):**
 Analysiere diese als Shopping-Signale. Sie zeigen, dass Google eine transaktionale Intention erkennt.
 - Welche Preispunkte werden gezeigt? (Preisspanne signalisiert Produktvielfalt)
 - Welche Plattformen dominieren? (idealo = Preisvergleich, Amazon = Convenience)
@@ -229,6 +263,7 @@ Analysiere diese als Shopping-Signale. Sie zeigen, dass Google eine transaktiona
 - Welche Versprechen dominieren (Schnelligkeit / Sicherheit / Preis / Qualitaet)?
 - Werden Aengste adressiert ("risikolos", "kostenlos", "unverbindlich")?
 - Gibt es implizite Hinweise auf Kaufhuerden, die Ads gezielt abbauen?
+- Was signalisiert der CPC ueber den kommerziellen Wert der Suchanfrage?
 
 ### 2c -- Featured Snippet / AI Overview / Knowledge Graph
 
