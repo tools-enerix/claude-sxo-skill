@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unfair Dismissal Compensation Calculator | Citizens Advice</title>
+<meta name="description" content="Calculate your unfair dismissal compensation free. Enter weekly pay, age &amp; years of service for your basic + compensatory award estimate. 2025/26 caps.">
+<link rel="canonical" href="https://www.citizensadvice.org.uk/work/employment-tribunal/unfair-dismissal-compensation-calculator/">
+<!-- Open Graph -->
+<meta property="og:title" content="Unfair Dismissal Compensation Calculator | Citizens Advice">
+<meta property="og:description" content="Calculate your unfair dismissal compensation free. Enter weekly pay, age and years of service. Updated for 2025/26 statutory caps. Free advice from Citizens Advice.">
+<meta property="og:image" content="https://www.citizensadvice.org.uk/images/og-compensation-calculator.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.citizensadvice.org.uk/work/employment-tribunal/unfair-dismissal-compensation-calculator/">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Unfair Dismissal Compensation Calculator | Citizens Advice">
+<meta name="twitter:description" content="Calculate your unfair dismissal compensation free. Enter weekly pay, age and years of service. Updated for 2025/26 statutory caps.">
+<meta name="twitter:image" content="https://www.citizensadvice.org.uk/images/og-compensation-calculator.jpg">
+<style>
+  /* -- Reset & Base -- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f8f9fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f7;
+    --surface-3: #e8ebf0;
+    --border: #e2e5ec;
+    --border-light: #eef0f4;
+    --text: #1a1f2e;
+    --text-muted: #4a5168;
+    --text-dim: #7a8198;
+    --accent: #004b88;
+    --accent-hover: #003d70;
+    --accent-light: rgba(0, 75, 136, 0.07);
+    --green: #008445;
+    --green-bg: rgba(0, 132, 69, 0.06);
+    --green-hover: #006b38;
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.06);
+    --red: #dc2626;
+    --red-bg: rgba(220, 38, 38, 0.06);
+    --amber: #b45309;
+    --amber-bg: rgba(180, 83, 9, 0.07);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --max-w: 760px;
+    --max-w-wide: 1100px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* -- Article Container -- */
+  .page-content {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* -- Hero Section -- */
+  .hero {
+    max-width: var(--max-w-wide);
+    margin: 0 auto;
+    padding: 60px 24px 40px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 640px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+  }
+  .hero-caps {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .hero-cap {
+    background: var(--accent-light);
+    border: 1px solid rgba(0, 75, 136, 0.15);
+    border-radius: var(--radius-sm);
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* -- CTA Buttons -- */
+  .cta-primary {
+    display: inline-block;
+    padding: 14px 32px;
+    background: var(--green);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+    border: none;
+    cursor: pointer;
+  }
+  .cta-primary:hover {
+    background: var(--green-hover);
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+
+  /* -- Trust Bar -- */
+  .trust-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 18px 24px;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 40px;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .trust-icon { font-size: 16px; }
+
+  /* -- Headings -- */
+  h2 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 48px 0 16px;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 32px 0 12px;
+    color: var(--text);
+  }
+
+  /* -- Paragraphs -- */
+  p { margin-bottom: 16px; color: var(--text); }
+  .answer-first { font-size: 17px; line-height: 1.7; }
+
+  /* -- Citation Capsule -- */
+  blockquote.citation-capsule {
+    border-left: 3px solid var(--purple);
+    background: var(--purple-bg);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* -- Calculator Section -- */
+  .calculator-section {
+    max-width: 640px;
+    margin: 0 auto 48px;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  }
+  .calculator-section h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 22px;
+  }
+  .calc-intro {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .calc-field {
+    margin-bottom: 20px;
+  }
+  .calc-field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .calc-field .calc-helper {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .calc-field input[type="number"],
+  .calc-field select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color 0.15s;
+    -moz-appearance: textfield;
+  }
+  .calc-field input::-webkit-outer-spin-button,
+  .calc-field input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .calc-field input:focus,
+  .calc-field select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+  .input-prefix {
+    position: relative;
+  }
+  .input-prefix::before {
+    content: '\00A3';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+  .input-prefix input {
+    padding-left: 30px !important;
+  }
+
+  .calc-btn {
+    width: 100%;
+    padding: 14px 24px;
+    background: var(--green);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    font-family: var(--font);
+    margin-top: 8px;
+  }
+  .calc-btn:hover {
+    background: var(--green-hover);
+    transform: translateY(-1px);
+  }
+
+  /* -- Results Box -- */
+  .calc-results {
+    margin-top: 28px;
+    padding: 24px;
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    display: none;
+  }
+  .calc-results.visible { display: block; }
+
+  .result-primary {
+    text-align: center;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .result-amount {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1.1;
+  }
+  .result-range {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .result-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+  }
+  .result-card-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+  .result-card-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .result-formula {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    font-family: var(--mono);
+    background: var(--surface);
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+  }
+  .result-disclaimer {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.5;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  /* -- Explanation Cards -- */
+  .explanation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .explanation-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .explanation-card h3 {
+    font-size: 16px;
+    margin: 0 0 8px;
+    color: var(--text);
+  }
+  .explanation-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  /* -- Warning Box -- */
+  .warning-box {
+    background: var(--amber-bg);
+    border: 1px solid rgba(180, 83, 9, 0.2);
+    border-left: 4px solid var(--amber);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 16px 20px;
+    margin: 24px 0;
+  }
+  .warning-box p {
+    font-size: 14px;
+    color: var(--amber);
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+
+  /* -- Comparison Table -- */
+  .comparison-wrapper {
+    overflow-x: auto;
+    margin: 24px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    background: var(--bg-alt);
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--border);
+    color: var(--text);
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-muted);
+  }
+  tr:last-child td { border-bottom: none; }
+
+  /* -- Methodology Section -- */
+  .methodology-section {
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 32px 0;
+  }
+  .methodology-section h3 {
+    margin-top: 24px;
+    font-size: 17px;
+  }
+  .methodology-section h3:first-of-type {
+    margin-top: 12px;
+  }
+  .formula-table {
+    width: 100%;
+    margin: 12px 0;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .formula-table th {
+    background: var(--surface);
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-dim);
+    border-bottom: 2px solid var(--border);
+  }
+  .formula-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .data-source {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-top: 16px;
+  }
+
+  /* -- FAQ Accordion -- */
+  .faq-section { margin-top: 48px; }
+  .faq-section details {
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .faq-section summary {
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    background: var(--bg-alt);
+    color: var(--text);
+    list-style: none;
+    display: flex;
+    align-items: center;
+  }
+  .faq-section summary::-webkit-details-marker { display: none; }
+  .faq-section summary::before {
+    content: '+';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    margin-right: 12px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .faq-section details[open] summary::before { content: '\2212'; }
+  .faq-section details > div {
+    padding: 16px 20px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  /* -- CTA Section -- */
+  .cta-section {
+    background: var(--green);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    text-align: center;
+    margin: 48px 0;
+    color: #fff;
+  }
+  .cta-section h2 {
+    color: #fff;
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 24px;
+  }
+  .cta-section p {
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 520px;
+    margin: 0 auto 20px;
+    font-size: 15px;
+  }
+  .cta-section .cta-white {
+    display: inline-block;
+    padding: 14px 32px;
+    background: #fff;
+    color: var(--green);
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .cta-section .cta-white:hover {
+    background: #f0f0f0;
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+  .cta-phone {
+    display: block;
+    margin-top: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    text-decoration: underline;
+  }
+
+  /* -- Related Content -- */
+  .related-content {
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin: 40px 0;
+  }
+  .related-content h2 { font-size: 18px; margin: 0 0 16px; }
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .related-link {
+    display: block;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .related-link:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 8px rgba(0, 75, 136, 0.1);
+    text-decoration: none;
+  }
+  .related-link-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .related-link-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* -- Inline Links -- */
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* -- Lists -- */
+  ul, ol { padding-left: 24px; margin-bottom: 16px; }
+  li { margin-bottom: 4px; }
+
+  /* -- Footer -- */
+  .page-footer {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* -- Responsive -- */
+  @media (max-width: 640px) {
+    .hero { padding: 40px 16px 28px; }
+    .hero h1 { font-size: 24px; }
+    .hero-caps { gap: 8px; }
+    .hero-cap { font-size: 12px; padding: 6px 12px; }
+    .trust-bar { gap: 16px; flex-direction: column; align-items: center; }
+    .page-content { padding: 0 16px 60px; }
+    h2 { font-size: 22px; }
+    .calculator-section { padding: 20px; }
+    .result-amount { font-size: 32px; }
+    .result-breakdown { grid-template-columns: 1fr; }
+    .explanation-grid { grid-template-columns: 1fr; }
+    .related-grid { grid-template-columns: 1fr; }
+    .cta-section { padding: 28px 20px; }
+  }
+
+  /* -- Print -- */
+  @media print {
+    body { font-size: 12px; line-height: 1.5; }
+    .hero { padding: 20px 0; }
+    .cta-primary, .calc-btn, .cta-section { display: none; }
+    .trust-bar { border: 1px solid #ccc; }
+    a { color: #000; text-decoration: underline; }
+  }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.citizensadvice.org.uk#organization",
+      "name": "Citizens Advice",
+      "url": "https://www.citizensadvice.org.uk",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.citizensadvice.org.uk/static/images/ca-logo.png",
+        "width": 300,
+        "height": 60
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.citizensadvice.org.uk/work/employment-tribunal/unfair-dismissal-compensation-calculator/#calculator",
+      "name": "Unfair Dismissal Compensation Calculator",
+      "description": "Free calculator to estimate your unfair dismissal basic award and compensatory award based on UK 2025/26 statutory caps.",
+      "url": "https://www.citizensadvice.org.uk/work/employment-tribunal/unfair-dismissal-compensation-calculator/",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "GBP"
+      },
+      "provider": {
+        "@id": "https://www.citizensadvice.org.uk#organization"
+      },
+      "dateModified": "2025-04-06"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.citizensadvice.org.uk/work/employment-tribunal/unfair-dismissal-compensation-calculator/#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.citizensadvice.org.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Work",
+          "item": "https://www.citizensadvice.org.uk/work/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Employment Tribunal",
+          "item": "https://www.citizensadvice.org.uk/work/employment-tribunal/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Unfair Dismissal Compensation Calculator",
+          "item": "https://www.citizensadvice.org.uk/work/employment-tribunal/unfair-dismissal-compensation-calculator/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.citizensadvice.org.uk/work/employment-tribunal/unfair-dismissal-compensation-calculator/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the average settlement for unfair dismissal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The median award for unfair dismissal at tribunal was £13,541 in 2023/24 (Ministry of Justice Employment Tribunal Statistics). However, most cases settle before tribunal. Settlement amounts typically range from 1 to 6 months' gross salary, depending on the strength of your case and your length of service."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much do you get for unfair dismissal if you win?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If you win at tribunal, you receive a basic award (calculated like redundancy pay, maximum £21,570 in 2025/26) plus a compensatory award for actual financial losses (capped at £118,223 or 52 weeks' gross pay, whichever is lower). Use the calculator above to estimate your basic award based on your specific circumstances."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is it better to settle or go to tribunal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on your circumstances. Settlements offer faster, more certain outcomes (typically 1 to 4 weeks) while tribunals take 6 to 12 months with around a 50% overall resolution rate. If your calculated compensation falls within what your employer offers as a settlement, accepting may provide faster financial resolution with less stress."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How often do unfair dismissal claims win?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Approximately 5 to 10% of unfair dismissal claims that reach a full tribunal hearing succeed. However, around 50% of all claims are resolved through settlement via Acas conciliation or direct negotiation before reaching a hearing. Most successful claimants never attend a full tribunal."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is it worth getting a solicitor for unfair dismissal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the complexity and value of your case. For straightforward claims with smaller amounts, Citizens Advice can provide free guidance. For complex cases or larger claims, many employment solicitors offer free initial consultations and no-win-no-fee arrangements. Solicitor costs typically range from £750 to £5,000 for tribunal representation."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+  <!-- ========== HERO SECTION ========== -->
+  <section class="hero">
+    <h1>Unfair Dismissal Compensation Calculator UK (2025/26)</h1>
+    <p class="hero-sub">Calculate your basic award and estimated compensatory award based on current statutory caps. Free, instant, and no login required.</p>
+    <div class="hero-caps">
+      <span class="hero-cap">Basic award max: &pound;21,570</span>
+      <span class="hero-cap">Compensatory cap: &pound;118,223</span>
+      <span class="hero-cap">Weekly pay cap: &pound;719</span>
+    </div>
+    <a href="#calculator" class="cta-primary">Calculate My Compensation &darr;</a>
+  </section>
+
+  <!-- ========== TRUST BAR ========== -->
+  <div class="trust-bar">
+    <div class="trust-item">
+      <span class="trust-icon">&#127963;</span> Official government advisory service
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">&#10003;</span> 100% free &middot; No registration
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">&#128197;</span> Updated April 2025
+    </div>
+  </div>
+
+  <!-- ========== CALCULATOR (PRIMARY CONTENT) ========== -->
+  <div class="page-content">
+
+    <div class="calculator-section" id="calculator">
+      <h2>Calculate Your Compensation</h2>
+      <p class="calc-intro">Enter your details below to estimate your unfair dismissal basic award and potential compensatory award range.</p>
+
+      <div class="calc-field">
+        <label for="weeklyPay">Your gross weekly pay (before tax)</label>
+        <div class="input-prefix">
+          <input type="number" id="weeklyPay" min="1" max="5000" step="1" placeholder="e.g. 500">
+        </div>
+        <div class="calc-helper">Capped at &pound;719/week for basic award calculation (2025/26)</div>
+      </div>
+
+      <div class="calc-field">
+        <label for="ageAtDismissal">Your age when dismissed</label>
+        <select id="ageAtDismissal">
+          <option value="" disabled selected>Select your age band</option>
+          <option value="under22">Under 22</option>
+          <option value="22to40">22 to 40</option>
+          <option value="41plus">41 and over</option>
+        </select>
+        <div class="calc-helper">This determines your multiplier: 0.5&times; (under 22), 1&times; (22&ndash;40), or 1.5&times; (41+) per year</div>
+      </div>
+
+      <div class="calc-field">
+        <label for="yearsService">Complete years of service</label>
+        <input type="number" id="yearsService" min="0" max="50" step="1" placeholder="e.g. 5">
+        <div class="calc-helper">Capped at 20 years for basic award calculation</div>
+      </div>
+
+      <div class="calc-field">
+        <label for="weeksLostEarnings">Estimated weeks of lost earnings (for compensatory award)</label>
+        <input type="number" id="weeksLostEarnings" min="1" max="104" step="1" value="26" placeholder="e.g. 26">
+        <div class="calc-helper">How many weeks you expect to be without work. Average: 12&ndash;26 weeks.</div>
+      </div>
+
+      <button class="calc-btn" onclick="calculateCompensation()">Calculate My Compensation &rarr;</button>
+
+      <div class="calc-results" id="calcResults">
+        <div class="result-primary">
+          <div class="result-label">Estimated Total Compensation Range</div>
+          <div class="result-amount" id="totalRange"></div>
+        </div>
+        <div class="result-breakdown">
+          <div class="result-card">
+            <div class="result-card-value" id="basicAwardResult">&pound;0</div>
+            <div class="result-card-label">Basic Award</div>
+          </div>
+          <div class="result-card">
+            <div class="result-card-value" id="compensatoryResult">&pound;0</div>
+            <div class="result-card-label">Compensatory Award (est.)</div>
+          </div>
+        </div>
+        <div class="result-formula" id="formulaBreakdown"></div>
+        <div class="result-disclaimer">
+          This is an estimate based on statutory formulas. Actual awards depend on tribunal assessment of your individual circumstances. The compensatory award is based on proven financial losses and can be reduced for contributory fault.
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== RESULT EXPLANATION ========== -->
+    <h2>What Your Results Mean</h2>
+
+    <p class="answer-first">Your unfair dismissal compensation has two distinct components, each calculated differently. The basic award is a fixed statutory sum based on a formula identical to redundancy pay. The compensatory award depends on your actual financial losses as assessed by the tribunal, making it harder to predict precisely (<a href="https://www.legislation.gov.uk/ukpga/1996/18/part/X" target="_blank" rel="noopener">Employment Rights Act 1996, Part X</a>).</p>
+
+    <div class="explanation-grid">
+      <div class="explanation-card">
+        <h3>Your Basic Award</h3>
+        <p>The basic award is a fixed statutory amount calculated using the same formula as redundancy pay. This is your minimum entitlement and cannot be reduced except in specific circumstances such as contributory fault. The maximum basic award for 2025/26 is &pound;21,570, based on 20 years at 1.5 weeks at the &pound;719 weekly cap.</p>
+      </div>
+      <div class="explanation-card">
+        <h3>Your Compensatory Award</h3>
+        <p>The compensatory award covers your actual financial losses: lost earnings, pension contributions, benefits, and expenses. Tribunals assess this individually based on evidence you provide. The statutory cap for 2025/26 is &pound;118,223 or 52 weeks&rsquo; gross pay, whichever is lower.</p>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <p><strong>Important:</strong> Compensation can be reduced if the tribunal finds you contributed to your dismissal (contributory fault), or if you have not taken reasonable steps to find new work (failure to mitigate losses). The Acas Code uplift can increase or decrease awards by up to 25% depending on whether correct procedures were followed.</p>
+    </div>
+
+    <blockquote class="citation-capsule">
+      The median unfair dismissal tribunal award was &pound;13,541 in 2023/24, with the maximum compensatory award capped at &pound;118,223 for 2025/26. However, actual payouts vary widely: the top 10% of awards exceeded &pound;40,000 while the bottom quartile received under &pound;5,000 (<a href="https://www.gov.uk/government/statistics/tribunal-statistics-quarterly" target="_blank" rel="noopener">Ministry of Justice, Tribunal Statistics Quarterly, 2024</a>).
+    </blockquote>
+
+    <!-- ========== METHODOLOGY ========== -->
+    <h2>How the Calculation Works</h2>
+
+    <p class="answer-first">This calculator uses the statutory formula set out in the Employment Rights Act 1996 (as amended), with rates effective from 6 April 2025. The basic award formula is identical to statutory redundancy pay. The Secretary of State updates the weekly pay cap and compensatory award limit each April (<a href="https://www.legislation.gov.uk/ukpga/1996/18/section/227" target="_blank" rel="noopener">ERA 1996, s.227</a>).</p>
+
+    <div class="methodology-section">
+      <h3>Basic Award Formula</h3>
+      <table class="formula-table">
+        <thead>
+          <tr>
+            <th>Age at Dismissal</th>
+            <th>Multiplier per Year of Service</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Under 22</td>
+            <td>0.5 weeks&rsquo; pay per year</td>
+          </tr>
+          <tr>
+            <td>22 to 40</td>
+            <td>1 week&rsquo;s pay per year</td>
+          </tr>
+          <tr>
+            <td>41 and over</td>
+            <td>1.5 weeks&rsquo; pay per year</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Weekly pay is capped at <strong>&pound;719</strong> regardless of actual earnings. Years of service are capped at <strong>20 years</strong>. Maximum possible basic award: 20 &times; 1.5 &times; &pound;719 = <strong>&pound;21,570</strong>.</p>
+
+      <h3>Compensatory Award</h3>
+      <p>Based on actual financial losses proven to the tribunal. Includes: loss of net earnings (net pay &times; weeks unemployed), loss of statutory rights (conventionally &pound;500), pension loss (if applicable), and expenses incurred. Capped at <strong>&pound;118,223</strong> or 52 weeks&rsquo; gross pay, whichever is lower (2025/26).</p>
+
+      <h3>Benefits Repayment</h3>
+      <p>If you received benefits (JSA, Universal Credit) during the period covered by your compensatory award, the Department for Work and Pensions may recoup these from your compensation under the Employment Protection (Recoupment of Benefits) Regulations 1996.</p>
+
+      <p class="data-source">Source: <a href="https://www.legislation.gov.uk/ukpga/1996/18/contents" target="_blank" rel="noopener">Employment Rights Act 1996</a>, updated annually by the Secretary of State. Current rates effective 6 April 2025. Next update expected April 2026.</p>
+    </div>
+
+    <blockquote class="citation-capsule">
+      The unfair dismissal basic award uses the same formula as statutory redundancy pay: 0.5 weeks&rsquo; pay per year of service under age 22, 1 week between ages 22 and 40, and 1.5 weeks from age 41 onwards. Weekly pay is capped at &pound;719 and service at 20 years, giving a maximum basic award of &pound;21,570 for 2025/26 (<a href="https://www.legislation.gov.uk/ukpga/1996/18/section/119" target="_blank" rel="noopener">ERA 1996, s.119</a>).
+    </blockquote>
+
+    <!-- ========== SETTLEMENT VS TRIBUNAL ========== -->
+    <h2>Settlement vs. Tribunal: Which Is Right for You?</h2>
+
+    <p class="answer-first">Most unfair dismissal cases settle before reaching a full tribunal hearing. Around 50% of employment tribunal claims are resolved through Acas early conciliation or private settlement, according to <a href="https://www.gov.uk/government/statistics/tribunal-statistics-quarterly" target="_blank" rel="noopener">Ministry of Justice statistics (2024)</a>. The right choice depends on your financial situation, the strength of your evidence, and how quickly you need resolution.</p>
+
+    <div class="comparison-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Factor</th>
+            <th>Settlement Agreement</th>
+            <th>Employment Tribunal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Typical payout</strong></td>
+            <td>1&ndash;6 months&rsquo; salary</td>
+            <td>Basic award + compensatory award</td>
+          </tr>
+          <tr>
+            <td><strong>Timeline</strong></td>
+            <td>1&ndash;4 weeks</td>
+            <td>6&ndash;12 months</td>
+          </tr>
+          <tr>
+            <td><strong>Success rate</strong></td>
+            <td>Negotiated (certain if accepted)</td>
+            <td>~50% of claims resolved overall</td>
+          </tr>
+          <tr>
+            <td><strong>Cost to you</strong></td>
+            <td>Usually &pound;0 (employer pays legal fees)</td>
+            <td>Free to file; solicitor optional (&pound;750&ndash;&pound;5,000)</td>
+          </tr>
+          <tr>
+            <td><strong>Tax treatment</strong></td>
+            <td>First &pound;30,000 tax-free</td>
+            <td>First &pound;30,000 tax-free</td>
+          </tr>
+          <tr>
+            <td><strong>Confidentiality</strong></td>
+            <td>Yes (NDA typical)</td>
+            <td>Public hearing</td>
+          </tr>
+          <tr>
+            <td><strong>Stress level</strong></td>
+            <td>Lower &mdash; negotiated privately</td>
+            <td>Higher &mdash; formal process, cross-examination</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>If your calculated compensation falls within the range your employer is offering as a settlement, accepting may provide faster, more certain financial resolution. Settlement agreements are legally binding and typically include a reference clause, which can help your future job search.</p>
+
+    <p>However, if your employer has acted particularly badly &mdash; for example, dismissing you for whistleblowing or asserting a statutory right &mdash; compensation is <strong>uncapped</strong> at tribunal. In these cases, going to tribunal may be the better financial decision.</p>
+
+    <blockquote class="citation-capsule">
+      Roughly half of all unfair dismissal claims are settled before reaching a full tribunal hearing, typically through Acas early conciliation. Settlement agreements offer faster, more certain outcomes (1&ndash;4 weeks versus 6&ndash;12 months for tribunal), but tribunal awards can be higher when evidence is strong (<a href="https://www.gov.uk/government/publications/employment-tribunal-and-employment-appeal-tribunal-statistics" target="_blank" rel="noopener">Ministry of Justice, 2024</a>).
+    </blockquote>
+
+    <!-- ========== FAQ SECTION ========== -->
+    <section class="faq-section">
+      <h2>Frequently Asked Questions About Unfair Dismissal Compensation</h2>
+
+      <details>
+        <summary>What is the average settlement for unfair dismissal?</summary>
+        <div>
+          <p>The median award for unfair dismissal at tribunal was &pound;13,541 in 2023/24 (<a href="https://www.gov.uk/government/statistics/tribunal-statistics-quarterly" target="_blank" rel="noopener">Ministry of Justice Employment Tribunal Statistics</a>). However, most cases settle before reaching tribunal. Settlement amounts typically range from 1 to 6 months&rsquo; gross salary, depending on the strength of your case, your length of service, and the employer&rsquo;s willingness to negotiate. For employees earning &pound;35,000, this means a settlement range of roughly &pound;2,900 to &pound;17,500.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>How much do you get for unfair dismissal if you win?</summary>
+        <div>
+          <p>If you win at tribunal, you receive a basic award (calculated using the same formula as redundancy pay, maximum &pound;21,570 in 2025/26) plus a compensatory award for actual financial losses (capped at &pound;118,223 or 52 weeks&rsquo; gross pay, whichever is lower). The basic award is guaranteed; the compensatory award depends on your proven losses. Use the calculator above to estimate your basic award based on your specific age, pay, and service.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Is it better to settle or go to tribunal?</summary>
+        <div>
+          <p>It depends on your circumstances. Settlements offer faster, more certain outcomes &mdash; typically resolved in 1 to 4 weeks compared to 6 to 12 months for tribunal. Around 50% of all claims settle through Acas conciliation. If your calculated compensation is within the range of your employer&rsquo;s settlement offer, accepting may give you faster financial resolution. However, tribunal is worth considering if your employer has acted particularly badly or you have very strong evidence, as awards can exceed settlement offers significantly.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>How often do unfair dismissal claims win?</summary>
+        <div>
+          <p>Approximately 5&ndash;10% of unfair dismissal claims that reach a full tribunal hearing are successful (<a href="https://www.gov.uk/government/statistics/tribunal-statistics-quarterly" target="_blank" rel="noopener">Ministry of Justice, 2024</a>). This sounds low, but the number is misleading. Around 50% of all claims are resolved through settlement before reaching a hearing. Many &ldquo;withdrawn&rdquo; cases reflect private settlements. The overall resolution rate &mdash; including settlements &mdash; is significantly higher than the hearing success rate alone.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Is it worth getting a solicitor for unfair dismissal?</summary>
+        <div>
+          <p>It depends on the complexity and value of your case. For straightforward claims with smaller amounts, Citizens Advice provides free guidance and can help you prepare. For complex cases or claims exceeding &pound;10,000, many employment solicitors offer free initial consultations and no-win-no-fee arrangements. Solicitor costs typically range from &pound;750 to &pound;5,000 for full tribunal representation. Weigh the potential compensation against legal costs before deciding.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="cta-section">
+      <h2>Need Help With Your Unfair Dismissal Claim?</h2>
+      <p>Get free, confidential advice from a Citizens Advice employment specialist. We can help you understand your options and prepare your case.</p>
+      <a href="https://www.citizensadvice.org.uk/about-us/contact-us/" class="cta-white">Get Free Advice &rarr;</a>
+      <a href="tel:08001448848" class="cta-phone">Or call our free helpline: 0800 144 8848</a>
+    </section>
+
+    <!-- ========== RELATED RESOURCES ========== -->
+    <section class="related-content">
+      <h2>Related Tribunal Advice</h2>
+      <div class="related-grid">
+        <a href="https://www.citizensadvice.org.uk/work/employment-tribunal/making-a-claim/" class="related-link">
+          <div class="related-link-title">Making an employment tribunal claim &rarr;</div>
+          <div class="related-link-desc">Step-by-step guide to starting your tribunal claim, including time limits and forms.</div>
+        </a>
+        <a href="https://www.citizensadvice.org.uk/work/employment-tribunal/before-you-go-to-the-tribunal/early-conciliation/" class="related-link">
+          <div class="related-link-title">Early conciliation through Acas &rarr;</div>
+          <div class="related-link-desc">Mandatory first step before tribunal. Free service to negotiate with your employer.</div>
+        </a>
+        <a href="https://www.citizensadvice.org.uk/work/leaving-a-job/settlement-agreements/" class="related-link">
+          <div class="related-link-title">Understanding settlement agreements &rarr;</div>
+          <div class="related-link-desc">What to consider before signing. Your rights and what to negotiate.</div>
+        </a>
+        <a href="https://www.citizensadvice.org.uk/work/dismissal/unfair-dismissal/" class="related-link">
+          <div class="related-link-title">Unfair dismissal: your rights &rarr;</div>
+          <div class="related-link-desc">Check whether your dismissal was unfair and what you can do about it.</div>
+        </a>
+        <a href="https://www.citizensadvice.org.uk/work/employment-tribunal/making-a-claim/time-limits/" class="related-link">
+          <div class="related-link-title">Time limits for tribunal claims &rarr;</div>
+          <div class="related-link-desc">Critical: you have 3 months less 1 day from dismissal to start your claim.</div>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="page-footer">
+    <p>Last updated: April 2025 &middot; Next review: April 2026 &middot; Statutory figures from the <a href="https://www.legislation.gov.uk/ukpga/1996/18/contents">Employment Rights Act 1996</a></p>
+    <p>&copy; Citizens Advice. Registered charity number 279057.</p>
+  </footer>
+
+  <!-- ========== CALCULATOR JAVASCRIPT ========== -->
+  <script>
+    function calculateCompensation() {
+      // Get input values
+      const weeklyPayRaw = parseFloat(document.getElementById('weeklyPay').value);
+      const ageBand = document.getElementById('ageAtDismissal').value;
+      const yearsRaw = parseInt(document.getElementById('yearsService').value);
+      const weeksLost = parseInt(document.getElementById('weeksLostEarnings').value) || 26;
+
+      // Validate inputs
+      if (!weeklyPayRaw || isNaN(weeklyPayRaw) || weeklyPayRaw <= 0) {
+        alert('Please enter your gross weekly pay.');
+        return;
+      }
+      if (!ageBand) {
+        alert('Please select your age band.');
+        return;
+      }
+      if (isNaN(yearsRaw) || yearsRaw < 0) {
+        alert('Please enter your years of service.');
+        return;
+      }
+      if (yearsRaw === 0) {
+        alert('You need at least 2 years of continuous service (qualifying period) to bring an unfair dismissal claim. Some exceptions apply -- contact Citizens Advice for guidance.');
+        return;
+      }
+
+      // Apply statutory caps
+      const WEEKLY_CAP = 719;
+      const MAX_YEARS = 20;
+      const COMPENSATORY_CAP = 118223;
+
+      const weeklyPay = Math.min(weeklyPayRaw, WEEKLY_CAP);
+      const years = Math.min(yearsRaw, MAX_YEARS);
+
+      // Determine multiplier based on age band
+      let multiplier;
+      let multiplierLabel;
+      switch (ageBand) {
+        case 'under22':
+          multiplier = 0.5;
+          multiplierLabel = '0.5';
+          break;
+        case '22to40':
+          multiplier = 1.0;
+          multiplierLabel = '1';
+          break;
+        case '41plus':
+          multiplier = 1.5;
+          multiplierLabel = '1.5';
+          break;
+        default:
+          alert('Please select your age band.');
+          return;
+      }
+
+      // Calculate basic award
+      const basicAward = weeklyPay * multiplier * years;
+
+      // Calculate compensatory award estimate (based on net pay approximation)
+      // Rough net pay estimate: 75% of gross for average earner
+      const netWeekly = weeklyPayRaw * 0.75;
+      const compensatoryEstimate = Math.min(netWeekly * weeksLost + 500, COMPENSATORY_CAP);
+      const compensatoryCap52Weeks = weeklyPayRaw * 52;
+      const compensatoryAward = Math.min(compensatoryEstimate, compensatoryCap52Weeks, COMPENSATORY_CAP);
+
+      // Total range
+      const totalLow = basicAward;
+      const totalHigh = basicAward + compensatoryAward;
+
+      // Format currency
+      const fmt = (n) => '£' + n.toLocaleString('en-GB', { maximumFractionDigits: 0 });
+
+      // Update DOM
+      document.getElementById('totalRange').textContent = fmt(totalLow) + ' – ' + fmt(totalHigh);
+      document.getElementById('basicAwardResult').textContent = fmt(basicAward);
+      document.getElementById('compensatoryResult').textContent = fmt(compensatoryAward);
+
+      // Show formula breakdown
+      const cappedNote = weeklyPayRaw > WEEKLY_CAP ? ' (capped from ' + fmt(weeklyPayRaw) + ')' : '';
+      const yearsNote = yearsRaw > MAX_YEARS ? ' (capped from ' + yearsRaw + ')' : '';
+      document.getElementById('formulaBreakdown').textContent =
+        years + ' yrs' + yearsNote + ' × ' + multiplierLabel + ' × ' + fmt(weeklyPay) + '/wk' + cappedNote + ' = ' + fmt(basicAward);
+
+      // Show results
+      document.getElementById('calcResults').classList.add('visible');
+
+      // Scroll to results
+      document.getElementById('calcResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SXO Analysis: unfair dismissal compensation calculator</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f7;
+    --surface-3: #e8ebf0;
+    --border: #d1d5de;
+    --border-light: #bfc5d2;
+    --text: #1a1f2e;
+    --text-muted: #4a5168;
+    --text-dim: #7a8198;
+    --accent: #2563eb;
+    --accent-glow: rgba(37, 99, 235, 0.08);
+    --green: #16a34a;
+    --green-bg: rgba(22, 163, 74, 0.08);
+    --red: #dc2626;
+    --red-bg: rgba(220, 38, 38, 0.07);
+    --yellow: #b45309;
+    --yellow-bg: rgba(180, 83, 9, 0.07);
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.07);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .report { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  .report-header {
+    position: relative;
+    padding: 48px 40px 40px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+  .report-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+  }
+  .report-header .meta-label { color: #94a3b8; }
+  .report-header .meta-value { color: #e2e8f0; }
+  .report-header .meta-value a { color: #93c5fd; }
+  .report-header .label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #93c5fd;
+    background: rgba(147, 197, 253, 0.15);
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .report-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 24px;
+    color: #f1f5f9;
+  }
+  .report-header h1 span { color: #93c5fd; }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-item .meta-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+  .meta-item .meta-value {
+    font-size: 14px; color: var(--text); word-break: break-all;
+  }
+  .meta-item .meta-value a { color: var(--accent); text-decoration: none; }
+
+  .section { margin-bottom: 32px; }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-number {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    background: var(--accent-glow);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 10px; font-size: 15px; font-weight: 700;
+    color: var(--accent); flex-shrink: 0;
+  }
+  .section-header h2 { font-size: 20px; font-weight: 700; color: var(--text); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
+  }
+  .card h3 {
+    font-size: 15px; font-weight: 600; color: var(--text);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .card h3 .icon { font-size: 16px; }
+  .card p, .card li { color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+  .card p + p { margin-top: 8px; }
+  .card ul, .card ol { padding-left: 20px; margin-top: 8px; }
+  .card li + li { margin-top: 4px; }
+
+  .sub-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px;
+  }
+
+  .table-wrap { overflow-x: auto; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim);
+    background: var(--surface-2); border-bottom: 1px solid var(--border);
+  }
+  thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  thead th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+  tbody td {
+    padding: 10px 14px; color: var(--text-muted);
+    border-bottom: 1px solid var(--border); vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--surface-2); }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 600; padding: 3px 10px;
+    border-radius: 6px; white-space: nowrap;
+  }
+  .badge-pass { color: var(--green); background: var(--green-bg); }
+  .badge-fail { color: var(--red); background: var(--red-bg); }
+  .badge-warn { color: var(--yellow); background: var(--yellow-bg); }
+  .badge-info { color: var(--accent); background: var(--accent-glow); }
+  .badge-neutral { color: var(--text-muted); background: var(--surface-3); }
+
+  .priority-high { color: var(--red); font-weight: 600; }
+  .priority-medium { color: var(--yellow); font-weight: 600; }
+  .priority-low { color: var(--green); font-weight: 600; }
+
+  .verdict {
+    padding: 20px 24px; border-radius: var(--radius); margin: 16px 0; font-weight: 500;
+  }
+  .verdict-partial { background: var(--yellow-bg); border: 1px solid rgba(251, 191, 36, 0.25); color: var(--yellow); }
+  .verdict-good { background: var(--green-bg); border: 1px solid rgba(52, 211, 153, 0.25); color: var(--green); }
+  .verdict-bad { background: var(--red-bg); border: 1px solid rgba(248, 113, 113, 0.25); color: var(--red); }
+  .verdict .verdict-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .verdict p { font-size: 13px; line-height: 1.6; opacity: 0.85; }
+
+  .user-story-quote {
+    position: relative; padding: 24px 28px;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+    border-left: 3px solid var(--purple);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 16px 0; font-size: 15px; font-style: italic;
+    color: var(--text); line-height: 1.8;
+  }
+
+  .reco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 700px) { .reco-grid { grid-template-columns: 1fr; } }
+  .reco-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; position: relative; overflow: hidden;
+  }
+  .reco-card.recommended {
+    border-color: rgba(96, 165, 250, 0.4);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.05);
+  }
+  .reco-card.recommended::before {
+    content: 'RECOMMENDED';
+    position: absolute; top: 12px; right: -32px;
+    background: var(--accent); color: var(--bg);
+    font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    padding: 3px 36px; transform: rotate(45deg);
+  }
+  .reco-card h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .reco-card .reco-meta {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);
+  }
+  .reco-card .reco-meta-item .reco-meta-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+  .reco-card .reco-meta-item .reco-meta-value { font-size: 14px; font-weight: 600; }
+
+  .checklist { list-style: none; padding: 0; margin: 0; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--text-muted);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon {
+    flex-shrink: 0; width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; font-size: 12px; font-weight: 700; margin-top: 1px;
+  }
+  .check-pass { background: var(--green-bg); color: var(--green); }
+  .check-fail { background: var(--red-bg); color: var(--red); }
+  .check-warn { background: var(--yellow-bg); color: var(--yellow); }
+  .check-na { background: var(--surface-3); color: var(--text-dim); }
+
+  .gap-item {
+    padding: 16px; background: var(--surface-2);
+    border-radius: var(--radius-sm); margin-bottom: 10px;
+    border-left: 3px solid var(--border-light);
+  }
+  .gap-item.gap-high { border-left-color: var(--red); }
+  .gap-item.gap-medium { border-left-color: var(--yellow); }
+  .gap-item.gap-low { border-left-color: var(--green); }
+  .gap-item h4 {
+    font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .gap-detail {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px; font-size: 12px; margin-top: 8px;
+  }
+  @media (max-width: 600px) { .gap-detail { grid-template-columns: 1fr; } }
+  .gap-detail > div { padding: 8px 10px; background: var(--surface); border-radius: 6px; }
+  .gap-detail .gd-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--text-dim); margin-bottom: 3px;
+  }
+
+  .serp-type {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 4px;
+    background: var(--surface-3); color: var(--text-muted);
+  }
+  .serp-type-guide { background: var(--accent-glow); color: var(--accent); }
+  .serp-type-blog { background: var(--accent-glow); color: var(--accent); }
+  .serp-type-tool { background: var(--green-bg); color: var(--green); }
+  .serp-type-landing { background: var(--purple-bg); color: var(--purple); }
+  .serp-type-service { background: var(--yellow-bg); color: var(--yellow); }
+  .serp-type-comparison { background: var(--yellow-bg); color: var(--yellow); }
+  .serp-type-hybrid { background: var(--purple-bg); color: var(--purple); }
+
+  .mismatch-alert {
+    padding: 20px 24px; border-radius: var(--radius); margin: 16px 0;
+    background: var(--red-bg); border: 1px solid rgba(248, 113, 113, 0.25);
+    color: var(--red); font-weight: 500;
+  }
+  .mismatch-alert .mismatch-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .mismatch-alert p { font-size: 13px; line-height: 1.6; opacity: 0.85; }
+
+  .cwv-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+  .cwv-table th {
+    text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim);
+    background: var(--surface-2); border-bottom: 1px solid var(--border);
+  }
+  .cwv-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  .cwv-table tr:last-child td { border-bottom: none; }
+  .cwv-good { color: var(--green); font-weight: 600; }
+  .cwv-warn { color: var(--yellow); font-weight: 600; }
+  .cwv-poor { color: var(--red); font-weight: 600; }
+
+  .score-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+  .score-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; background: var(--surface-2);
+    border-radius: var(--radius-sm); flex: 1; min-width: 140px;
+  }
+  .score-value { font-size: 28px; font-weight: 700; line-height: 1; }
+  .score-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+
+  .img-audit-summary { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+  .img-audit-stat {
+    padding: 10px 14px; background: var(--surface-2);
+    border-radius: var(--radius-sm); text-align: center; min-width: 100px;
+  }
+  .img-audit-stat .stat-value { font-size: 24px; font-weight: 700; line-height: 1.2; }
+  .img-audit-stat .stat-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  .report-footer {
+    margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border);
+    text-align: center; font-size: 12px; color: var(--text-dim);
+  }
+
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-8 { margin-bottom: 8px; }
+  .text-accent { color: var(--accent); }
+  .text-muted { color: var(--text-muted); }
+  .fw-600 { font-weight: 600; }
+  .fs-13 { font-size: 13px; }
+
+  @media print {
+    body { background: #fff; color: #1a1a1a; font-size: 12px; }
+    .report { max-width: 100%; padding: 0; }
+    .report-header { background: #f5f5f5; border: 1px solid #ddd; }
+    .report-header::before { display: none; }
+    .report-header h1, .section-header h2, .card h3, .reco-card h3, .gap-item h4 { color: #1a1a1a; }
+    .card, .reco-card, .gap-item { background: #fafafa; border-color: #ddd; }
+    .label, .section-number { background: #eee; color: #333; border-color: #ccc; }
+    thead th { background: #eee; }
+    tbody td, .card p, .card li, .checklist li { color: #333; }
+    .reco-card.recommended::before { background: #333; color: #fff; }
+  }
+</style>
+</head>
+<body>
+<div class="report">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="report-header">
+    <div class="label">SXO Analysis</div>
+    <h1>SXO Analysis: <span>unfair dismissal compensation calculator</span></h1>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Target Page</span>
+        <span class="meta-value"><a href="https://www.citizensadvice.org.uk/work/employment-tribunal/employment-tribunals/before-you-go-to-the-tribunal/check-what-compensation-you-can-get-for-unfair-dismissal/" target="_blank">citizensadvice.org.uk/&hellip;/check-what-compensation-you-can-get-for-unfair-dismissal/</a></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Date</span>
+        <span class="meta-value">2026-03-25</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Market</span>
+        <span class="meta-value">United Kingdom / en / Desktop</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Data Source</span>
+        <span class="meta-value">DataForSEO MCP (Live)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ 1. SERP ANALYSIS ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2>SERP Analysis</h2>
+    </div>
+
+    <!-- 1a Autocomplete / Related Searches -->
+    <div class="card">
+      <h3><span class="icon">&#128269;</span> Autocomplete / Related Searches</h3>
+      <div class="sub-label">Observation</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Search Term</th><th>Intent Signal</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>unfair dismissal compensation calculator uk</td><td><span class="badge badge-info">Tool / Calculator</span></td></tr>
+            <tr><td>unfair dismissal calculator 2025</td><td><span class="badge badge-info">Tool / Current Year</span></td></tr>
+            <tr><td>unfair dismissal basic award calculator</td><td><span class="badge badge-info">Tool / Specific Calculation</span></td></tr>
+            <tr><td>unfair dismissal payout amounts</td><td><span class="badge badge-warn">Commercial / Numbers</span></td></tr>
+            <tr><td>average unfair dismissal settlement uk</td><td><span class="badge badge-warn">Commercial / Benchmark</span></td></tr>
+            <tr><td>employment tribunal compensation calculator</td><td><span class="badge badge-info">Tool / Calculator</span></td></tr>
+            <tr><td>how much compensation for unfair dismissal</td><td><span class="badge badge-warn">Commercial / Amount</span></td></tr>
+            <tr><td>schedule of loss calculator</td><td><span class="badge badge-info">Tool / Calculator</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>Related searches overwhelmingly contain tool/calculator terms (&ldquo;calculator&rdquo;, &ldquo;calculator uk&rdquo;, &ldquo;calculator 2025&rdquo;) and monetary queries (&ldquo;payout amounts&rdquo;, &ldquo;how much compensation&rdquo;). This is not an audience seeking legal education &mdash; they want a personalised number. The &ldquo;2025&rdquo; modifier signals that users expect up-to-date statutory caps, reinforcing the need for an interactive tool with current data.</p>
+    </div>
+
+    <!-- 1b Google Ads / Shopping Signals -->
+    <div class="card">
+      <h3><span class="icon">&#128176;</span> Google Ads / Shopping Signals</h3>
+      <div class="sub-label">Observation</div>
+      <p>No paid ads appeared in the SERP crawl (API limitation &mdash; SERP API crawlers use datacenter IPs and Google frequently suppresses ads for non-residential traffic).</p>
+      <p class="mt-8"><strong>Google Ads Keyword Data (from Google Ads API):</strong></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="fw-600">CPC</td><td>&pound;2.90</td></tr>
+            <tr><td class="fw-600">Competition</td><td>LOW (Index: 14/100)</td></tr>
+            <tr><td class="fw-600">Search Volume</td><td>590/month (avg.)</td></tr>
+            <tr><td class="fw-600">Peak Months</td><td>September (1,300), March&ndash;April (880&ndash;1,000)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>CPC of &pound;2.90 confirms advertisers are actively bidding on this keyword &mdash; there is commercial value. However, competition is LOW (14/100), indicating this is an under-exploited opportunity. The seasonal peaks in September and March/April align with the UK financial year transition (new statutory caps in April) and post-summer employment disputes. Law firms running ads here are likely promoting free consultations or no-win-no-fee services to convert calculator users into paying clients.</p>
+    </div>
+
+    <!-- 1c Featured Snippet / AI Overview -->
+    <div class="card">
+      <h3><span class="icon">&#9889;</span> AI Overview</h3>
+      <div class="sub-label">Observation</div>
+      <p>Google displays a detailed AI Overview at position 1 (above all organic results) with specific calculation methodology:</p>
+      <ul>
+        <li><strong>Basic Award:</strong> Calculated like statutory redundancy pay. Capped at 20 years service, maximum weekly pay &pound;719 (2025/26). Maximum basic award: <strong>&pound;21,570</strong>.</li>
+        <li><strong>Compensatory Award:</strong> Covers financial losses. Capped at the lower of <strong>&pound;118,223</strong> or 52 weeks&rsquo; actual gross pay (2025/26).</li>
+        <li>Formula provided with age-based multipliers (0.5/1.0/1.5 weeks per year of service).</li>
+      </ul>
+      <p class="mt-8">Sources cited: Stephensons (calculator), Citizens Advice (guide), Tribunal Claim Solicitors (calculator), Landau Law (calculator).</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>Google&rsquo;s AI Overview leads with <strong>specific numbers and formulas</strong> &mdash; not legal explanations. This confirms the search intent is computational: users want to plug in their own figures and get a result. The AI Overview itself functions as a mini-calculator, showing the exact statutory caps and formula. Pages that provide this interactively (with input fields) are cited alongside the guide content, but the calculators dominate the source citations.</p>
+    </div>
+
+    <!-- 1d PAA -->
+    <div class="card">
+      <h3><span class="icon">&#10067;</span> People Also Ask</h3>
+      <div class="sub-label">Observation</div>
+      <ol>
+        <li>What is the average settlement for unfair dismissal?</li>
+        <li>How much do you get for unfair dismissal if you win?</li>
+        <li>Is it better to settle or go to tribunal?</li>
+        <li>How often do unfair dismissal claims win?</li>
+        <li>Is it hard to prove unfair dismissal?</li>
+        <li>What is an acceptable settlement offer?</li>
+        <li>Can I sue my employer for unfair dismissal?</li>
+        <li>What evidence is needed for unfair dismissal?</li>
+        <li>How much is a solicitor for unfair dismissal?</li>
+      </ol>
+      <p class="mt-8"><em>Note: Questions 1, 2, and 3 are answered by AI Overviews (reduced click potential for these).</em></p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>Every single PAA question revolves around <strong>money and outcomes</strong>: &ldquo;how much&rdquo;, &ldquo;average settlement&rdquo;, &ldquo;what is acceptable&rdquo;, &ldquo;how much is a solicitor&rdquo;. The searcher is deep in the Decision phase &mdash; they have already been dismissed and are now calculating whether legal action is financially worthwhile. Questions like &ldquo;is it better to settle or go to tribunal?&rdquo; and &ldquo;how often do claims win?&rdquo; reveal risk assessment behaviour. This audience needs data to make a go/no-go decision, not a legal education.</p>
+    </div>
+
+    <!-- 1e Images -->
+    <div class="card">
+      <h3><span class="icon">&#128444;</span> Image Integration</h3>
+      <div class="sub-label">Observation</div>
+      <p>No image pack was present in the SERP for this keyword.</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p>The absence of images reinforces that this is a data/tool query, not a visual one. Google does not consider images relevant for compensation calculators &mdash; the search intent is entirely numerical and interactive. This further supports the Tool Page recommendation.</p>
+    </div>
+
+    <!-- 1f Top-10 -->
+    <div class="card">
+      <h3><span class="icon">&#127942;</span> Top-10 Page Types</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Pos.</th><th>Domain</th><th>Title</th><th>Type</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="fw-600">1</td>
+              <td>stephensons.co.uk</td>
+              <td>Unfair Dismissal Compensation Calculator</td>
+              <td><span class="serp-type serp-type-tool">Tool Page</span></td>
+            </tr>
+            <tr>
+              <td class="fw-600">2</td>
+              <td>winstonsolicitors.co.uk</td>
+              <td>Unfair dismissal calculator</td>
+              <td><span class="serp-type serp-type-tool">Tool Page</span></td>
+            </tr>
+            <tr>
+              <td class="fw-600">3</td>
+              <td>landaulaw.co.uk</td>
+              <td>Basic award calculator for unfair dismissal</td>
+              <td><span class="serp-type serp-type-tool">Tool Page</span></td>
+            </tr>
+            <tr>
+              <td class="fw-600">4</td>
+              <td>croner.co.uk</td>
+              <td>Unfair Dismissal Calculator</td>
+              <td><span class="serp-type serp-type-tool">Tool Page</span></td>
+            </tr>
+            <tr>
+              <td class="fw-600">5</td>
+              <td>citizensadvice.org.uk</td>
+              <td>Check what compensation you can get for unfair dismissal</td>
+              <td><span class="serp-type serp-type-blog">Blog / Guide</span></td>
+            </tr>
+            <tr>
+              <td class="fw-600">6</td>
+              <td>jobrights.co.uk</td>
+              <td>Unfair dismissal compensation calculator and legal advice</td>
+              <td><span class="serp-type serp-type-hybrid">Hybrid</span></td>
+            </tr>
+            <tr>
+              <td class="fw-600">7</td>
+              <td>dsmlegal.co.uk</td>
+              <td>Unfair dismissal compensation calculator Warrington</td>
+              <td><span class="serp-type serp-type-tool">Tool Page</span></td>
+            </tr>
+            <tr>
+              <td class="fw-600">8</td>
+              <td>monacosolicitors.co.uk</td>
+              <td>Settlement agreement compensation calculator</td>
+              <td><span class="serp-type serp-type-tool">Tool Page</span></td>
+            </tr>
+            <tr>
+              <td class="fw-600">9</td>
+              <td>tribunalclaimsolicitors.co.uk</td>
+              <td>Tools &mdash; Employment Solicitors for Employees</td>
+              <td><span class="serp-type serp-type-tool">Tool Page</span></td>
+            </tr>
+            <tr>
+              <td class="fw-600">10</td>
+              <td>avensure.com</td>
+              <td>Unfair Dismissal Award Calculator</td>
+              <td><span class="serp-type serp-type-tool">Tool Page</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-16"><strong>Page Type Distribution:</strong> 8&times; Tool Page, 1&times; Blog/Guide (Citizens Advice at #5), 1&times; Hybrid (JobRights at #6)</p>
+      <div class="sub-label mt-16">Interpretation</div>
+      <p><strong>The signal is unmistakable: Google overwhelmingly rewards Tool Pages for this keyword.</strong> 8 out of 10 results are interactive calculators. The only guide-format page (Citizens Advice) sits at position 5 despite massive domain authority &mdash; it cannot outrank smaller law firms that provide an actual calculator. Even JobRights at #6 is a hybrid with a calculator component. Every single title in the Top 4 contains the word &ldquo;calculator&rdquo;. This is as clear a page-type signal as the SERPs can produce.</p>
+    </div>
+
+    <!-- 1g Meta Description Patterns -->
+    <div class="card">
+      <h3><span class="icon">&#128203;</span> Meta Description Patterns</h3>
+      <ol>
+        <li><strong>Instant Calculation Promise:</strong> &ldquo;Calculate your unfair dismissal compensation&rdquo;, &ldquo;Use our free calculator&rdquo; &mdash; immediacy and zero friction</li>
+        <li><strong>Current Year Figures:</strong> &ldquo;2025/26 rates&rdquo;, &ldquo;Updated April 2025&rdquo; &mdash; freshness signals for statutory cap changes</li>
+        <li><strong>Free &amp; No Obligation:</strong> &ldquo;Free calculator&rdquo;, &ldquo;No win no fee&rdquo; &mdash; removing financial risk barriers</li>
+        <li><strong>Expert Credibility:</strong> &ldquo;Employment solicitors&rdquo;, &ldquo;Specialist lawyers&rdquo; &mdash; E-E-A-T trust signals</li>
+        <li><strong>Conversion Bridge:</strong> &ldquo;Calculate then speak to a solicitor&rdquo; &mdash; calculator as lead generation funnel</li>
+      </ol>
+    </div>
+
+    <!-- 2h Page-Type Mismatch -->
+    <div class="card">
+      <h3><span class="icon">&#9888;</span> Page Type Analysis</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Aspect</th><th>Finding</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="fw-600">Dominant Type in Top-10</td><td><span class="serp-type serp-type-tool">Tool Page</span> &mdash; 8 of 10 results</td></tr>
+            <tr><td class="fw-600">Target Page Type</td><td><span class="serp-type serp-type-blog">Blog / Guide</span> &mdash; 1,843-word text guide</td></tr>
+            <tr><td class="fw-600">Search Intent</td><td><span class="badge badge-warn">Commercial</span> (calculator + decision-making)</td></tr>
+            <tr><td class="fw-600">Mismatch</td><td><span class="badge badge-fail">YES &mdash; Critical</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mismatch-alert mt-16">
+        <div class="mismatch-title">&#9888; Page-Type Mismatch Detected</div>
+        <p>The target page is a <strong>Blog/Guide</strong> (1,843-word explanatory text), but Google overwhelmingly favours <strong>Tool Pages</strong> with interactive calculators for this keyword (8 of 10 Top-10 results). Even with Citizens Advice&rsquo;s exceptional domain authority, the page is stuck at position 5 behind four smaller law firms that provide calculators. Perfect content in the wrong page type will not rank higher &mdash; a structural page-type change is required.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 2. USER STORY ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2>User Story</h2>
+    </div>
+
+    <div class="card">
+      <h3>Identified Elements</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Element</th><th>Derived from SERPs</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="fw-600">Search Intent</td><td><span class="badge badge-warn">Commercial</span> &mdash; Users want to calculate personal compensation to decide whether to pursue a tribunal claim</td></tr>
+            <tr><td class="fw-600">Recommended Page Type</td><td><span class="serp-type serp-type-tool">Tool Page</span> &mdash; Interactive compensation calculator with input fields</td></tr>
+            <tr><td class="fw-600">Knowledge Level</td><td>Already informed &mdash; knows they were unfairly dismissed, understands basic/compensatory awards exist, now needs specific numbers</td></tr>
+            <tr><td class="fw-600">Required Content Type</td><td>Interactive calculator (primary), concise legal explainer (supporting), solicitor CTA (conversion)</td></tr>
+            <tr><td class="fw-600">Personalisation Need</td><td>High &mdash; needs calculation based on their age, years of service, and weekly pay</td></tr>
+            <tr><td class="fw-600">Journey Phase</td><td>Decision &mdash; weighing whether to pursue a claim or accept a settlement</td></tr>
+            <tr><td class="fw-600">Emotional State</td><td>Stressed, possibly angry, financially anxious. Looking for clarity and control over an uncertain situation.</td></tr>
+            <tr><td class="fw-600">Primary Goal</td><td>&ldquo;How much compensation am I entitled to, based on MY specific circumstances?&rdquo;</td></tr>
+            <tr><td class="fw-600">Secondary Goal</td><td>&ldquo;Should I pursue a tribunal claim or accept a settlement? Is it worth getting a solicitor?&rdquo;</td></tr>
+            <tr><td class="fw-600">Barriers</td><td>Legal complexity (don&rsquo;t understand the formula), financial risk (cost of solicitor vs. potential payout), emotional burden (tribunal process seems daunting)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>User Story Statement</h3>
+      <div class="user-story-quote">
+        &ldquo;I&rsquo;ve been unfairly dismissed and I see calculating my specific compensation amount as a major challenge. I want an instant, personalised calculation based on my salary, age, and years of service, to decide whether pursuing a tribunal claim is financially worth it and feel in control of a stressful situation where I currently have no clarity.&rdquo;
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 3. TARGET PAGE COMPARISON ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2>Target Page Comparison</h2>
+    </div>
+
+    <!-- 3a First Screen Check -->
+    <div class="card">
+      <h3>First Screen Check (3-Second Test)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>User Story Element</th><th>Status</th><th>Assessment</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Headline addresses keyword / intention</td>
+              <td><span class="badge badge-warn">Partial</span></td>
+              <td>H1 says &ldquo;Check what compensation you can get&rdquo; &mdash; addresses the topic but doesn&rsquo;t signal a calculator</td>
+            </tr>
+            <tr>
+              <td>Primary tool / content immediately accessible</td>
+              <td><span class="badge badge-fail">No</span></td>
+              <td>No calculator or interactive element visible. First screen is text explaining basic and compensatory awards.</td>
+            </tr>
+            <tr>
+              <td>Trust signals visible</td>
+              <td><span class="badge badge-pass">Yes</span></td>
+              <td>Citizens Advice brand + government advisory status provides strong institutional trust</td>
+            </tr>
+            <tr>
+              <td>CTA clear and prominent</td>
+              <td><span class="badge badge-fail">No</span></td>
+              <td>No CTA above the fold. Page links to GOV.UK redundancy calculator later in text, but it&rsquo;s buried.</td>
+            </tr>
+            <tr>
+              <td>No barriers (login, long forms)</td>
+              <td><span class="badge badge-pass">Yes</span></td>
+              <td>No barriers &mdash; open access, no login required</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3b User Story Coverage -->
+    <div class="card">
+      <h3>User Story Coverage (Gap Analysis)</h3>
+
+      <div class="gap-item gap-high">
+        <h4>
+          Page-Type Mismatch: Blog/Guide vs. Tool Page
+          <span class="badge badge-fail">High</span>
+        </h4>
+        <div class="gap-detail">
+          <div>
+            <div class="gd-label">SERP Signal</div>
+            8 of 10 Top-10 results are interactive calculators. Google clearly rewards Tool Pages for this keyword.
+          </div>
+          <div>
+            <div class="gd-label">Target Page</div>
+            1,843-word text guide explaining how compensation works. No interactive elements.
+          </div>
+          <div>
+            <div class="gd-label">Gap</div>
+            Fundamental page-type mismatch. The page educates when it should calculate. No amount of content optimisation will close this gap.
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-high">
+        <h4>
+          No Interactive Calculator
+          <span class="badge badge-fail">High</span>
+        </h4>
+        <div class="gap-detail">
+          <div>
+            <div class="gd-label">SERP Signal</div>
+            Every Top-4 result has an interactive calculator with input fields for age, salary, and years of service.
+          </div>
+          <div>
+            <div class="gd-label">Target Page</div>
+            Text-only explanation of the formula. Links to GOV.UK redundancy pay calculator but doesn&rsquo;t embed one.
+          </div>
+          <div>
+            <div class="gd-label">Gap</div>
+            Users need to input their specific data and get a personalised result instantly. A text explanation of the formula is not a substitute.
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-high">
+        <h4>
+          No Current Statutory Figures Prominently Displayed
+          <span class="badge badge-fail">High</span>
+        </h4>
+        <div class="gap-detail">
+          <div>
+            <div class="gd-label">SERP Signal</div>
+            AI Overview leads with &pound;21,570 basic award cap and &pound;118,223 compensatory cap (2025/26). Competing pages show current year figures prominently.
+          </div>
+          <div>
+            <div class="gd-label">Target Page</div>
+            Mentions &pound;719/week cap but mixes 2023/24 and 2024/25 figures. Does not prominently show the maximum total award amounts.
+          </div>
+          <div>
+            <div class="gd-label">Gap</div>
+            Key figures need to be front-and-centre, updated annually. Mixed year references undermine trust and freshness.
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-medium">
+        <h4>
+          No Conversion CTA (Solicitor Consultation)
+          <span class="badge badge-warn">Medium</span>
+        </h4>
+        <div class="gap-detail">
+          <div>
+            <div class="gd-label">SERP Signal</div>
+            PAA: &ldquo;How much is a solicitor for unfair dismissal?&rdquo; Competing pages offer &ldquo;Speak to a solicitor&rdquo; CTAs after calculator results.
+          </div>
+          <div>
+            <div class="gd-label">Target Page</div>
+            Links to &ldquo;talk to an adviser&rdquo; deep in text. No prominent CTA or next-step guidance.
+          </div>
+          <div>
+            <div class="gd-label">Gap</div>
+            After calculating, users want to know their next step. A prominent &ldquo;Get free advice&rdquo; CTA would serve the secondary goal.
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-medium">
+        <h4>
+          Settlement vs. Tribunal Decision Framework Missing
+          <span class="badge badge-warn">Medium</span>
+        </h4>
+        <div class="gap-detail">
+          <div>
+            <div class="gd-label">SERP Signal</div>
+            PAA: &ldquo;Is it better to settle or go to tribunal?&rdquo;, &ldquo;How often do unfair dismissal claims win?&rdquo; &mdash; users need a decision framework.
+          </div>
+          <div>
+            <div class="gd-label">Target Page</div>
+            Mentions settlement in passing but doesn&rsquo;t provide a structured comparison or success rate data.
+          </div>
+          <div>
+            <div class="gd-label">Gap</div>
+            A short comparison section (settlement vs. tribunal: pros, cons, average outcomes) would directly address the secondary goal.
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-item gap-low">
+        <h4>
+          Page Last Reviewed: November 2021
+          <span class="badge badge-info">Low</span>
+        </h4>
+        <div class="gap-detail">
+          <div>
+            <div class="gd-label">SERP Signal</div>
+            Competing pages show &ldquo;Updated 2025&rdquo; signals. Google favours fresh content for statutory data that changes annually.
+          </div>
+          <div>
+            <div class="gd-label">Target Page</div>
+            &ldquo;Page last reviewed on 09 November 2021&rdquo; &mdash; over 4 years old despite containing year-specific figures.
+          </div>
+          <div>
+            <div class="gd-label">Gap</div>
+            Update the review date. Statutory figures change every April &mdash; the page should reflect this with annual review cycles.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3c Overall Verdict -->
+    <div class="card">
+      <h3>Overall Verdict</h3>
+      <div class="verdict verdict-bad">
+        <div class="verdict-title">&#10060; Search Experience is not met &mdash; structural overhaul required</div>
+        <p>The page provides accurate legal information but fundamentally fails to meet the search experience. The SERPs demand an interactive compensation calculator; this page delivers a text guide. Despite exceptional domain authority and flawless technical performance (100/100 on all Lighthouse scores), Citizens Advice cannot break past position 5 for this keyword. The gap is structural, not content-based: a page-type change from Blog/Guide to Tool Page is the only viable path to Top-3 rankings.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 4. OPTIMIZATION RECOMMENDATIONS ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2>Optimization Recommendations</h2>
+    </div>
+
+    <div class="reco-grid">
+      <!-- Option A -->
+      <div class="reco-card recommended">
+        <h3>Option A: Build a Calculator-First Tool Page</h3>
+        <p class="fs-13 text-muted">Transform the page into a Tool Page with an interactive unfair dismissal compensation calculator as the primary content element. Keep the existing guide content below as supporting material.</p>
+        <ul class="mt-8">
+          <li class="fs-13 text-muted">Add interactive calculator above the fold: inputs for weekly pay, age, years of service &rarr; outputs basic award + estimated compensatory award</li>
+          <li class="fs-13 text-muted">Display current 2025/26 statutory caps prominently (&pound;719/week, &pound;21,570 basic max, &pound;118,223 compensatory cap)</li>
+          <li class="fs-13 text-muted">Add result explanation section with next-step CTA (&ldquo;Get free advice from Citizens Advice&rdquo;)</li>
+          <li class="fs-13 text-muted">Move existing guide text below the calculator as &ldquo;How compensation is calculated&rdquo; methodology section</li>
+          <li class="fs-13 text-muted">Add WebApplication schema markup for the calculator</li>
+          <li class="fs-13 text-muted">Add FAQ section from PAA questions (settlement vs tribunal, solicitor costs, success rates)</li>
+        </ul>
+        <div class="reco-meta">
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Effort</div>
+            <div class="reco-meta-value priority-high">High</div>
+          </div>
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Impact</div>
+            <div class="reco-meta-value priority-high">High</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Option B -->
+      <div class="reco-card">
+        <h3>Option B: Embed GOV.UK Calculator + Enhance Guide</h3>
+        <p class="fs-13 text-muted">Keep the guide format but embed or prominently link the existing GOV.UK redundancy pay calculator at the top, add current statutory figures, and update the review date.</p>
+        <ul class="mt-8">
+          <li class="fs-13 text-muted">Move the GOV.UK calculator link to the very top of the page with a prominent CTA box</li>
+          <li class="fs-13 text-muted">Add a &ldquo;Key Figures 2025/26&rdquo; summary box with statutory caps</li>
+          <li class="fs-13 text-muted">Update page review date to current year</li>
+          <li class="fs-13 text-muted">Add structured FAQ section from PAA questions</li>
+          <li class="fs-13 text-muted">This is a lighter intervention but does not address the fundamental page-type mismatch</li>
+        </ul>
+        <div class="reco-meta">
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Effort</div>
+            <div class="reco-meta-value text-accent">Low</div>
+          </div>
+          <div class="reco-meta-item">
+            <div class="reco-meta-label">Impact</div>
+            <div class="reco-meta-value text-muted">Medium</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-16">
+      <h3>Recommendation</h3>
+      <p><strong>Option A is strongly recommended.</strong> The SERP signal is unambiguous: 8 of 10 results are calculators. Option B improves the page but does not change the underlying page type, which means it is unlikely to break past position 4-5. Citizens Advice already has the domain authority, trust signals, and content quality to rank #1 for this keyword &mdash; the only thing missing is an interactive calculator. Building one would leverage the existing strengths (E-E-A-T, accessibility, brand trust) while finally matching the page type Google rewards. The calculator also creates a natural conversion funnel: calculate &rarr; understand result &rarr; get free advice.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 5. CHECKLISTS ═══════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2>Checklists</h2>
+    </div>
+
+    <!-- Layout Basics -->
+    <div class="card">
+      <h3>Layout Basics</h3>
+      <ul class="checklist">
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Key elements (logo, H1, content) identifiable within 3 seconds</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Content sections clearly separated with whitespace</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Logical element order (user guided through the page)</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Layout consistent (buttons, headlines, links uniform)</span>
+        </li>
+        <li>
+          <span class="check-icon check-fail">&#10007;</span>
+          <span>No prominent CTA visible &mdash; &ldquo;Talk to an adviser&rdquo; link is buried in text</span>
+        </li>
+        <li>
+          <span class="check-icon check-warn">!</span>
+          <span>Page is text-heavy with minimal visual variety (no tables, charts, or interactive elements)</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Mobile-friendly responsive layout</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- SEO Target URL -->
+    <div class="card">
+      <h3>SEO Hygiene &mdash; Target URL</h3>
+      <ul class="checklist">
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>H1 contains the core topic (&ldquo;compensation&rdquo; + &ldquo;unfair dismissal&rdquo;) but lacks &ldquo;calculator&rdquo;</span>
+        </li>
+        <li>
+          <span class="check-icon check-warn">!</span>
+          <span>Title Tag: 74 characters (&ldquo;Check what compensation you can get for unfair dismissal - Citizens Advice&rdquo;) &mdash; exceeds 60-character recommendation. Missing &ldquo;calculator&rdquo; keyword.</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Meta Description: 158 characters &mdash; within range. Contains relevant terms but no CTA.</span>
+        </li>
+        <li>
+          <span class="check-icon check-fail">&#10007;</span>
+          <span>No structured data detected (no FAQPage, HowTo, or WebApplication schema)</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Strong internal linking: 48 internal links connecting to related tribunal advice pages</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Content accessible without JavaScript (server-rendered)</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Images -->
+    <div class="card">
+      <h3>Images &amp; Alt Tags</h3>
+      <div class="img-audit-summary">
+        <div class="img-audit-stat">
+          <div class="stat-value">1</div>
+          <div class="stat-label">Total images</div>
+        </div>
+        <div class="img-audit-stat">
+          <div class="stat-value cwv-good">1</div>
+          <div class="stat-label">with alt tag</div>
+        </div>
+        <div class="img-audit-stat">
+          <div class="stat-value cwv-good">0</div>
+          <div class="stat-label">missing alt tag</div>
+        </div>
+      </div>
+      <p class="fs-13 text-muted mt-8">All images have proper alt attributes. No issues detected.</p>
+    </div>
+
+    <!-- CWV -->
+    <div class="card">
+      <h3>Core Web Vitals &amp; Performance</h3>
+      <div class="score-row">
+        <div class="score-item">
+          <div class="score-value cwv-good">100</div>
+          <div class="score-label">Performance</div>
+        </div>
+        <div class="score-item">
+          <div class="score-value cwv-good">100</div>
+          <div class="score-label">Accessibility</div>
+        </div>
+        <div class="score-item">
+          <div class="score-value cwv-good">100</div>
+          <div class="score-label">SEO</div>
+        </div>
+      </div>
+      <table class="cwv-table">
+        <thead>
+          <tr><th>Metric</th><th>Value</th><th>Rating</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>LCP (Largest Contentful Paint)</td>
+            <td>0.4s</td>
+            <td><span class="badge badge-pass">Good</span></td>
+          </tr>
+          <tr>
+            <td>CLS (Cumulative Layout Shift)</td>
+            <td>0.005</td>
+            <td><span class="badge badge-pass">Good</span></td>
+          </tr>
+          <tr>
+            <td>TBT (Total Blocking Time)</td>
+            <td>0 ms</td>
+            <td><span class="badge badge-pass">Good</span></td>
+          </tr>
+          <tr>
+            <td>FCP (First Contentful Paint)</td>
+            <td>0.3s</td>
+            <td><span class="badge badge-pass">Good</span></td>
+          </tr>
+          <tr>
+            <td>Speed Index</td>
+            <td>0.5s</td>
+            <td><span class="badge badge-pass">Good</span></td>
+          </tr>
+          <tr>
+            <td>TTFB (Time to First Byte)</td>
+            <td>24 ms</td>
+            <td><span class="badge badge-pass">Good</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-16">
+        <div class="sub-label">Assessment</div>
+        <p class="fs-13 text-muted">Technically flawless. All metrics in the green zone with perfect scores across performance, accessibility, and SEO. This reinforces the key finding: the ranking limitation at position 5 is <strong>not</strong> a technical problem &mdash; it is entirely a page-type mismatch. The page has every technical advantage and still cannot outrank smaller law firms with calculators.</p>
+      </div>
+    </div>
+
+    <!-- SEO Domain -->
+    <div class="card">
+      <h3>SEO Hygiene &mdash; Domain</h3>
+      <ul class="checklist">
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>citizensadvice.org.uk is a high-authority domain (government-affiliated advisory body) &mdash; significantly stronger than competing law firm domains</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Strong backlink profile as a national advisory service</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Crawlable &mdash; canonical set, no noindex, HTTPS with valid certificate</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>E-E-A-T: Strong institutional authority. Citizens Advice is a recognised UK advisory body with expert contributors.</span>
+        </li>
+        <li>
+          <span class="check-icon check-pass">&#10003;</span>
+          <span>Mobile-friendly domain-wide (responsive design)</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="report-footer">
+    SXO Analysis generated with Claude Code &middot; sxo-analyzer Skill &middot; 2026-03-25
+  </footer>
+
+</div>
+</body>
+</html>

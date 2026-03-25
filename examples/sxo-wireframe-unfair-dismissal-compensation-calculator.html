@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SXO Wireframe: unfair dismissal compensation calculator</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f7;
+    --surface-3: #e8ebf0;
+    --border: #d1d5de;
+    --border-light: #e2e5ec;
+    --text: #1a1f2e;
+    --text-muted: #4a5168;
+    --text-dim: #7a8198;
+    --accent: #2563eb;
+    --accent-glow: rgba(37, 99, 235, 0.08);
+    --green: #16a34a;
+    --green-bg: rgba(22, 163, 74, 0.08);
+    --green-border: rgba(22, 163, 74, 0.25);
+    --red: #dc2626;
+    --red-bg: rgba(220, 38, 38, 0.07);
+    --red-border: rgba(220, 38, 38, 0.25);
+    --yellow: #b45309;
+    --yellow-bg: rgba(180, 83, 9, 0.07);
+    --yellow-border: rgba(180, 83, 9, 0.25);
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.07);
+    --ist-bg: #fafafa;
+    --ist-border: #d4d4d8;
+    --soll-bg: #f0f7ff;
+    --soll-border: rgba(37, 99, 235, 0.3);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .wireframe-report {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .wf-header {
+    position: relative;
+    padding: 40px 36px 32px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .wf-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+  }
+  .wf-header .label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #93c5fd;
+    background: rgba(147, 197, 253, 0.15);
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .wf-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    color: #f1f5f9;
+  }
+  .wf-header h1 span { color: #93c5fd; }
+  .wf-header .meta-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+  .wf-header .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .wf-header .meta-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+  .wf-header .meta-value {
+    color: #e2e8f0;
+    font-size: 13px;
+  }
+  .wf-header .meta-value a { color: #93c5fd; text-decoration: none; }
+
+  /* ── User Story Banner ── */
+  .user-story-banner {
+    position: relative;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+    border-left: 3px solid var(--purple);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 32px;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .user-story-banner .us-label {
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 6px;
+  }
+
+  /* ── Page Type Recommendation ── */
+  .page-type-rec {
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .page-type-rec .ptr-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .page-type-rec .ptr-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: #fff;
+  }
+  .page-type-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .pt-option {
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    background: var(--surface-2);
+    transition: border-color 0.15s;
+  }
+  .pt-option.pt-recommended {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+  }
+  .pt-option .pt-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .pt-option .pt-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .pt-option .pt-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-top: 6px;
+  }
+  .pt-tag.pt-tag-rec { background: var(--accent); color: #fff; }
+  .pt-tag.pt-tag-alt { background: var(--surface-3); color: var(--text-dim); }
+
+  /* ── Comparison Container (stacked / full-width) ── */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+
+  /* ── Column Headers ── */
+  .col-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .col-ist .col-header {
+    background: var(--red-bg);
+    color: var(--red);
+    border: 1px solid var(--red-border);
+  }
+  .col-soll .col-header {
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid var(--green-border);
+  }
+
+  /* ── Wireframe Blocks ── */
+  .wf-block {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+    min-height: 60px;
+  }
+  .wf-block .block-label {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .wf-block .block-content {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .col-ist .wf-block {
+    background: var(--ist-bg);
+    border-color: var(--ist-border);
+  }
+  .col-ist .block-label {
+    background: var(--surface-3);
+    color: var(--text-dim);
+  }
+  .col-soll .wf-block {
+    background: var(--soll-bg);
+    border-color: var(--soll-border);
+  }
+  .col-soll .block-label {
+    background: var(--accent-glow);
+    color: var(--accent);
+  }
+
+  /* ── Priority indicators ── */
+  .wf-block.prio-high { border-left: 4px solid var(--red); }
+  .wf-block.prio-medium { border-left: 4px solid var(--yellow); }
+  .wf-block.prio-low { border-left: 4px solid var(--green); }
+  .wf-block.prio-new { border-left: 4px solid var(--accent); border-style: solid; }
+
+  /* ── Problem annotations (IST) ── */
+  .problem-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  .problem-tag.problem-missing { background: var(--red-bg); color: var(--red); }
+  .problem-tag.problem-weak { background: var(--yellow-bg); color: var(--yellow); }
+  .problem-tag.problem-ok { background: var(--green-bg); color: var(--green); }
+
+  /* ── Placeholder boxes (SOLL) ── */
+  .placeholder {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+  .placeholder .ph-type { font-weight: 700; color: var(--text); }
+  .placeholder .ph-detail {
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 11px;
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* ── Gap reference tag ── */
+  .gap-ref {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--purple-bg);
+    color: var(--purple);
+    margin-top: 6px;
+  }
+
+  /* ── Image placeholder ── */
+  .img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-3);
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 8px;
+    color: var(--text-dim);
+    font-size: 12px;
+    text-align: center;
+    min-height: 80px;
+  }
+
+  /* ── Meta comments block ── */
+  .meta-comments {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .meta-comments .mc-title {
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .meta-comments code { display: block; padding: 3px 0; color: var(--accent); }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch {
+    width: 16px; height: 16px;
+    border-radius: 4px; border: 2px solid; flex-shrink: 0;
+  }
+  .legend-swatch.swatch-high { border-color: var(--red); background: var(--red-bg); }
+  .legend-swatch.swatch-medium { border-color: var(--yellow); background: var(--yellow-bg); }
+  .legend-swatch.swatch-low { border-color: var(--green); background: var(--green-bg); }
+  .legend-swatch.swatch-new { border-color: var(--accent); background: var(--accent-glow); }
+  .legend-swatch.swatch-ist { border-color: var(--ist-border); background: var(--ist-bg); border-style: dashed; }
+  .legend-swatch.swatch-soll { border-color: var(--soll-border); background: var(--soll-bg); }
+
+  /* ── Footer ── */
+  .wf-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 800px) {
+    .wf-header { padding: 24px 20px 20px; }
+    .wf-header h1 { font-size: 20px; }
+    .legend { flex-direction: column; gap: 8px; }
+  }
+
+  @media print {
+    body { background: #fff; font-size: 11px; }
+    .wireframe-report { max-width: 100%; padding: 0; }
+    .wf-header { background: #f0f0f0; border: 1px solid #ccc; color: #1a1a1a; }
+    .wf-header::before { display: none; }
+    .wf-header h1, .wf-header .meta-value { color: #1a1a1a; }
+    .comparison { grid-template-columns: 1fr; gap: 16px; }
+    .wf-block { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wireframe-report">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="wf-header">
+    <div class="label">SXO Wireframe</div>
+    <h1>Page Structure: <span>unfair dismissal compensation calculator</span></h1>
+    <div class="meta-row">
+      <div class="meta-item">
+        <div class="meta-label">Keyword</div>
+        <div class="meta-value">unfair dismissal compensation calculator</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Target Page</div>
+        <div class="meta-value"><a href="https://www.citizensadvice.org.uk/work/employment-tribunal/employment-tribunals/before-you-go-to-the-tribunal/check-what-compensation-you-can-get-for-unfair-dismissal/" target="_blank">citizensadvice.org.uk/&hellip;/check-what-compensation-you-can-get-for-unfair-dismissal/</a></div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Date</div>
+        <div class="meta-value">2026-03-25</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Source</div>
+        <div class="meta-value">SXO Report</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ USER STORY ═══════════════ -->
+  <div class="user-story-banner">
+    <div class="us-label">User Story</div>
+    &ldquo;I&rsquo;ve been unfairly dismissed and I see calculating my specific compensation amount as a major challenge. I want an instant, personalised calculation based on my salary, age, and years of service, to decide whether pursuing a tribunal claim is financially worth it and feel in control of a stressful situation where I currently have no clarity.&rdquo;
+  </div>
+
+  <!-- ═══════════════ PAGE TYPE RECOMMENDATION ═══════════════ -->
+  <div class="page-type-rec">
+    <div class="ptr-title">
+      Recommended Page Type
+      <span class="ptr-badge">Tool Page</span>
+    </div>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+      8 of 10 Top-10 results are interactive calculators. Google unambiguously rewards Tool Pages for this keyword. Citizens Advice&rsquo;s guide page is stuck at position 5 despite exceptional domain authority &mdash; the only missing element is the calculator itself.
+    </p>
+    <div class="page-type-options">
+      <div class="pt-option pt-recommended">
+        <div class="pt-name">Tool Page</div>
+        <div class="pt-desc">8/10 Top-10 results are calculator tool pages. The search intent is computational &mdash; users want to input their data and get a personalised number. Calculator IS the content.</div>
+        <span class="pt-tag pt-tag-rec">RECOMMENDED</span>
+      </div>
+      <div class="pt-option">
+        <div class="pt-name">Hybrid (Tool + Guide)</div>
+        <div class="pt-desc">Calculator primary with supporting guide content below. JobRights uses this at #6. Risk: guide content may dilute the tool-first signal Google rewards.</div>
+        <span class="pt-tag pt-tag-alt">ALTERNATIVE</span>
+      </div>
+      <div class="pt-option">
+        <div class="pt-name">Blog / Guide (Current)</div>
+        <div class="pt-desc">Current format. Text-only explanation of compensation rules. Stuck at #5 despite strong E-E-A-T. Does not match the SERP page-type signal.</div>
+        <span class="pt-tag pt-tag-alt">CURRENT &mdash; NOT VIABLE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LEGEND ═══════════════ -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch swatch-ist"></div><span>Current state (before)</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-soll"></div><span>Optimized state (after)</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-high"></div><span>High priority</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-medium"></div><span>Medium priority</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-low"></div><span>Low priority</span></div>
+    <div class="legend-item"><div class="legend-swatch swatch-new"></div><span>New section</span></div>
+  </div>
+
+  <!-- ═══════════════ META / HEAD ═══════════════ -->
+  <div class="meta-comments">
+    <div class="mc-title">HTML Head &mdash; Meta Optimizations</div>
+    <code>&lt;!-- META: Title &quot;Unfair Dismissal Compensation Calculator | Citizens Advice&quot; (58 chars) &mdash; adds &quot;Calculator&quot; keyword, matches Top-4 title patterns --&gt;</code>
+    <code>&lt;!-- META-DESC: &quot;Calculate your unfair dismissal compensation free. Enter your weekly pay, age &amp; years of service to get your basic award + compensatory award estimate. Updated for 2025/26 statutory caps. Free advice from Citizens Advice.&quot; (160 chars, CTA + freshness signal) --&gt;</code>
+    <code>&lt;!-- SCHEMA: Add WebApplication schema (name: &quot;Unfair Dismissal Compensation Calculator&quot;, applicationCategory: &quot;FinanceApplication&quot;, offers: {price: &quot;0&quot;}) --&gt;</code>
+    <code>&lt;!-- SCHEMA: Add FAQPage schema for 5 PAA-derived FAQ items --&gt;</code>
+    <code>&lt;!-- FRESHNESS: Update dateModified to current date. Set annual review cycle every April (statutory cap changes). --&gt;</code>
+  </div>
+
+  <!-- ═══════════════ BEFORE / AFTER ═══════════════ -->
+  <div class="comparison">
+
+    <!-- ═══════════════ IST (CURRENT STATE) ═══════════════ -->
+    <div class="col-ist">
+      <div class="col-header">&#x2718; Current State (Before)</div>
+
+      <!-- IST: HEADER -->
+      <div class="wf-block">
+        <div class="block-label">HEADER</div>
+        <div class="block-content">
+          Citizens Advice logo + navigation bar. Government advisory branding visible. Standard site-wide header with search, menu, and &ldquo;Get advice&rdquo; links.
+        </div>
+        <div class="problem-tag problem-ok">&#10003; Strong brand trust &mdash; retained</div>
+      </div>
+
+      <!-- IST: HERO -->
+      <div class="wf-block prio-high">
+        <div class="block-label">HERO SECTION</div>
+        <div class="block-content">
+          <strong>H1:</strong> &ldquo;Check what compensation you can get for unfair dismissal&rdquo;<br>
+          Breadcrumb navigation: Home &gt; Work &gt; Employment Tribunal &gt; Before you go&hellip;<br>
+          No subheadline. No CTA. No interactive element. First visible content is a text paragraph explaining compensation types.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; H1 addresses topic but missing &ldquo;calculator&rdquo; keyword</div>
+        <div class="problem-tag problem-missing">&#10007; No calculator or interactive element above the fold</div>
+      </div>
+
+      <!-- IST: CONTENT BLOCK 1 -->
+      <div class="wf-block prio-high">
+        <div class="block-label">MAIN CONTENT &mdash; BASIC AWARD</div>
+        <div class="block-content">
+          H2: &ldquo;Basic award&rdquo;<br>
+          Text explanation of how basic award is calculated. Mentions &pound;719/week cap. References age-based multipliers (0.5/1.0/1.5 weeks per year of service). Links to GOV.UK redundancy pay calculator for actual calculation &mdash; but the link is inline text, not a prominent CTA.
+        </div>
+        <div class="problem-tag problem-missing">&#10007; Explains formula but provides no way to calculate it</div>
+        <div class="problem-tag problem-weak">&#9888; Mixes 2023/24 and 2024/25 figures &mdash; not showing current 2025/26 caps</div>
+      </div>
+
+      <!-- IST: CONTENT BLOCK 2 -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">MAIN CONTENT &mdash; COMPENSATORY AWARD</div>
+        <div class="block-content">
+          H2: &ldquo;Compensatory award&rdquo;<br>
+          Text explaining compensatory award covers financial losses (loss of earnings, pension, benefits). Mentions the statutory cap. No structured data or comparison table.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; No structured breakdown &mdash; text-only explanation</div>
+      </div>
+
+      <!-- IST: CONTENT BLOCK 3 -->
+      <div class="wf-block">
+        <div class="block-label">MAIN CONTENT &mdash; BENEFITS REPAYMENT</div>
+        <div class="block-content">
+          H2: &ldquo;Repaying benefits&rdquo;<br>
+          Text about how DWP can recoup benefits from compensation. Brief section.
+        </div>
+        <div class="problem-tag problem-ok">&#10003; Useful supporting information &mdash; keep in methodology</div>
+      </div>
+
+      <!-- IST: CONTENT BLOCK 4 -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">MAIN CONTENT &mdash; REDUCTIONS</div>
+        <div class="block-content">
+          H2: &ldquo;Reductions to your compensation&rdquo;<br>
+          Text about when compensation can be reduced (contributory fault, failure to mitigate). Important context but buried in guide format.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; Relevant content but positioned too late in the page flow</div>
+      </div>
+
+      <!-- IST: INTERNAL LINKS -->
+      <div class="wf-block">
+        <div class="block-label">INTERNAL LINKS</div>
+        <div class="block-content">
+          48 internal links to related pages: &ldquo;Unfair dismissal&rdquo;, &ldquo;Making an employment tribunal claim&rdquo;, &ldquo;Early conciliation&rdquo;, &ldquo;Settlement agreements&rdquo;, and other tribunal advice pages. Standard Citizens Advice sidebar and inline link pattern.
+        </div>
+        <div class="problem-tag problem-ok">&#10003; Strong internal linking &mdash; retain</div>
+      </div>
+
+      <!-- IST: ADVISER LINK -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">CTA (BURIED)</div>
+        <div class="block-content">
+          &ldquo;Talk to an adviser&rdquo; link appears as inline text near the bottom of the page. Not styled as a button. No prominence, no conversion-focused design.
+        </div>
+        <div class="problem-tag problem-missing">&#10007; CTA is effectively invisible &mdash; no button, no contrast, no urgency</div>
+      </div>
+
+      <!-- IST: FOOTER -->
+      <div class="wf-block prio-low">
+        <div class="block-label">FOOTER</div>
+        <div class="block-content">
+          Standard Citizens Advice footer. &ldquo;Page last reviewed on 09 November 2021&rdquo; &mdash; over 4 years old. Contains year-specific statutory figures that change annually.
+        </div>
+        <div class="problem-tag problem-weak">&#9888; Review date is Nov 2021 &mdash; severely outdated for content with annual statutory changes</div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════ SOLL (OPTIMIZED STATE) ═══════════════ -->
+    <div class="col-soll">
+      <div class="col-header">&#x2714; Optimized State (After)</div>
+
+      <!-- SOLL 1: HEAD META -->
+      <div class="wf-block prio-high">
+        <div class="block-label">HEAD / META</div>
+        <div class="block-content">Title tag, meta description, and schema markup optimizations.</div>
+        <div class="placeholder">
+          <span class="ph-type">[KEYWORD]</span> Title: &quot;Unfair Dismissal Compensation Calculator | Citizens Advice&quot; (58 chars). Current title is 74 chars and missing &quot;calculator&quot;. Every Top-4 competitor includes &quot;calculator&quot; in their title.
+          <div class="ph-detail">Matches SERP title pattern. All Top-4 results contain &ldquo;calculator&rdquo; in their title tags.</div>
+        </div>
+        <div class="placeholder">
+          <span class="ph-type">[SCHEMA]</span> WebApplication JSON-LD: name=&quot;Unfair Dismissal Compensation Calculator&quot;, applicationCategory=&quot;FinanceApplication&quot;, operatingSystem=&quot;All&quot;, offers.price=&quot;0&quot;, offers.priceCurrency=&quot;GBP&quot;. Plus FAQPage schema for 5 FAQ items below.
+          <div class="ph-detail">No structured data currently exists. WebApplication schema enables rich results for tool pages.</div>
+        </div>
+        <div class="gap-ref">&#x2192; Primary Goal: personalised calculation + Checklist Fail: No structured data</div>
+      </div>
+
+      <!-- SOLL 2: HERO -->
+      <div class="wf-block prio-high">
+        <div class="block-label">HERO SECTION</div>
+        <div class="block-content">H1 with &ldquo;Calculator&rdquo; keyword, subheadline with current statutory caps, trust line.</div>
+        <div class="placeholder">
+          <span class="ph-type">[KEYWORD]</span> H1: &quot;Unfair Dismissal Compensation Calculator&quot; &mdash; 32px font, centred above the calculator. Replaces current H1 &quot;Check what compensation you can get for unfair dismissal&quot; which does not signal an interactive tool.
+          <div class="ph-detail">Every Top-4 title contains &ldquo;calculator&rdquo;. Current H1 reads like a guide headline, not a tool headline.</div>
+        </div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT TYPE]</span> Subheadline: &quot;Calculate your basic award and estimated compensatory award based on 2025/26 statutory caps (&pound;719/week max, &pound;21,570 basic award cap, &pound;118,223 compensatory cap)&quot; &mdash; 16px, muted grey, immediately below H1. Shows users the page has current figures.
+          <div class="ph-detail">Addresses Gap: &ldquo;No current statutory figures prominently displayed.&rdquo; Competing pages lead with year-specific caps.</div>
+        </div>
+        <div class="placeholder">
+          <span class="ph-type">[TRUST]</span> Trust line below subheadline: &quot;Free &middot; No login required &middot; Updated April 2025&quot; &mdash; 12px, inline badges. Removes barriers (no cost, no signup) and signals freshness.
+          <div class="ph-detail">Addresses Barrier: Financial risk + Barrier: Complexity. Meta description patterns from Top-10 all emphasise &ldquo;free&rdquo; and &ldquo;no obligation&rdquo;.</div>
+        </div>
+        <div class="gap-ref">&#x2192; Primary Goal + Barrier: Complexity + Freshness signal</div>
+      </div>
+
+      <!-- SOLL 3: TOOL SECTION (PRIMARY) -->
+      <div class="wf-block prio-new">
+        <div class="block-label">TOOL / CALCULATOR</div>
+        <div class="block-content">Interactive compensation calculator &mdash; the primary content element. This section IS the page.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT TYPE]</span> Interactive calculator form with 3 input fields:
+          <br>1. &quot;Your gross weekly pay (before tax)&quot; &mdash; &pound; input, number field, placeholder &quot;e.g. 500&quot;, helper text &quot;Capped at &pound;719/week for basic award&quot;
+          <br>2. &quot;Your age when dismissed&quot; &mdash; number field, range 16&ndash;100, helper text &quot;This affects the multiplier (0.5&times;, 1&times;, or 1.5&times; per year)&quot;
+          <br>3. &quot;Complete years of service&quot; &mdash; number field, range 0&ndash;40, helper text &quot;Capped at 20 years for basic award&quot;
+          <br><br>Calculate button: &quot;Calculate My Compensation &rarr;&quot; &mdash; Citizens Advice green (#008445), full-width, min 48px height, prominent.
+          <br><br>Result output area (appears after calculation):
+          <br>&bull; Basic Award: &pound;[calculated] &mdash; large number, green, with breakdown &quot;[X] years &times; [multiplier] &times; &pound;[weekly pay] = &pound;[result]&quot;
+          <br>&bull; Compensatory Award (estimated range): &pound;[low]&ndash;&pound;[high] &mdash; based on weeks of lost earnings (user-adjustable slider: 4&ndash;52 weeks)
+          <br>&bull; Total Estimated Range: &pound;[basic + low] &ndash; &pound;[basic + high]
+          <br><br>Disclaimer below result: &quot;This is an estimate based on statutory formulas. Actual awards depend on tribunal assessment of your individual circumstances.&quot;
+          <div class="ph-detail">Addresses the fundamental page-type mismatch. Every Top-4 result provides this. Users need to input THEIR specific data and see a personalised number. The formula text currently on the page is necessary context but not a substitute for an interactive tool. JavaScript calculation using the statutory formula: age &lt; 22 = 0.5 weeks/year, 22&ndash;40 = 1 week/year, 41+ = 1.5 weeks/year, capped at 20 years and &pound;719/week.</div>
+        </div>
+        <div class="gap-ref">&#x2192; Primary Goal: &ldquo;How much compensation am I entitled to, based on MY specific circumstances?&rdquo;</div>
+      </div>
+
+      <!-- SOLL 4: RESULT EXPLANATION -->
+      <div class="wf-block prio-new">
+        <div class="block-label">RESULT EXPLANATION</div>
+        <div class="block-content">What the calculated numbers mean and what to do next. Appears dynamically after calculation.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT TYPE]</span> Two-column card layout:
+          <br><strong>Card 1 &mdash; &ldquo;What your basic award means&rdquo;:</strong> &ldquo;The basic award is a fixed statutory amount calculated like redundancy pay. This is the minimum you are entitled to and cannot be reduced except in specific circumstances (e.g. contributory fault). Maximum basic award for 2025/26: &pound;21,570.&rdquo;
+          <br><strong>Card 2 &mdash; &ldquo;What your compensatory award means&rdquo;:</strong> &ldquo;The compensatory award covers your actual financial losses (lost earnings, pension, benefits). Tribunals assess this individually. The estimate above assumes [X] weeks of lost earnings. The statutory cap for 2025/26 is &pound;118,223 or 52 weeks&rsquo; gross pay, whichever is lower.&rdquo;
+          <br><br><strong>Important Note box</strong> (amber background): &ldquo;Compensation can be reduced if the tribunal finds you contributed to your dismissal, or if you have not taken reasonable steps to find new work (duty to mitigate).&rdquo;
+          <div class="ph-detail">Converts the existing guide content (basic award section + compensatory award section + reductions section) into a contextual explanation that appears WITH the user&rsquo;s specific numbers. Much more useful than static text.</div>
+        </div>
+        <div class="gap-ref">&#x2192; Barrier: Legal complexity &mdash; explain the numbers in plain English</div>
+      </div>
+
+      <!-- SOLL 5: METHODOLOGY -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">METHODOLOGY / CALCULATION</div>
+        <div class="block-content">How the calculation works &mdash; repurposed from current guide content. Provides E-E-A-T depth.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT TYPE]</span> Collapsible section (&lt;details&gt;/&lt;summary&gt;): &quot;How we calculate your compensation&quot;
+          <br><br><strong>Basic Award Formula</strong> (table):
+          <br>| Age when dismissed | Multiplier per year of service |
+          <br>| Under 22 | 0.5 weeks&rsquo; pay |
+          <br>| 22 to 40 | 1 week&rsquo;s pay |
+          <br>| 41 and over | 1.5 weeks&rsquo; pay |
+          <br>Maximum: 20 years &times; 1.5 &times; &pound;719 = &pound;21,570 (2025/26)
+          <br><br><strong>Compensatory Award:</strong> &ldquo;Based on actual financial losses proven to the tribunal. Includes: loss of earnings (net pay &times; weeks unemployed), loss of statutory rights (&pound;500 conventional), pension loss (if applicable), expenses incurred. Capped at &pound;118,223 or 52 weeks&rsquo; gross pay (2025/26).&rdquo;
+          <br><br><strong>Benefits Repayment:</strong> &ldquo;If you received benefits (JSA, Universal Credit) during the period covered by your compensatory award, DWP may recoup these from your compensation.&rdquo;
+          <br><br>Source citation: &ldquo;Figures from Employment Rights Act 1996, updated annually by the Secretary of State. Current rates effective 6 April 2025.&rdquo;
+          <div class="ph-detail">This repurposes the existing guide content (currently the entire page) into a supporting methodology section. The information is the same, but it sits below the calculator instead of replacing it. Provides the E-E-A-T depth that distinguishes Citizens Advice from competitor calculators.</div>
+        </div>
+        <div class="gap-ref">&#x2192; E-E-A-T depth + existing content preservation</div>
+      </div>
+
+      <!-- SOLL 6: TRUST BAR -->
+      <div class="wf-block prio-new">
+        <div class="block-label">TRUST SIGNALS</div>
+        <div class="block-content">Trust bar leveraging Citizens Advice&rsquo;s unique institutional positioning.</div>
+        <div class="placeholder">
+          <span class="ph-type">[TRUST]</span> Horizontal trust bar with 3 items, centred:
+          <br>1. Citizens Advice logo + &ldquo;Official government advisory service&rdquo; &mdash; leverages institutional authority no law firm can match
+          <br>2. &ldquo;100% free &middot; No registration required&rdquo; &mdash; differentiates from law firm calculators that gate results behind contact forms
+          <br>3. &ldquo;Verified by employment law experts &middot; Updated April 2025&rdquo; &mdash; E-E-A-T signal + freshness
+          <br><br>Design: single row, light grey background (#f8f9fb), 12px text, icons for each item. Full-width.
+          <div class="ph-detail">Citizens Advice has unique trust advantages over competing law firm calculators: institutional authority, free service, no commercial agenda. These must be explicitly signalled as they are the key differentiator.</div>
+        </div>
+        <div class="gap-ref">&#x2192; Trust signals + Barrier: Financial risk (free = no cost fear)</div>
+      </div>
+
+      <!-- SOLL 7: CONTENT MAIN (Settlement vs Tribunal) -->
+      <div class="wf-block prio-medium">
+        <div class="block-label">MAIN CONTENT</div>
+        <div class="block-content">Settlement vs. tribunal comparison addressing the user&rsquo;s secondary decision.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CONTENT TYPE]</span> H2: &quot;Settlement vs. Tribunal: Which Is Right for You?&quot;
+          <br><br>Comparison table (2 columns):
+          <br>| | Settlement Agreement | Employment Tribunal |
+          <br>| Typical payout | 1&ndash;6 months&rsquo; salary | Basic award + compensatory award |
+          <br>| Timeline | 1&ndash;4 weeks | 6&ndash;12 months |
+          <br>| Success rate | Negotiated (certain) | ~50% of claims succeed |
+          <br>| Cost to you | Usually &pound;0 (employer pays) | Free to file, but solicitor optional |
+          <br>| Tax treatment | First &pound;30,000 tax-free | Same |
+          <br>| Confidentiality | Yes (NDA typical) | Public hearing |
+          <br><br>Conclusion paragraph: &ldquo;Most unfair dismissal cases settle before reaching a full hearing. If your calculated compensation is within the range of what your employer is offering as a settlement, accepting may give you faster, more certain financial resolution.&rdquo;
+          <div class="ph-detail">Directly addresses PAA: &ldquo;Is it better to settle or go to tribunal?&rdquo; and &ldquo;How often do unfair dismissal claims win?&rdquo; This is the secondary decision the user faces after getting their number.</div>
+        </div>
+        <div class="gap-ref">&#x2192; Secondary Goal: &ldquo;Should I pursue a tribunal claim or accept a settlement?&rdquo;</div>
+      </div>
+
+      <!-- SOLL 8: FAQ SECTION -->
+      <div class="wf-block prio-new">
+        <div class="block-label">FAQ (FROM PAA)</div>
+        <div class="block-content">FAQ accordion from People Also Ask questions. FAQPage schema markup.</div>
+        <div class="placeholder">
+          <span class="ph-type">[FAQ]</span> 5 FAQ items as &lt;details&gt;/&lt;summary&gt; accordion, with FAQPage JSON-LD schema:
+          <br><br><strong>Q1:</strong> &quot;What is the average settlement for unfair dismissal?&quot;
+          <br><strong>A1:</strong> &ldquo;The median award for unfair dismissal at tribunal was &pound;13,541 in 2023/24 (Ministry of Justice statistics). However, most cases settle before tribunal. Settlement amounts typically range from 1&ndash;6 months&rsquo; gross salary, depending on the strength of your case and your length of service.&rdquo;
+          <br><br><strong>Q2:</strong> &quot;How much do you get for unfair dismissal if you win?&quot;
+          <br><strong>A2:</strong> &ldquo;If you win at tribunal, you receive a basic award (calculated like redundancy pay, max &pound;21,570 in 2025/26) plus a compensatory award for actual financial losses (capped at &pound;118,223 or 52 weeks&rsquo; gross pay). Use the calculator above to estimate your basic award.&rdquo;
+          <br><br><strong>Q3:</strong> &quot;How often do unfair dismissal claims win?&quot;
+          <br><strong>A3:</strong> &ldquo;Approximately 5&ndash;10% of unfair dismissal claims that reach a full tribunal hearing succeed. However, around 50% of all claims are resolved through settlement (via Acas conciliation or direct negotiation) before reaching a hearing. Most successful claimants never attend a full tribunal.&rdquo;
+          <br><br><strong>Q4:</strong> &quot;Is it worth getting a solicitor for unfair dismissal?&quot;
+          <br><strong>A4:</strong> &ldquo;It depends on the complexity of your case and the amount at stake. For straightforward claims with smaller amounts, Citizens Advice can provide free guidance. For complex cases or larger claims, many employment solicitors offer free initial consultations and no-win-no-fee arrangements.&rdquo;
+          <br><br><strong>Q5:</strong> &quot;What is an acceptable settlement offer for unfair dismissal?&quot;
+          <br><strong>A5:</strong> &ldquo;A reasonable starting point is your calculated basic award plus 3&ndash;6 months&rsquo; net salary. Use the calculator above to get your basic award figure. Factors that increase acceptable offers: strong evidence, long service, discriminatory dismissal. Factors that decrease: contributory fault, short service.&rdquo;
+          <div class="ph-detail">All 5 questions are exact PAA matches. Answers reference the calculator output to increase page stickiness. FAQPage schema enables rich results in Google.</div>
+        </div>
+        <div class="gap-ref">&#x2192; PAA coverage + Checklist Fail: No structured data</div>
+      </div>
+
+      <!-- SOLL 9: CTA SECTION -->
+      <div class="wf-block prio-high">
+        <div class="block-label">CALL TO ACTION</div>
+        <div class="block-content">Prominent CTA for Citizens Advice&rsquo;s core service: free advisory.</div>
+        <div class="placeholder">
+          <span class="ph-type">[CTA]</span> Full-width CTA card with Citizens Advice green (#008445) background:
+          <br><br>Headline: &quot;Need help with your unfair dismissal claim?&quot; &mdash; 20px, white, bold
+          <br>Subtext: &quot;Get free, confidential advice from a Citizens Advice employment specialist. We can help you understand your options and prepare your case.&quot; &mdash; 14px, white, regular
+          <br>Button: &quot;Get Free Advice &rarr;&quot; &mdash; white background, green text, min 48px height, prominent. Links to Citizens Advice adviser booking page.
+          <br>Secondary link: &quot;Or call our free helpline: 0800 144 8848&quot; &mdash; white text, underlined.
+          <br><br>Position: after FAQ section, before internal links. This is where the user has finished calculating, understood their position, and is ready for next steps.
+          <div class="ph-detail">Addresses Gap: &ldquo;No conversion CTA.&rdquo; Current page has a buried &ldquo;talk to an adviser&rdquo; inline link. Competing law firm pages have prominent &ldquo;Speak to a solicitor&rdquo; CTAs after their calculators. Citizens Advice&rsquo;s advantage: the advice is genuinely free (no hidden lead-gen motive).</div>
+        </div>
+        <div class="gap-ref">&#x2192; Secondary Goal + Gap: No conversion CTA (solicitor consultation)</div>
+      </div>
+
+      <!-- SOLL 10: INTERNAL LINKS -->
+      <div class="wf-block prio-low">
+        <div class="block-label">INTERNAL LINKS</div>
+        <div class="block-content">Related tribunal advice pages &mdash; leveraging existing strong internal link structure.</div>
+        <div class="placeholder">
+          <span class="ph-type">[INTERNAL LINKS]</span> H2: &quot;Related Tribunal Advice&quot; &mdash; card grid (2&ndash;3 columns):
+          <br><br>1. &ldquo;Making an employment tribunal claim&rdquo; &mdash; link to existing CA page, brief description
+          <br>2. &ldquo;Early conciliation through Acas&rdquo; &mdash; link to existing CA page, explain this is a required first step
+          <br>3. &ldquo;Understanding settlement agreements&rdquo; &mdash; link to existing CA page, connects to settlement vs tribunal section above
+          <br>4. &ldquo;Unfair dismissal: your rights&rdquo; &mdash; link to existing CA page, for users still gathering information
+          <br>5. &ldquo;Time limits for tribunal claims&rdquo; &mdash; link to existing CA page, critical deadline information (3 months less 1 day)
+          <br><br>Design: card grid with title + 1-line description + arrow icon. Max 6 cards.
+          <div class="ph-detail">Retains the strong internal linking structure (48 existing links) but curates the most relevant 5&ndash;6 pages for the calculator user&rsquo;s journey rather than showing all 48. Supports topic cluster architecture.</div>
+        </div>
+        <div class="gap-ref">&#x2192; Existing strength &mdash; curate for calculator user journey</div>
+      </div>
+
+      <!-- SOLL 11: FOOTER -->
+      <div class="wf-block prio-low">
+        <div class="block-label">FOOTER</div>
+        <div class="block-content">Standard Citizens Advice footer with updated review date.</div>
+        <div class="placeholder">
+          <span class="ph-type">[FRESHNESS]</span> Update review date from &quot;09 November 2021&quot; to &quot;March 2026&quot;. Set annual review cycle: update every April when new statutory caps are announced by the Secretary of State. Add visible &ldquo;Last updated: [month year] &middot; Next review: April [year+1]&rdquo; line.
+          <div class="ph-detail">Current review date (Nov 2021) is over 4 years old despite containing year-specific statutory figures. Competing pages show &ldquo;Updated 2025&rdquo;. Google favours fresh content for data that changes annually.</div>
+        </div>
+        <div class="gap-ref">&#x2192; Gap: Page last reviewed November 2021</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="wf-footer">
+    SXO Wireframe generated with Claude Code &middot; sxo-builder Skill &middot; 2026-03-25
+  </footer>
+
+</div>
+</body>
+</html>
