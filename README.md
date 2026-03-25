@@ -35,7 +35,7 @@ From all these signals, the skill derives a **User Story**:
 
 **Step 2: Build the wireframe** (`/sxo-builder`)
 
-The Builder takes that report and recommends a **Hybrid page type** (service page with informational elements). It creates a wireframe with:
+The Builder takes that report and recommends a **Service Page** type. It creates a wireframe with:
 - Hero with price range and "same-day repair" promise + booking CTA above the fold
 - Trust bar: "2,500+ repairs completed" + Google rating + warranty badge
 - Price/service table (because the Featured Snippet rewards structured data)
@@ -118,7 +118,7 @@ The skill reads an SXO Analyzer report and generates a visual page structure com
 | Step | What Happens |
 |------|-------------|
 | **1. Data Extraction** | Reads keyword, URL, User Story, gaps, recommendations, and checklist results from the SXO report |
-| **2. Page Type Analysis** | Evaluates SERP signals to recommend a page type (Blog, Landing Page, Product Page, or Hybrid) |
+| **2. Page Type Analysis** | Evaluates SERP signals to recommend one of 8 page types (Landing Page, Blog/Guide, Product Page, Hybrid, Service Page, Comparison Page, Local Page, Tool Page) |
 | **3. IST Structure** | Derives current page structure via DataForSEO content parsing, maps problems from gap analysis |
 | **4. SOLL Structure** | Builds optimized structure with ultra-concrete placeholders (what, how, why) |
 | **5. Meta Optimizations** | Title, Description, Schema, E-E-A-T recommendations as HTML comments |
@@ -126,7 +126,7 @@ The skill reads an SXO Analyzer report and generates a visual page structure com
 
 ### Key Features
 
-- **Page Type Recommendation**: Evaluates 4 page types (Landing Page, Blog/Guide, Product Page, Hybrid) against SERP signals with decision matrix
+- **Page Type Recommendation**: Evaluates 8 page types against SERP signals with decision matrix
 - **Ultra-Concrete Placeholders**: Every placeholder contains exact text, design specs (colors, sizes, formats), and User Story reference -- a designer can implement without questions
 - **Stacked Layout**: IST (before) shown full-width, SOLL (after) below -- no side-by-side comparison that compresses content
 - **Priority Indicators**: High (red), medium (yellow), low (green), new section (blue)
@@ -227,10 +227,27 @@ Place all files in the same directory and run `/sxo-page`. The skill then:
 A production-ready **HTML page** (`sxo-page-<keyword>.html`) or **Markdown file** with:
 - Answer-First content with researched statistics and source citations
 - FAQ section from PAA questions with FAQPage schema
-- Schema markup (WebPage/BlogPosting, FAQ, Breadcrumb)
+- Page-type-specific schema markup (WebPage, BlogPosting, Service, LocalBusiness, WebApplication, FAQ, Breadcrumb)
 - Meta tags (title, description, OG, Twitter Card)
 - Citation Capsules for AI citability (ChatGPT, Perplexity, AI Overviews)
-- Quality verification checklist
+- Page-type-specific quality verification (e.g., pricing transparency for Service Pages, comparison matrix for Comparison Pages)
+
+---
+
+## Supported Page Types
+
+SXO Builder and SXO Page support 8 page types. The Builder recommends the best fit based on SERP signals; SXO Page produces the corresponding layout with type-specific sections and schema.
+
+| Page Type | When SERPs Show | Key Sections | Schema |
+|-----------|----------------|--------------|--------|
+| **Landing Page** | Strong transactional intent, CTAs, converters | Hero + CTA, trust bar, social proof | WebPage |
+| **Blog / Guide** | Informational intent, how-tos, listicles | Content-heavy, images, FAQ, internal links | BlogPosting |
+| **Product Page** | Commercial intent, prices, reviews | Product hero, features, pricing, reviews | Product, AggregateRating |
+| **Hybrid** | Mixed intent (info + action) | CTA above fold + guide content below | WebPage |
+| **Service Page** | Booking ads, service providers, price ranges | Service overview, pricing, process steps, booking CTA | Service |
+| **Comparison Page** | "vs" queries, "best X", comparison tables | Feature matrix, pros/cons, recommendation | ItemPage |
+| **Local Page** | Map pack, "near me", opening hours | Address, map, hours, local reviews, contact form | LocalBusiness |
+| **Tool Page** | Calculator in Featured Snippet, "X calculator" | Tool (primary), result explanation, methodology | WebApplication |
 
 ---
 
@@ -363,11 +380,11 @@ SXO Builder takes an SXO Analyzer report and transforms the findings into a **vi
 - Get a concrete restructuring plan for your page
 - See before/after comparison of page sections
 - Hand a designer or developer exact specifications
-- Understand which page type (Blog, Landing Page, Hybrid) fits your keyword
+- Understand which page type fits your keyword (8 types available)
 - Prioritize which changes have the highest impact
 
 **What you get:**
-- Page type recommendation with reasoning (4 types evaluated)
+- Page type recommendation with reasoning (8 types evaluated)
 - IST (before) structure with annotated problems
 - SOLL (after) structure with ultra-concrete placeholders
 - Meta optimization checklist (Title, Description, Schema, E-E-A-T)
