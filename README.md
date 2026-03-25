@@ -11,35 +11,43 @@ SXO asks: *"What experience does the searcher expect, and does my page deliver i
 
 ### How It Works -- A Concrete Example
 
-Imagine you run a phone repair shop and want to rank for **"iPhone 13 screen repair"**.
+You run a phone repair shop and want to rank for **"iPhone 13 screen repair"**. You start by creating a great blog post:
+
+**The starting point: A perfect blog post**
+
+You use `/blog-write` and get an excellent guide: "iPhone 13 Screen Repair -- Everything You Need to Know". It scores 90+ on Blog Analyze -- well-researched statistics, Answer-First structure, proper E-E-A-T signals, clean readability. By every content quality metric, it's a great piece.
+
+But it doesn't rank. Why?
 
 **Step 1: Read the SERPs backwards** (`/sxo-analyzer`)
 
-You run an SXO analysis. The skill pulls live Google data and finds:
-- **Google Ads** show prices ($50-$150) and "same-day repair" -- searchers care about cost and speed
-- **PAA questions**: "Can I repair it myself?", "How long does it take?", "Is it worth repairing?" -- there's uncertainty and price sensitivity
-- **Top-10 results**: Mix of repair guides, local shops, and Apple's official page -- Google rewards both information and service pages
-- **Featured Snippet**: A price comparison table -- Google wants structured data
+You run an SXO analysis on your keyword. The skill pulls live Google data and discovers something your blog post missed entirely -- the **page type is wrong**:
+
+- **Google Ads** dominate the top of the page with prices ($50-$150) and "same-day repair" -- searchers want to **book**, not read
+- **Top-10 results**: 7 out of 10 are service/shop pages with booking forms, not blog posts -- Google has already decided this is a transactional keyword
+- **PAA questions**: "How much does iPhone 13 screen repair cost?", "How long does it take?", "Where can I get it repaired near me?" -- the intent is action, not education
+- **Featured Snippet**: A price comparison table -- Google rewards structured, scannable data here
 
 From all these signals, the skill derives a **User Story**:
-> *"Someone with a cracked iPhone 13 screen who wants to know the cost, whether DIY is an option, and where to get it repaired quickly. They're price-sensitive, slightly stressed, and comparing options."*
+> *"Someone with a cracked iPhone 13 screen who wants to book a repair quickly. They're price-sensitive, slightly stressed, comparing options, and ready to act -- not looking for a 2,000-word guide."*
 
-The skill then compares this User Story to your actual page and finds **gaps**: your page has no prices, no FAQ, no trust signals, and the CTA is buried below the fold.
+**This is the gap that content quality alone can't fix.** Your blog post is flawless content on the wrong page type. The SERPs want a service page with prices, a booking CTA, and trust signals -- not an informational guide.
 
 **Step 2: Build the wireframe** (`/sxo-builder`)
 
-The Builder takes that report and creates a visual before/after wireframe. It shows exactly what sections your page needs, in what order, with concrete placeholders:
-- Hero with price range and "same-day" promise
-- Trust bar: "2,500+ repairs completed" + Google rating
-- Price table (because the Featured Snippet rewards this)
+The Builder takes that report and recommends a **Hybrid page type** (service page with informational elements). It creates a wireframe with:
+- Hero with price range and "same-day repair" promise + booking CTA above the fold
+- Trust bar: "2,500+ repairs completed" + Google rating + warranty badge
+- Price/service table (because the Featured Snippet rewards structured data)
+- Short explainer sections (not a full guide -- just enough to build confidence)
 - FAQ from the PAA questions
-- CTA: "Get a free quote in 30 seconds"
+- Prominent CTA: "Book your repair -- get a free quote in 30 seconds"
 
 **Step 3: Produce the finished page** (`/sxo-page`)
 
-SXO Page takes the wireframe structure, the report data, and optionally your existing content (from `/blog-write` or your live page), then produces a production-ready HTML page. It researches real statistics, writes Answer-First content, adds schema markup, and verifies quality -- a page optimized for both rankings and conversions.
+SXO Page takes the wireframe, the report, and your existing blog post, then **merges them**: it keeps the best parts of your well-researched content (statistics, E-E-A-T signals, FAQ answers) but restructures everything into the service-page layout the SERPs demand. The result is a production-ready HTML page with schema markup, meta tags, and quality verification.
 
-**The result:** Your page now mirrors the search experience Google already rewards. It answers the User Story, fills the gaps competitors miss, and converts visitors because the UX matches their expectations.
+**The result:** Your page now matches what Google actually rewards for this keyword. The content quality from your blog post is preserved, but the page type, structure, and UX now mirror the search experience. You rank **and** convert -- because visitors land on a page that lets them do what they came to do: book a repair.
 
 ## Skills Overview
 
