@@ -98,7 +98,8 @@ Lies die Wireframe-HTML-Datei und extrahiere:
 
 ```
 SEITENTYP:       Aus .page-type-rec .pt-recommended .pt-name
-                 (Landing-Page / Blog / Produkt / Hybrid)
+                 (Landing-Page / Blog / Produkt / Hybrid /
+                  Service-Seite / Vergleichsseite / Standortseite / Tool-Seite)
 
 USER_STORY:      Aus .user-story-banner (woertlich uebernehmen)
 
@@ -304,6 +305,77 @@ INTERNE VERLINKUNG:
   -> Links aus Wireframe-Anweisungen
   -> Beschreibende Anchor-Texte (nie "hier klicken")
   -> 3-5 Links in eigenem Block oder integriert
+
+LEISTUNGSUEBERSICHT (Service-Seite):
+  -> 3-6 Leistungen als Karten mit Icon, Titel, Kurzbeschreibung
+  -> Jede Karte mit eigener Mini-CTA ("Mehr erfahren" / "Termin buchen")
+  -> Keywords natuerlich in Leistungstitel einbauen
+
+PREISE / PAKETE (Service-Seite, Produkt-Seite):
+  -> Preistabelle oder Paketkarten (2-4 Optionen)
+  -> "Beliebteste" Option hervorgehoben
+  -> Transparente Preise (ab-Preise wenn noetig, nie verstecken)
+  -> Pricing Schema (Offer) einbauen
+
+ABLAUF / PROZESS (Service-Seite):
+  -> 3-5 nummerierte Schritte mit Icons
+  -> Zeitleiste oder vertikale Stepper-Darstellung
+  -> Adressiert Barriere "Komplexitaet" aus User Story
+
+BUCHUNG / ANFRAGE (Service-Seite, Standortseite):
+  -> Prominentes Formular oder Calendly/Buchungs-Embed
+  -> Wenige Felder (Name, Kontakt, Anliegen -- max 5)
+  -> Trust-Hinweis direkt am Formular ("Kostenlos & unverbindlich")
+  -> First-Person-Copy: "Meine Anfrage senden"
+
+VERGLEICHSMATRIX (Vergleichsseite):
+  -> Feature-Tabelle mit Haekchen/Kreuzen/Werten
+  -> Spalten = Optionen, Zeilen = Kriterien
+  -> Gewinner-Markierung bei klarer Empfehlung
+  -> Responsive: Tabelle scrollbar auf Mobile
+
+DETAILVERGLEICH (Vergleichsseite):
+  -> Pro Kriterium eine H3-Sektion mit Erklaerung
+  -> Answer-First pro Kriterium ("Option A gewinnt bei X weil...")
+  -> Objektiver Ton, faktenbasiert
+
+VOR- UND NACHTEILE (Vergleichsseite):
+  -> Pro/Contra-Listen pro Option
+  -> Gruene Haekchen / rote Kreuze
+  -> Maximal 5 Punkte pro Seite
+
+EMPFEHLUNG (Vergleichsseite):
+  -> Klare Aussage: "Fuer [Zielgruppe] empfehlen wir [Option]"
+  -> Begruendung in 2-3 Saetzen
+  -> CTA zur empfohlenen Option
+
+STANDORT-INFO (Standortseite):
+  -> Adresse, Telefon, E-Mail als strukturierte Daten
+  -> Oeffnungszeiten als Tabelle
+  -> Anfahrtsbeschreibung (OEPNV + Auto + Parken)
+  -> LocalBusiness Schema einbauen
+
+KARTE / ANFAHRT (Standortseite):
+  -> Google Maps Embed oder statische Karte
+  -> Responsive (100% Breite, feste Hoehe 300-400px)
+  -> Marker mit Firmenname
+
+ERGEBNIS-ERKLAERUNG (Tool-Seite):
+  -> Erklaert was das Ergebnis bedeutet
+  -> Einordnung: "Gut / Mittel / Schlecht" mit Kontext
+  -> Handlungsempfehlungen basierend auf Ergebnis
+  -> Statistiken fuer Kontext ("Der Durchschnitt liegt bei...")
+
+METHODIK / BERECHNUNG (Tool-Seite):
+  -> Erklaert die Berechnungsgrundlage transparent
+  -> Datenquellen nennen (Tier 1-3)
+  -> Formel oder Logik vereinfacht darstellen
+  -> Baut Vertrauen auf ("Basierend auf Daten von [Quelle]")
+
+VERWANDTE TOOLS (Tool-Seite):
+  -> 2-4 verwandte Rechner/Tools als Karten
+  -> Kurzbeschreibung + Link
+  -> Thematisch passend zum Haupt-Tool
 ```
 
 ---
@@ -335,6 +407,11 @@ IF Output = HTML:
      * FAQPage Schema (wenn FAQ-Sektion vorhanden)
      * BreadcrumbList Schema (immer)
      * Organization/Person Schema (wenn Autor angegeben)
+     * Service Schema (bei Service-Seite: serviceType, provider, areaServed)
+     * LocalBusiness Schema (bei Standortseite: address, geo, openingHours)
+     * WebApplication Schema (bei Tool-Seite: applicationCategory, offers)
+     * Product Schema mit AggregateRating (bei Produkt-Seite)
+     * ItemPage Schema (bei Vergleichsseite)
 
 5. Speichere als: sxo-page-[KEYWORD-SLUG].html
 ```

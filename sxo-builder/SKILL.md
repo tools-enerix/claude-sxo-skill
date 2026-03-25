@@ -155,13 +155,18 @@ Bestimme den empfohlenen Seitentyp nach dieser Matrix:
 | Transactional dominant (Rechner, Konfiguratoren) | Nutzer will sofort Ergebnis | **Landing-Page** |
 | Informational dominant (Ratgeber, Listen, How-To) | Nutzer will lernen/verstehen | **Blog-Beitrag / Ratgeber** |
 | Commercial dominant (Vergleiche, Reviews, Preise) | Nutzer will kaufen/vergleichen | **Produkt-Seite** |
+| Booking-Ads, Dienstleister-Listings, Preisranges | Nutzer will Dienstleistung buchen/anfragen | **Service-Seite** |
+| "vs"-Queries, "beste X", Vergleichstabellen in SERPs | Nutzer will Optionen vergleichen und entscheiden | **Vergleichsseite** |
+| Map Pack, "in der Naehe", Oeffnungszeiten in SERPs | Nutzer sucht lokalen Anbieter | **Standortseite** |
+| Rechner/Tool in Featured Snippet, "X berechnen" | Nutzer will interaktives Ergebnis | **Tool-Seite** |
 | Gemischt ohne klare Dominanz | Haengt von User Story ab | **Hybrid** (Landing + Ratgeber) |
 
 Erstelle fuer jeden in Frage kommenden Typ eine Kurzbewertung:
 
 ```
 Seitentyp-Option:
-  name:        Landing-Page / Blog-Beitrag / Produkt-Seite / Hybrid
+  name:        Landing-Page / Blog-Beitrag / Produkt-Seite / Hybrid /
+               Service-Seite / Vergleichsseite / Standortseite / Tool-Seite
   passt_weil:  1-2 Saetze warum dieser Typ zu den SERP-Signalen passt
   risiko:      Was spricht dagegen (z.B. "zu wenig Info-Content fuer PAA-Abdeckung")
   empfohlen:   ja / nein (genau EINER ist empfohlen)
@@ -191,6 +196,30 @@ Preis/Leistung sichtbar, Vergleichstabellen, Bewertungen
 ```
 hero (CTA + Keyword) -> trust-bar -> tool-section -> content-main (Ratgeber) -> image-section -> social-proof -> faq-section -> cta-section -> internal-links -> footer
 Conversion-Elemente above-the-fold, informativer Ratgeber-Teil darunter
+```
+
+**Service-Seite:**
+```
+hero (Dienstleistung + CTA) -> trust-bar -> service-overview -> pricing-table -> process-steps -> social-proof -> faq-section -> booking-cta -> internal-links -> footer
+Buchung/Anfrage above-the-fold, Preise transparent, Prozess erklaert, starke Trust-Signale (Bewertungen, Zertifizierungen, Garantien)
+```
+
+**Vergleichsseite:**
+```
+hero (Vergleichstitel) -> comparison-matrix -> detailed-comparison -> pros-cons -> recommendation -> faq-section -> cta-section -> internal-links -> footer
+Feature-Vergleichstabelle als Kernelement, klare Empfehlung am Ende, objektiver Ton
+```
+
+**Standortseite:**
+```
+hero (Standort + CTA) -> trust-bar -> location-info -> service-overview -> map-embed -> social-proof -> faq-section -> contact-cta -> internal-links -> footer
+Adresse/Karte prominent, Oeffnungszeiten, lokale Bewertungen, Kontaktformular, LocalBusiness Schema
+```
+
+**Tool-Seite:**
+```
+hero (Tool-Name + Kurzbeschreibung) -> tool-section (PRIMAER) -> result-explanation -> methodology -> faq-section -> related-tools -> internal-links -> footer
+Das Tool IST die Seite (nicht Beiwerk). Erklaerung der Methodik, verwandte Tools verlinkt, WebApplication Schema
 ```
 
 ---
@@ -255,6 +284,18 @@ IF Seitentyp = Produkt-Seite:
 
 IF Seitentyp = Hybrid (Landing + Ratgeber):
   hero (CTA + Keyword) -> trust-bar -> tool-section -> content-main (Ratgeber) -> image-section -> social-proof -> faq-section -> cta-section -> internal-links -> footer
+
+IF Seitentyp = Service-Seite:
+  hero (Dienstleistung + CTA) -> trust-bar -> service-overview -> pricing-table -> process-steps -> social-proof -> faq-section -> booking-cta -> internal-links -> footer
+
+IF Seitentyp = Vergleichsseite:
+  hero (Vergleichstitel) -> comparison-matrix -> detailed-comparison -> pros-cons -> recommendation -> faq-section -> cta-section -> internal-links -> footer
+
+IF Seitentyp = Standortseite:
+  hero (Standort + CTA) -> trust-bar -> location-info -> service-overview -> map-embed -> social-proof -> faq-section -> contact-cta -> internal-links -> footer
+
+IF Seitentyp = Tool-Seite:
+  hero (Tool-Name) -> tool-section (PRIMAER) -> result-explanation -> methodology -> faq-section -> related-tools -> internal-links -> footer
 ```
 
 **Regeln:**
@@ -494,6 +535,20 @@ Wichtigste Strukturaenderungen:
 | faq-section | FAQ (AUS PAA) | FAQ (FROM PAA) |
 | cta-section | CALL-TO-ACTION | CALL TO ACTION |
 | internal-links | INTERNE VERLINKUNG | INTERNAL LINKS |
+| service-overview | LEISTUNGSUEBERSICHT | SERVICE OVERVIEW |
+| pricing-table | PREISE / PAKETE | PRICING / PACKAGES |
+| process-steps | ABLAUF / PROZESS | PROCESS / STEPS |
+| booking-cta | BUCHUNG / ANFRAGE | BOOKING / INQUIRY |
+| comparison-matrix | VERGLEICHSMATRIX | COMPARISON MATRIX |
+| detailed-comparison | DETAILVERGLEICH | DETAILED COMPARISON |
+| pros-cons | VOR- UND NACHTEILE | PROS AND CONS |
+| recommendation | EMPFEHLUNG | RECOMMENDATION |
+| location-info | STANDORT-INFO | LOCATION INFO |
+| map-embed | KARTE / ANFAHRT | MAP / DIRECTIONS |
+| contact-cta | KONTAKT / ANFRAGE | CONTACT / INQUIRY |
+| result-explanation | ERGEBNIS-ERKLAERUNG | RESULT EXPLANATION |
+| methodology | METHODIK / BERECHNUNG | METHODOLOGY / CALCULATION |
+| related-tools | VERWANDTE TOOLS | RELATED TOOLS |
 | footer | FOOTER | FOOTER |
 
 ---

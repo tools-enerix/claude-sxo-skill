@@ -45,6 +45,44 @@
 | HTML-Validitaet | Keine offenen Tags, korrekte Verschachtelung | Invalides HTML |
 | Heading-Hierarchie | H1 > H2 > H3, keine Spruenge | H3 ohne vorheriges H2, mehrere H1 |
 
+### Gate 5: Seitentyp-spezifisch
+
+**Service-Seite:**
+
+| Pruefpunkt | Kriterium | Fail-Bedingung |
+|---|---|---|
+| Preistransparenz | Preise oder Preis-Range sichtbar | Keine Preisangabe trotz Pricing-Sektion im Wireframe |
+| Buchungs-CTA | Booking-CTA above-the-fold oder prominent | Kein Buchungs-/Anfrageformular |
+| Prozess-Darstellung | Ablauf in Schritten erklaert | Keine Prozess-Sektion trotz Wireframe-Vorgabe |
+| Service Schema | Service + provider JSON-LD | Kein Service Schema |
+
+**Vergleichsseite:**
+
+| Pruefpunkt | Kriterium | Fail-Bedingung |
+|---|---|---|
+| Vergleichsmatrix | Feature-Tabelle mit min. 5 Kriterien | Keine Vergleichstabelle |
+| Objektivitaet | Ausgewogene Darstellung | Nur Vorteile einer Option |
+| Empfehlung | Klare Empfehlung am Ende | Keine Empfehlung nach Vergleich |
+| Zielgruppen-Differenzierung | "Fuer [X] empfehlen wir [Y]" | Pauschale Empfehlung ohne Zielgruppe |
+
+**Standortseite:**
+
+| Pruefpunkt | Kriterium | Fail-Bedingung |
+|---|---|---|
+| Kontaktdaten | Adresse + Telefon + E-Mail | Fehlende Kontaktdaten |
+| Oeffnungszeiten | Tabellarisch dargestellt | Keine Oeffnungszeiten |
+| LocalBusiness Schema | Vollstaendig (name, address, geo, phone, hours) | Kein LocalBusiness Schema |
+| Karte | Maps-Embed oder statische Karte | Keine Karte/Anfahrt |
+
+**Tool-Seite:**
+
+| Pruefpunkt | Kriterium | Fail-Bedingung |
+|---|---|---|
+| Tool prominent | Tool-Sektion ist primaerer Content | Tool versteckt oder nachrangig |
+| Methodik | Berechnungsgrundlage erklaert | Keine Methodik-Erklaerung |
+| Ergebnis-Erklaerung | Einordnung des Ergebnisses | Ergebnis ohne Kontext |
+| WebApplication Schema | applicationCategory + offers | Kein WebApplication Schema |
+
 ---
 
 ## Warn-Gates (Empfehlungen, kein Fail)

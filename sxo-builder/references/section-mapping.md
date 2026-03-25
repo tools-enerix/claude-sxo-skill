@@ -66,6 +66,23 @@ Sektion:
 11. `internal-links` — Verwandte Inhalte, Themen-Cluster-Links
 12. `footer` — Navigation, Kontakt, rechtliche Links
 
+### Zusaetzliche Sektionen (fuer erweiterte Seitentypen)
+
+13. `service-overview` — Leistungsbeschreibungen mit Icons/Karten (Service-Seite)
+14. `pricing-table` — Preis-/Paketvergleich als Tabelle oder Karten (Service-Seite, Produkt-Seite)
+15. `process-steps` — Ablauf in nummerierten Schritten mit Icons (Service-Seite)
+16. `booking-cta` — Buchungs-/Anfrageformular oder Terminbuchung (Service-Seite, Standortseite)
+17. `comparison-matrix` — Feature-Vergleichstabelle mit Haekchen/Kreuzen (Vergleichsseite)
+18. `detailed-comparison` — Ausfuehrlicher Textvergleich pro Kriterium (Vergleichsseite)
+19. `pros-cons` — Vor-/Nachteile pro Option als Listen (Vergleichsseite)
+20. `recommendation` — Klare Empfehlung mit Begruendung (Vergleichsseite)
+21. `location-info` — Adresse, Oeffnungszeiten, Kontaktdaten (Standortseite)
+22. `map-embed` — Google Maps Embed oder statische Karte (Standortseite)
+23. `contact-cta` — Kontaktformular, Telefon, E-Mail prominent (Standortseite)
+24. `result-explanation` — Erklaerung des Tool-Ergebnisses mit Kontext (Tool-Seite)
+25. `methodology` — Berechnungsgrundlage, Datenquellen, Formeln (Tool-Seite)
+26. `related-tools` — Verwandte Rechner/Tools als Karten verlinkt (Tool-Seite)
+
 ### Regeln fuer IST-Ableitung
 
 Wenn Content-Parsing-Daten verfuegbar:

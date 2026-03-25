@@ -252,6 +252,393 @@ Diese drei Datenpunkte werden zu echtem, optimiertem Content konvertiert.
 
 ---
 
+### LEISTUNGSUEBERSICHT / SERVICE OVERVIEW (Service-Seite)
+
+**Input aus Wireframe:**
+- `[SERVICE: Leistungen mit Icons und Kurzbeschreibungen]`
+
+**Output produzieren:**
+
+```html
+<section class="service-overview">
+  <h2>[Keyword-bezogene Ueberschrift, z.B. "Unsere Reparatur-Services"]</h2>
+  <div class="service-grid">
+    <div class="service-card">
+      <div class="service-icon">[Icon/Emoji]</div>
+      <h3>[Leistungsname]</h3>
+      <p>[Kurzbeschreibung: 20-30 Woerter, Nutzen betonen]</p>
+      <a href="#[ziel]" class="service-link">[Mini-CTA]</a>
+    </div>
+    [... 3-6 Karten ...]
+  </div>
+</section>
+```
+
+**Regeln:**
+- 3-6 Leistungen als Grid (2-3 Spalten Desktop, 1 Spalte Mobile)
+- Jede Karte: Icon + Titel + 1-2 Saetze + optionaler Link
+- Keywords natuerlich in Leistungstitel einbauen
+- Nutzen statt Features ("Reparatur in 30 Min" statt "Display-Tausch")
+
+---
+
+### PREISE / PAKETE / PRICING (Service-Seite, Produkt-Seite)
+
+**Input aus Wireframe:**
+- `[PRICING: Preistabelle/Pakete mit Preisen und Leistungen]`
+
+**Output produzieren:**
+
+```html
+<section class="pricing-section">
+  <h2>[z.B. "Transparente Preise fuer Ihre Reparatur"]</h2>
+  <p>[Answer-First: Preisrange + Statistik wenn verfuegbar]</p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <h3>[Paketname / Service]</h3>
+      <div class="price">[Preis / ab-Preis]</div>
+      <ul>
+        <li>[Enthaltene Leistung 1]</li>
+        <li>[Enthaltene Leistung 2]</li>
+      </ul>
+      <a href="#[buchung]" class="cta-primary">[CTA-Text]</a>
+    </div>
+    <div class="pricing-card pricing-popular">
+      <span class="popular-badge">[Beliebteste Option]</span>
+      [... gleiche Struktur, hervorgehoben ...]
+    </div>
+  </div>
+</section>
+```
+
+**Regeln:**
+- 2-4 Preis-Optionen (nicht mehr, Paradox of Choice)
+- Beliebteste Option visuell hervorheben
+- Preise transparent, keine versteckten Kosten
+- Offer Schema (JSON-LD) einbauen
+- "Ab"-Preise wenn exakte Preise nicht moeglich
+
+---
+
+### ABLAUF / PROZESS / PROCESS STEPS (Service-Seite)
+
+**Input aus Wireframe:**
+- `[PROZESS: Schritte des Ablaufs mit Zeitleiste]`
+
+**Output produzieren:**
+
+```html
+<section class="process-section">
+  <h2>[z.B. "So funktioniert Ihre Reparatur"]</h2>
+  <p>[Answer-First: Kernaussage zum Ablauf + Zeitangabe]</p>
+  <div class="process-steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <h3>[Schritt-Titel]</h3>
+      <p>[Kurzbeschreibung: 15-25 Woerter]</p>
+    </div>
+    [... 3-5 Schritte ...]
+  </div>
+</section>
+```
+
+**Regeln:**
+- 3-5 Schritte (nicht mehr, sonst wirkt komplex)
+- Nummeriert mit visuellen Schritt-Indikatoren
+- Adressiert Barriere "Komplexitaet" aus User Story
+- Zeitangaben einbauen wenn moeglich ("In nur 30 Minuten")
+
+---
+
+### BUCHUNG / ANFRAGE / BOOKING CTA (Service-Seite, Standortseite)
+
+**Input aus Wireframe:**
+- `[BOOKING: Buchungsformular/Terminanfrage mit Feldern]`
+
+**Output produzieren:**
+
+```html
+<section class="booking-section">
+  <h2>[z.B. "Jetzt Termin vereinbaren"]</h2>
+  <p>[1-2 Saetze: Wert rekapitulieren + Trust-Hinweis]</p>
+  <form class="booking-form">
+    <input type="text" placeholder="[Feld 1]" required>
+    <input type="email" placeholder="[Feld 2]" required>
+    <textarea placeholder="[Anliegen/Nachricht]"></textarea>
+    <button type="submit" class="cta-primary">[First-Person CTA]</button>
+    <p class="form-trust">[Trust-Hinweis: "Kostenlos &amp; unverbindlich" / "Antwort innerhalb von 24h"]</p>
+  </form>
+</section>
+```
+
+**Regeln:**
+- Maximal 5 Formularfelder (weniger = mehr Conversions)
+- First-Person-Copy: "Meine Anfrage senden" / "My free quote"
+- Trust-Hinweis direkt unter/neben dem Button
+- Keine Pflichtfelder ausser Name + Kontakt
+- Formular-Action als Platzhalter
+
+---
+
+### VERGLEICHSMATRIX / COMPARISON MATRIX (Vergleichsseite)
+
+**Input aus Wireframe:**
+- `[COMPARISON: Feature-Vergleichstabelle Option A vs B vs C]`
+
+**Output produzieren:**
+
+```html
+<section class="comparison-section">
+  <h2>[z.B. "Shopify vs WooCommerce vs Wix im Vergleich"]</h2>
+  <p>[Answer-First: Kernaussage wer bei was gewinnt]</p>
+  <div class="comparison-table-wrapper">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Kriterium</th>
+          <th>[Option A]</th>
+          <th class="winner">[Option B] ★</th>
+          <th>[Option C]</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>[Kriterium 1]</td>
+          <td>[Wert/Haekchen/Kreuz]</td>
+          <td>[Wert/Haekchen/Kreuz]</td>
+          <td>[Wert/Haekchen/Kreuz]</td>
+        </tr>
+        [... weitere Zeilen ...]
+      </tbody>
+    </table>
+  </div>
+</section>
+```
+
+**Regeln:**
+- Tabelle responsiv (horizontales Scrollen auf Mobile)
+- Gewinner-Spalte visuell hervorheben
+- Haekchen (&#10003;) und Kreuze (&#10007;) fuer ja/nein Kriterien
+- Konkrete Werte wo moeglich (nicht nur ja/nein)
+- 5-10 Vergleichskriterien
+
+---
+
+### VOR- UND NACHTEILE / PROS AND CONS (Vergleichsseite)
+
+**Input aus Wireframe:**
+- `[PROS-CONS: Vor- und Nachteile pro Option]`
+
+**Output produzieren:**
+
+```html
+<section class="pros-cons-section">
+  <h2>[z.B. "Vor- und Nachteile im Ueberblick"]</h2>
+  <div class="pros-cons-grid">
+    <div class="option-card">
+      <h3>[Option A]</h3>
+      <div class="pros">
+        <h4>Vorteile</h4>
+        <ul><li>[Pro 1]</li><li>[Pro 2]</li></ul>
+      </div>
+      <div class="cons">
+        <h4>Nachteile</h4>
+        <ul><li>[Contra 1]</li><li>[Contra 2]</li></ul>
+      </div>
+    </div>
+    [... weitere Optionen ...]
+  </div>
+</section>
+```
+
+**Regeln:**
+- Maximal 5 Pros und 5 Cons pro Option
+- Objektiver Ton, keine wertende Sprache
+- Gruene Haekchen fuer Pros, rote Kreuze fuer Cons
+- Balanciert: nicht eine Option offensichtlich bevorzugen
+
+---
+
+### EMPFEHLUNG / RECOMMENDATION (Vergleichsseite)
+
+**Input aus Wireframe:**
+- `[RECOMMENDATION: Klare Empfehlung mit Begruendung]`
+
+**Output produzieren:**
+
+```html
+<section class="recommendation-section">
+  <h2>[z.B. "Unsere Empfehlung"]</h2>
+  <div class="recommendation-card">
+    <h3>[Empfohlene Option]</h3>
+    <p>[2-3 Saetze: Fuer wen und warum diese Option am besten passt]</p>
+    <a href="[link]" class="cta-primary">[CTA zur empfohlenen Option]</a>
+  </div>
+  <p class="rec-alternative">[1 Satz: "Falls Sie [Kriterium] priorisieren, ist [Alternative] besser geeignet."]</p>
+</section>
+```
+
+**Regeln:**
+- Klare Aussage: "Fuer [Zielgruppe] empfehlen wir [Option]"
+- Begruendung faktenbasiert (Statistiken wenn verfuegbar)
+- Alternative fuer anderen Use Case nennen
+- CTA zur empfohlenen Option
+
+---
+
+### STANDORT-INFO / LOCATION INFO (Standortseite)
+
+**Input aus Wireframe:**
+- `[LOCATION: Adresse, Oeffnungszeiten, Kontakt, Anfahrt]`
+
+**Output produzieren:**
+
+```html
+<section class="location-section">
+  <h2>[z.B. "So finden Sie uns"]</h2>
+  <div class="location-grid">
+    <div class="location-address">
+      <h3>Adresse</h3>
+      <address>[Strasse, PLZ Ort]</address>
+      <p>Telefon: <a href="tel:[nummer]">[Nummer]</a></p>
+      <p>E-Mail: <a href="mailto:[email]">[Email]</a></p>
+    </div>
+    <div class="location-hours">
+      <h3>Oeffnungszeiten</h3>
+      <table class="hours-table">
+        <tr><td>Mo-Fr</td><td>[Zeiten]</td></tr>
+        <tr><td>Sa</td><td>[Zeiten]</td></tr>
+        <tr><td>So</td><td>Geschlossen</td></tr>
+      </table>
+    </div>
+    <div class="location-directions">
+      <h3>Anfahrt</h3>
+      <p>[OEPNV + Parken kurz beschrieben]</p>
+    </div>
+  </div>
+</section>
+```
+
+**Regeln:**
+- Adresse als `<address>` Element (semantisch korrekt)
+- Telefonnummer als `tel:` Link (klickbar auf Mobile)
+- Oeffnungszeiten als Tabelle
+- LocalBusiness + PostalAddress Schema einbauen
+- Platzhalter wenn echte Daten nicht bekannt
+
+---
+
+### KARTE / MAP EMBED (Standortseite)
+
+**Input aus Wireframe:**
+- `[MAP: Google Maps Embed mit Standort-Marker]`
+
+**Output produzieren:**
+
+```html
+<section class="map-section">
+  <div class="map-embed">
+    <!-- Google Maps Embed: URL mit echten Koordinaten ersetzen -->
+    <iframe src="https://www.google.com/maps/embed?pb=[PLATZHALTER]"
+            width="100%" height="350" style="border:0;"
+            allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Standort [Firmenname]">
+    </iframe>
+  </div>
+</section>
+```
+
+**Regeln:**
+- 100% Breite, 300-400px Hoehe
+- loading="lazy" (nicht LCP-relevant)
+- title-Attribut fuer Accessibility
+- Embed-URL als Platzhalter wenn Koordinaten nicht bekannt
+
+---
+
+### ERGEBNIS-ERKLAERUNG / RESULT EXPLANATION (Tool-Seite)
+
+**Input aus Wireframe:**
+- `[RESULT: Erklaerung was das Ergebnis bedeutet]`
+
+**Output produzieren:**
+
+```html
+<section class="result-section">
+  <h2>[z.B. "Was Ihr Ergebnis bedeutet"]</h2>
+  <p>[Answer-First: Einordnung des typischen Ergebnisses + Statistik]</p>
+  <div class="result-ranges">
+    <div class="range range-good">[Bereich "Gut": Kriterien + Handlungsempfehlung]</div>
+    <div class="range range-medium">[Bereich "Mittel": Kriterien + Handlungsempfehlung]</div>
+    <div class="range range-poor">[Bereich "Verbesserungswuerdig": Kriterien + Handlungsempfehlung]</div>
+  </div>
+  <p>[Kontext: "Der Durchschnitt liegt bei [Zahl] ([Quelle], Jahr)"]</p>
+</section>
+```
+
+**Regeln:**
+- Ergebnis-Bereiche mit Farbcodierung (gruen/gelb/rot)
+- Konkrete Handlungsempfehlungen pro Bereich
+- Durchschnittswerte als Kontext (mit Quelle)
+- Ergebnis-Erklaerung NACH dem Tool, nicht davor
+
+---
+
+### METHODIK / METHODOLOGY (Tool-Seite)
+
+**Input aus Wireframe:**
+- `[METHODOLOGY: Berechnungsgrundlage und Datenquellen]`
+
+**Output produzieren:**
+
+```html
+<section class="methodology-section">
+  <h2>[z.B. "So berechnen wir Ihr Ergebnis"]</h2>
+  <p>[Answer-First: Kernaussage zur Methodik + Datenquelle]</p>
+  <div class="methodology-content">
+    <p>[Vereinfachte Erklaerung der Formel/Logik, 80-120 Woerter]</p>
+    <p class="data-source">Datengrundlage: [Quelle(n) mit Link(s)]</p>
+  </div>
+</section>
+```
+
+**Regeln:**
+- Transparent aber nicht ueberwaeltigend (keine mathematischen Formeln)
+- Datenquellen klar benennen (Tier 1-3)
+- Baut Vertrauen auf (E-E-A-T Signal)
+- Kompakt: 80-150 Woerter maximal
+
+---
+
+### VERWANDTE TOOLS / RELATED TOOLS (Tool-Seite)
+
+**Input aus Wireframe:**
+- `[RELATED-TOOLS: Verwandte Rechner/Tools verlinken]`
+
+**Output produzieren:**
+
+```html
+<section class="related-tools">
+  <h2>[z.B. "Weitere nuetzliche Rechner"]</h2>
+  <div class="tools-grid">
+    <a href="[URL]" class="tool-card">
+      <h3>[Tool-Name]</h3>
+      <p>[Kurzbeschreibung: 15-20 Woerter]</p>
+    </a>
+    [... 2-4 Karten ...]
+  </div>
+</section>
+```
+
+**Regeln:**
+- 2-4 verwandte Tools (nicht mehr)
+- Thematisch passend zum Haupt-Tool
+- Karten als Links (nicht nur Text-Links)
+- Interne Verlinkung fuer Themen-Cluster
+
+---
+
 ## Ton-Ableitung aus User Story
 
 Der Content-Ton wird aus der User Story abgeleitet:
@@ -292,4 +679,4 @@ Fuer Blog/Ratgeber und Hybrid-Seitentypen erstelle eine Key Takeaways Box nach d
 - 40-60 Woerter gesamt
 - Mindestens 1 Statistik mit Quelle
 - Jeder Punkt eigenstaendig verstaendlich
-- Nur bei Blog/Ratgeber/Hybrid (nicht bei reiner Landing-Page)
+- Nur bei Blog/Ratgeber/Hybrid/Vergleichsseite (nicht bei Landing-Page, Service-Seite, Standortseite, Tool-Seite)
