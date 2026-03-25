@@ -16,7 +16,13 @@ Der finale Report wird als **selbststaendige HTML-Datei** gespeichert.
 
 ## CSS-Klassen Referenz
 
-**SERP-Typ Tags:** `serp-type-ratgeber`, `serp-type-shop`, `serp-type-feature`, `serp-type-video`, `serp-type-vergleich`, `serp-type-guide`, `serp-type-comparison`, `serp-type-forum`, `serp-type-tool`, `serp-type-news`
+**SERP-Typ Tags (8 Seitentypen):** `serp-type-landing`, `serp-type-blog`, `serp-type-product`, `serp-type-hybrid`, `serp-type-service`, `serp-type-comparison`, `serp-type-local`, `serp-type-tool`
+
+**SERP-Typ Tags (Sondertypen):** `serp-type-forum`, `serp-type-video`, `serp-type-news`
+
+**Intent Tags:** `intent-informational`, `intent-transactional`, `intent-commercial`, `intent-navigational`, `intent-mixed`
+
+**Page-Type-Mismatch:** `mismatch-alert` (rote Box mit Warnung wenn Seitentyp nicht passt)
 
 **Status Badges:** `badge-pass` (gruen), `badge-fail` (rot), `badge-warn` (gelb), `badge-info` (blau)
 
@@ -53,6 +59,10 @@ Der finale Report wird als **selbststaendige HTML-Datei** gespeichert.
 | Datenquelle | Datenquelle | Data Source |
 | Sektions-Titel 1 | SERP-Betrachtung | SERP Analysis |
 | Beobachtung/Interpretation | Beobachtung / Interpretation | Observation / Interpretation |
+| Page-Type-Analyse | Seitentyp-Analyse | Page Type Analysis |
+| Page-Type-Mismatch | Seitentyp-Mismatch | Page Type Mismatch |
+| Empfohlener Seitentyp | Empfohlener Seitentyp | Recommended Page Type |
+| Search Intent | Search Intent | Search Intent |
 | Sektions-Titel 2 | User Story | User Story |
 | Sektions-Titel 3 | Zielseiten-Abgleich | Target Page Comparison |
 | Sektions-Titel 4 | Optimierungsempfehlungen | Optimization Recommendations |

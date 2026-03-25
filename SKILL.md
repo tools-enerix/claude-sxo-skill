@@ -271,19 +271,29 @@ Interpretation: Visuelle Erwartungshaltung der Zielgruppe.
 Beobachtung: Welche Seitentypen und Domains dominieren?
 Interpretation: Was Google als "beste Antwort" einstuft.
 
-**Kategorisiere jedes Ergebnis:**
+**Kategorisiere jedes Ergebnis nach den 8 Seitentypen:**
 ```
-[ ] Direkter Rechner / Tool
-[ ] Ratgeber / Informationsartikel
-[ ] Produktseite / Landingpage
-[ ] Forum / Community (Reddit, gutefrage etc.)
-[ ] Vergleichsportal
-[ ] Video (YouTube)
-[ ] Lokales Ergebnis
+[ ] Landing Page      — Conversion-fokussiert, ein klarer CTA, Hero + Trust + CTA
+[ ] Blog / Guide      — Informationsartikel, Ratgeber, How-to, Erklaertext
+[ ] Product Page      — E-Commerce Produktseite mit Preis, Warenkorb, Specs
+[ ] Hybrid            — Mischform (z.B. Ratgeber + Tool, Blog + Shop-Element)
+[ ] Service Page      — Dienstleistungsseite mit Buchung/Anfrage, Prozess, Preise
+[ ] Comparison Page   — Vergleichsportal, Feature-Matrix, vs-Seite
+[ ] Local Page        — Standortseite mit Adresse, Oeffnungszeiten, Karte
+[ ] Tool Page         — Rechner, Konfigurator, interaktives Online-Tool
 ```
 
+Zusaetzlich notiere Sondertypen (kein Seitentyp-Match):
+```
+[ ] Forum / Community (Reddit, gutefrage, Quora)
+[ ] Video (YouTube)
+[ ] News / Magazin
+```
+
+**Zaehle die Seitentyp-Verteilung der Top-10** (z.B. "5x Blog/Guide, 2x Tool Page, 2x Service Page, 1x Forum").
+
 **Leitfragen:**
-- Welcher Seitentyp dominiert die Top-3? (-> Das ist der Content-Typ, den Google bevorzugt)
+- Welcher Seitentyp dominiert die Top-3? (-> Das ist der Seitentyp, den Google fuer dieses Keyword bevorzugt)
 - Gibt es auffaellige Muster in den Titeln (Woerter, die immer wieder auftauchen)?
 - Ranken grosse Portale oder Nischen-Anbieter? (-> Wettbewerbsintensitaet)
 
@@ -298,6 +308,48 @@ Interpretation: Was klickt die Zielgruppe an -- und warum.
 - Individualitaets-/Praezisionsversprechen
 - Call-to-Action Typen
 
+### 2h -- Page-Type-Mismatch Erkennung
+
+**Dies ist die wichtigste strategische Erkenntnis der SERP-Analyse.**
+
+Vergleiche den **dominierenden Seitentyp der Top-10** (aus 2f) mit dem **aktuellen Typ der Zielseite**.
+
+```
+DOMINANT IN TOP-10:  [z.B. Service Page — 6 von 10 Ergebnisse]
+ZIELSEITE AKTUELL:   [z.B. Blog / Guide]
+MISMATCH:            [Ja / Nein]
+```
+
+**Wenn MISMATCH = Ja:**
+
+```
+-> Flagge als HIGH-PRIORITY GAP in Schritt 4b:
+   "Page-Type-Mismatch: Die Zielseite ist ein [IST-Typ], aber Google bevorzugt
+   [SOLL-Typ] fuer dieses Keyword (X von 10 Top-Ergebnisse). Selbst perfekter
+   Content im falschen Seitentyp wird langfristig nicht ranken."
+
+-> Empfehlung in Schritt 5 muss den Seitentyp-Wechsel als primaere Massnahme enthalten
+-> Der empfohlene Seitentyp wird im Report prominent ausgegeben
+```
+
+**Wenn MISMATCH = Nein:**
+```
+-> Vermerke: "Seitentyp stimmt mit SERP-Erwartung ueberein"
+-> Fokus in Schritt 4b auf Content- und UX-Gaps
+```
+
+**Seitentyp der Zielseite bestimmen:**
+
+Nutze die Content-Parsing-Daten aus Schritt 1b (`on_page_content_parsing`). Klassifiziere anhand:
+- Vorhandensein von Formularen / Buchungs-CTAs -> Service Page / Landing Page
+- Warenkorb / Preis / "In den Warenkorb" -> Product Page
+- Rechner / Konfigurator / interaktives Element -> Tool Page
+- Adresse / Oeffnungszeiten / Karte -> Local Page
+- Vergleichstabelle / vs-Struktur -> Comparison Page
+- Langer Fliesstext / Inhaltsverzeichnis / Lesezeit -> Blog / Guide
+- Kurze Hero-Section + mehrere CTAs -> Landing Page
+- Mischform -> Hybrid
+
 ---
 
 ## Schritt 3: User Story ableiten
@@ -310,14 +362,26 @@ Fuelle diese Tabelle aus den SERP-Daten:
 
 | Element | Aus den SERPs abgeleitet |
 |---|---|
+| **Search Intent** | Informational / Transactional / Commercial / Navigational / Mixed |
+| **Empfohlener Seitentyp** | Aus 2h: Landing Page / Blog / Product / Hybrid / Service / Comparison / Local / Tool |
 | **Wissensstand** | Anfaenger / bereits informiert / Experte |
-| **Benoetigter Inhaltstyp** | Rechner / Tabelle / Erklaertext / Vergleich / ... |
+| **Benoetigter Inhaltstyp** | Rechner / Tabelle / Erklaertext / Vergleich / Service-Beschreibung / Produktliste |
 | **Individualitaetsbedarf** | Generische Info / Lokale/persoenliche Berechnung |
 | **Journey-Phase** | Awareness / Consideration / Decision |
 | **Emotionale Lage** | z.B. Unsicherheit bei Investitionsentscheidung |
 | **Primaeres Ziel** | z.B. "Lohnt sich das fuer mich konkret?" |
 | **Sekundaeres Ziel** | z.B. "Danach ggf. konkretes Angebot einholen" |
 | **Barrieren** | Was haelt den User zurueck? (Risiko, Komplexitaet, Zeit) |
+
+**Intent-Klassifikation ableiten aus SERP-Signalen:**
+
+```
+Informational:   PAA dominiert, Wikipedia/Knowledge Graph, Blog/Guide in Top-3, keine Ads
+Transactional:   Shopping-Produkte, Preis-Terme, Warenkorb-CTAs, Product Pages in Top-3
+Commercial:      Vergleichsportale, "beste/bester", Reviews, Ads mit Preisen, Comparison/Service Pages
+Navigational:    Markenname im Keyword, eine Domain dominiert, Knowledge Graph mit Brand
+Mixed:           Mehrere Signale gleichzeitig (z.B. Ads + Blog + Tool) -> nenne die 2 staerksten
+```
 
 ### 3b -- User Story Statement formulieren
 
