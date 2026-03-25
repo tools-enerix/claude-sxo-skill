@@ -2,13 +2,44 @@
 
 Three Claude Code skills for **Search Experience Optimization (SXO)** -- combining SEO with UX to align your pages with what Google's SERPs actually reward.
 
-## Core Thesis
+## What is SXO?
 
-> Google's SERPs already show the optimal answer to the User Story -- you just need to read them backwards.
+**Search Experience Optimization (SXO)** combines SEO with UX. The core idea: Google's SERPs already show the optimal answer to the User Story -- you just need to read them backwards.
 
-**Logic:** User Story &rarr; SERP layout &rarr; Your page must mirror the User Story.
+Traditional SEO asks: *"How do I rank higher?"*
+SXO asks: *"What experience does the searcher expect, and does my page deliver it?"*
 
-**Goal:** Sustainably improve rankings **and** conversions by aligning your page with the search experience Google already rewards.
+### How It Works -- A Concrete Example
+
+Imagine you run a phone repair shop and want to rank for **"iPhone 13 screen repair"**.
+
+**Step 1: Read the SERPs backwards** (`/sxo-analyzer`)
+
+You run an SXO analysis. The skill pulls live Google data and finds:
+- **Google Ads** show prices ($50-$150) and "same-day repair" -- searchers care about cost and speed
+- **PAA questions**: "Can I repair it myself?", "How long does it take?", "Is it worth repairing?" -- there's uncertainty and price sensitivity
+- **Top-10 results**: Mix of repair guides, local shops, and Apple's official page -- Google rewards both information and service pages
+- **Featured Snippet**: A price comparison table -- Google wants structured data
+
+From all these signals, the skill derives a **User Story**:
+> *"Someone with a cracked iPhone 13 screen who wants to know the cost, whether DIY is an option, and where to get it repaired quickly. They're price-sensitive, slightly stressed, and comparing options."*
+
+The skill then compares this User Story to your actual page and finds **gaps**: your page has no prices, no FAQ, no trust signals, and the CTA is buried below the fold.
+
+**Step 2: Build the wireframe** (`/sxo-builder`)
+
+The Builder takes that report and creates a visual before/after wireframe. It shows exactly what sections your page needs, in what order, with concrete placeholders:
+- Hero with price range and "same-day" promise
+- Trust bar: "2,500+ repairs completed" + Google rating
+- Price table (because the Featured Snippet rewards this)
+- FAQ from the PAA questions
+- CTA: "Get a free quote in 30 seconds"
+
+**Step 3: Produce the finished page** (`/sxo-page`)
+
+SXO Page takes the wireframe structure, the report data, and optionally your existing content (from `/blog-write` or your live page), then produces a production-ready HTML page. It researches real statistics, writes Answer-First content, adds schema markup, and verifies quality -- a page optimized for both rankings and conversions.
+
+**The result:** Your page now mirrors the search experience Google already rewards. It answers the User Story, fills the gaps competitors miss, and converts visitors because the UX matches their expectations.
 
 ## Skills Overview
 
@@ -106,30 +137,81 @@ A self-contained **HTML wireframe** (`sxo-wireframe-<keyword>.html`) with:
 
 ## SXO Page
 
+### The Problem It Solves
+
+You have two things that are each good on their own but better together:
+
+1. **Great content** -- a well-written blog post (from `/blog-write` or your CMS) with researched statistics, proper structure, and good readability
+2. **SXO intelligence** -- an SXO report and wireframe that know exactly what the search experience demands: which sections, which CTAs, which trust signals, in which order
+
+SXO Page **merges both**. It takes your existing content and restructures it according to the wireframe's SOLL structure, filling gaps identified by the SXO analysis. If you don't have existing content, it produces everything from scratch using blog-write quality standards.
+
 ### How It Works
 
 ```
 /sxo-page
 ```
 
-The skill auto-detects SXO report and wireframe files in the current directory and produces a finished page:
+The skill auto-detects files in the current working directory:
+
+| Input | Source | Required? |
+|-------|--------|-----------|
+| `sxo-report-*.html` | From `/sxo-analyzer` | Yes (keyword, User Story, gaps, PAA questions) |
+| `sxo-wireframe-*.html` | From `/sxo-builder` | Yes (SOLL structure, placeholders, page type) |
+| Existing content (`.html` / `.md`) | From `/blog-write`, your CMS, or any source | Optional (reusable text, images, links) |
+
+Place all files in the same directory and run `/sxo-page`. The skill then:
 
 | Step | What Happens |
 |------|-------------|
-| **0. Input Detection** | Finds `sxo-report-*.html` and `sxo-wireframe-*.html` in the working directory, detects language (DE/EN) |
-| **1. Data Extraction** | Parses wireframe sections (SOLL structure, placeholders, gap references) and report data (keyword, User Story, PAA questions, SERP top-10) |
-| **2. Content Research** | Spawns a blog-researcher agent for statistics (Tier 1-3 sources), royalty-free images, and competitive gaps |
-| **3. Content Production** | Writes each section following Answer-First, E-E-A-T, readability targets (Flesch 60-70), and citation capsules |
-| **4. Page Assembly** | Generates HTML (with schema, OG tags, meta) or Markdown with YAML frontmatter |
-| **5. Quality Check** | Verifies wireframe coverage, gap coverage, content quality, and technical requirements |
+| **0. Input Detection** | Finds report, wireframe, and optional existing content. Detects language (DE/EN). |
+| **1. Data Extraction** | Parses the wireframe's SOLL sections (structure, placeholders, gap references) and the report's SERP data (keyword, User Story, PAA questions, top-10). If existing content is present, extracts reusable text, images, and links. |
+| **2. Content Research** | Spawns a blog-researcher agent for current statistics (Tier 1-3 sources only), royalty-free images, and competitive gaps |
+| **3. Content Production** | For each wireframe section: writes new content or adapts existing content following Answer-First, E-E-A-T, readability targets (Flesch 60-70), and Citation Capsules. The wireframe structure is authoritative -- content is shaped to fit it, not the other way around. |
+| **4. Page Assembly** | Generates HTML (with schema markup, OG tags, meta tags) or Markdown (with YAML frontmatter) |
+| **5. Quality Check** | Verifies all wireframe sections covered, all placeholders resolved, all high-priority gaps addressed, and technical requirements met |
+
+### Two Typical Workflows
+
+**Workflow A: Content-first** (you already have a blog post)
+
+```
+1. /blog-write "iPhone 13 screen repair guide"
+   → blog-post.html (well-written content)
+
+2. /sxo-analyzer "iphone 13 screen repair" https://your-site.com/repair
+   → sxo-report-iphone-13-screen-repair.html
+
+3. /sxo-builder sxo-report-iphone-13-screen-repair.html
+   → sxo-wireframe-iphone-13-screen-repair.html
+
+4. /sxo-page
+   → sxo-page-iphone-13-screen-repair.html
+   (merges your blog content into the SXO-optimized structure)
+```
+
+**Workflow B: Analysis-first** (no existing content)
+
+```
+1. /sxo-analyzer "content marketing roi calculator" https://competitor.com/roi
+   → sxo-report-content-marketing-roi-calculator.html
+
+2. /sxo-builder sxo-report-content-marketing-roi-calculator.html
+   → sxo-wireframe-content-marketing-roi-calculator.html
+
+3. /sxo-page
+   → sxo-page-content-marketing-roi-calculator.html
+   (produces everything from scratch with blog-write quality)
+```
 
 ### Key Features
 
-- **Wireframe-Driven**: The SOLL structure from SXO Builder defines the page architecture -- no deviation
-- **Blog-Quality Content**: Applies blog-write techniques (Answer-First, statistics with sources, Citation Capsules, visual pacing)
+- **Content Merging**: Takes existing blog content and restructures it into the SXO wireframe's optimal layout -- no content wasted, no gaps left open
+- **Wireframe-Driven**: The SOLL structure from SXO Builder defines the page architecture. Content is shaped to fit, never the other way around.
+- **Blog-Quality Content**: Applies blog-write techniques (Answer-First, statistics with sources, Citation Capsules, visual pacing) whether writing from scratch or adapting existing text
 - **Placeholder Resolution**: Every wireframe placeholder (`[CTA]`, `[FAQ]`, `[KEYWORD]`) becomes real, production-ready HTML
 - **User Story Tone**: Content tone adapts to knowledge level, emotional state, and journey phase from the User Story
-- **Dual Format**: Output as HTML (with Tailwind CSS, schema markup, OG tags) or Markdown (with YAML frontmatter)
+- **Dual Format**: Output as HTML (with schema markup, OG tags) or Markdown (with YAML frontmatter)
 - **Automatic Language Detection**: German or English based on report/wireframe language
 
 ### Output
@@ -139,7 +221,7 @@ A production-ready **HTML page** (`sxo-page-<keyword>.html`) or **Markdown file*
 - FAQ section from PAA questions with FAQPage schema
 - Schema markup (WebPage/BlogPosting, FAQ, Breadcrumb)
 - Meta tags (title, description, OG, Twitter Card)
-- Citation Capsules for AI citability
+- Citation Capsules for AI citability (ChatGPT, Perplexity, AI Overviews)
 - Quality verification checklist
 
 ---
@@ -324,16 +406,26 @@ Blog Analyze starts from the **content itself** and scores it against a fixed qu
 | "Should my page be a guide, a tool, or a shop page?" | **SXO Analyzer** + **SXO Builder** |
 | "End-to-end: analyze, plan, and produce the page" | **SXO Analyzer** + **SXO Builder** + **SXO Page** |
 
-### Using All Four Together
+### Using All Together
 
-The skills complement each other in sequence:
+The skills complement each other. Two common sequences:
 
-1. **SXO Analyzer first** -- understand what the market wants for your target keyword
-2. **SXO Builder second** -- get a concrete restructuring plan with page type recommendation
-3. **SXO Page third** -- produce the finished page with researched content, schema, and meta tags
-4. **Blog Analyze last** -- verify the content meets quality standards before publishing
+**Starting from scratch:**
 
-SXO Analyzer tells you *what's wrong*. SXO Builder shows you *how to fix it*. SXO Page *builds the finished page*. Blog Analyze tells you *if you built it well*.
+1. **SXO Analyzer** -- understand what the market wants for your target keyword
+2. **SXO Builder** -- get a concrete restructuring plan with page type recommendation
+3. **SXO Page** -- produce the finished page with researched content, schema, and meta tags
+4. **Blog Analyze** -- verify the content meets quality standards before publishing
+
+**Starting with existing content:**
+
+1. **Blog Write** -- create a high-quality blog post with statistics, E-E-A-T, and proper structure
+2. **SXO Analyzer** -- analyze the SERP to find what's missing for ranking
+3. **SXO Builder** -- get the wireframe showing the optimal page structure
+4. **SXO Page** -- merge your blog content into the SXO-optimized structure
+5. **Blog Analyze** -- verify the final page meets quality standards
+
+SXO Analyzer tells you *what's wrong*. SXO Builder shows you *how to fix it*. SXO Page *builds the finished page* (with or without existing content). Blog Analyze tells you *if you built it well*.
 
 ---
 
