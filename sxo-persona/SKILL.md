@@ -2,10 +2,12 @@
 name: sxo-persona
 description: >
   Erstellt ein Persona-Feedback-Dashboard als HTML-Datei auf Basis eines SXO-Analyzer
-  Reports und/oder einer SXO Page. Leitet 4-7 Personas aus Intent-Signalen ab (Related
-  Searches, PAA, User Story, Gap-Analyse), bewertet die Zielseite aus jeder Persona-
-  Perspektive (Score 1-100) und gibt konkrete Verbesserungsvorschlaege. Downstream-Skill
-  von sxo-analyzer. Supports German and English -- auto-detects language from SXO report.
+  Reports und/oder einer SXO Page. Kann auch standalone mit URL + Keyword arbeiten
+  (fuehrt dann intern eine SERP-Analyse durch, ohne HTML-Report zu erzeugen).
+  Leitet 4-7 Personas aus Intent-Signalen ab (Related Searches, PAA, User Story,
+  Gap-Analyse), generiert Flat-Illustration-Avatare via Nano Banana MCP mit lokalem
+  Bild-Cache, bewertet die Zielseite aus jeder Persona-Perspektive (Score 1-100)
+  und gibt konkrete Verbesserungsvorschlaege. Supports German and English.
   Use when user says "SXO Persona", "Persona Dashboard", "Persona Analyse",
   "Persona erstellen", "create personas", "persona feedback", "Nutzer-Feedback",
   "user feedback dashboard", "Zielgruppen-Analyse", "audience analysis",
@@ -13,13 +15,16 @@ description: >
   "who is searching for this", or "SXO Persona Dashboard".
   Do NOT use for: marketing personas without SXO context, buyer personas for ads,
   UX research interviews, or general user research.
-argument-hint: "[sxo-report-datei] [sxo-page-datei|url]"
+argument-hint: "[keyword] [url] | [sxo-report-datei] [sxo-page-datei|url]"
 allowed-tools:
   - Read
   - Write
   - Glob
   - Grep
+  - Bash
   - WebFetch
+  - Agent
+  - "mcp__dataforseo__*"
 ---
 
 # SXO-Persona -- Persona-Feedback-Dashboard aus SXO-Report
@@ -34,32 +39,42 @@ Logik: **SERP-Signale -> Intent-Cluster -> Personas -> Scoring gegen Zielseite -
 
 ## Schritt 0: Inputs erkennen und validieren
 
-### 0a -- Dateien im Arbeitsverzeichnis suchen
+### 0a -- Inputs erkennen (4 Modi)
 
 ```
 Suche mit Glob im aktuellen Arbeitsverzeichnis nach:
 
 1. SXO-Report:  sxo-report-*.html   (aus /sxo-analyzer)
 2. SXO-Page:    sxo-page-*.html     (aus /sxo-page)
-3. Alternativ:  URL als Argument
+3. Argumente:   URL und/oder Keyword als Argument
 
-IF Report gefunden:
+Bestimme den Modus:
+
+MODUS A -- Report gefunden:
   -> Zeige gefundene Datei(en)
   -> Falls mehrere Reports: User waehlen lassen
   -> Lies den Report mit Read-Tool
+  -> IF zusaetzlich SXO-Page gefunden:
+       -> Nutze die Page fuer praeziseres Scoring
+       -> Hinweis: "SXO-Page gefunden -- Scoring basiert auf tatsaechlichem Seiteninhalt"
+  -> Weiter mit Schritt 1 (Daten aus Report extrahieren)
 
-IF zusaetzlich SXO-Page gefunden:
-  -> Nutze die Page fuer praeziseres Scoring
-  -> Hinweis: "SXO-Page gefunden -- Scoring basiert auf tatsaechlichem Seiteninhalt"
+MODUS B -- Kein Report, aber URL + Keyword als Argumente:
+  -> Standalone-Modus: Fuehre interne SERP-Analyse durch (siehe Schritt 0c)
+  -> Hinweis: "Standalone-Modus: Fuehre SERP-Analyse fuer '[KEYWORD]' durch..."
+  -> Weiter mit Schritt 0c
 
-IF kein Report, aber URL:
-  -> Hinweis: "Ohne SXO-Report kann ich nur eingeschraenkt Personas ableiten."
-  -> "Fuer optimale Ergebnisse empfehle ich: /sxo-analyzer [keyword] [url]"
-  -> Hole Seite via WebFetch und erstelle Basis-Personas aus Seiteninhalt
+MODUS C -- Kein Report, nur URL (ohne Keyword):
+  -> Frage den User nach dem Fokus-Keyword:
+     "Fuer die Persona-Analyse brauche ich ein Fokus-Keyword.
+      Welches Keyword soll ich analysieren?"
+  -> Warte auf Antwort
+  -> Dann weiter wie Modus B (Standalone mit URL + Keyword)
 
-IF weder Report noch URL:
-  -> Fehler: "Ich brauche mindestens einen SXO-Report oder eine URL."
-  -> "Starte mit: /sxo-analyzer [keyword] [url]"
+MODUS D -- Weder Report noch URL:
+  -> Fehler: "Ich brauche mindestens einen SXO-Report oder eine URL + Keyword."
+  -> "Option 1: /sxo-analyzer [keyword] [url]  (vollstaendiger Report)"
+  -> "Option 2: /sxo-persona [keyword] [url]   (Standalone-Analyse)"
 ```
 
 ### 0b -- Spracherkennung
@@ -78,6 +93,107 @@ IF Sprache = Englisch:
 ELSE:
   -> Verwende CSS aus assets/persona-template.html
   -> Deutsche Labels (Suchmotiv, Erwartung, Verbesserungen, etc.)
+```
+
+### 0c -- Standalone-Modus (SERP-Analyse ohne Report)
+
+Wenn Modus B oder C aktiv ist, fuehre die SERP-Analyse intern durch.
+Ziel: Dieselben Datenfelder wie in Schritt 1 erzeugen, aber aus Live-SERP-Daten statt aus einem HTML-Report.
+
+**WICHTIG:** Es wird KEIN HTML-Report erzeugt. Alle Daten bleiben im Arbeitskontext.
+
+```
+SCHRITT 0c-1: SERP-Daten holen (ein einzelner API-Call)
+
+  Rufe auf: mcp__dataforseo__serp_organic_live_advanced
+    keyword:       KEYWORD
+    location_code: 2276 (Deutschland) bzw. passend zur Sprache
+    language_code: "de" bzw. "en"
+    depth:         30
+
+  Dieser Call liefert:
+    - Organic Top-10/30 Ergebnisse
+    - Related Searches (item_types: "related_searches")
+    - People Also Ask (item_types: "people_also_ask")
+    - Featured Snippets (item_types: "featured_snippet")
+    - Google Ads (item_types: "paid")
+    - AI Overview (item_types: "ai_overview")
+
+SCHRITT 0c-2: Daten in Report-Format mappen
+
+  Aus den SERP-Daten extrahiere:
+
+  RELATED_SEARCHES:
+    -> Fuer jedes Related-Search-Item:
+       SUCHBEGRIFF: title
+       INTENT_BADGE: Leite Intent ab (Informational/Commercial/Transactional/Local/DIY)
+       Nutze mcp__dataforseo__dataforseo_labs_search_intent fuer praezise Intent-Klassifikation
+
+  PAA_FRAGEN:
+    -> Fuer jedes People-Also-Ask-Item:
+       PAA_FRAGE: title
+       PAA_ANTWORT: description (falls vorhanden)
+
+  ADS_SIGNALE:
+    -> Fuer jedes Paid-Item:
+       ADS_TITLE: title
+       ADS_DESCRIPTION: description
+       ADS_URL: url
+    -> Interpretation: Welche Botschaften werden getestet? Preispunkte?
+
+  TOP_10_ERGEBNISSE:
+    -> Fuer jedes Organic-Item (Position 1-10):
+       TITLE, URL, DESCRIPTION
+    -> Analyse: Welche Themen dominieren? Content-Typen?
+
+SCHRITT 0c-3: User Story ableiten
+
+  Aus den gesammelten SERP-Signalen leite die User Story ab:
+
+  1. WISSENSSTAND: Aus Komplexitaet der PAA-Fragen
+     - Einfache Fragen ("Was ist...?") -> Einsteiger
+     - Vergleichsfragen ("Was ist besser...?") -> Fortgeschritten
+     - Detailfragen ("Wie konfiguriere ich...?") -> Experte
+
+  2. JOURNEY_PHASE: Aus Intent-Verteilung
+     - Ueberwiegend Informational -> Recherche
+     - Gemischt Info+Commercial -> Vergleich
+     - Ueberwiegend Commercial/Transactional -> Entscheidung
+
+  3. EMOTIONALE_LAGE: Aus Tonalitaet der Suchanfragen
+     - "Lohnt sich...?" -> Unsicherheit
+     - "Beste/Top..." -> Optimismus
+     - "Problem/Fehler..." -> Frustration
+
+  4. BARRIEREN: Aus PAA-Fragen und Related Searches
+     - Preisfragen -> Kostenbarriere
+     - "Erfahrungen" -> Vertrauensbarriere
+     - "Nachteile/Risiken" -> Risikobarriere
+
+  5. PRIMAERES_ZIEL + SEKUNDAERES_ZIEL: Aus dominantem Intent
+
+  6. USER_STORY_STATEMENT: Formuliere als:
+     "Als [Rolle] mit [Wissensstand] moechte ich [Ziel],
+      damit ich [Nutzen]. Meine groesste Sorge ist [Barriere]."
+
+SCHRITT 0c-4: Seiteninhalte holen (fuer Scoring)
+
+  -> Hole die Zielseite via WebFetch (URL aus Argument)
+  -> Extrahiere: Headline, Meta-Description, Hauptinhalt, Trust-Signale
+  -> Scoring-Modus: "Basierend auf Live-URL (Standalone)"
+
+SCHRITT 0c-5: Gap-Analyse ableiten
+
+  Vergleiche SERP-Erwartungen mit Seiteninhalt:
+  -> Fuer jedes SERP-Signal (Related Search, PAA, Ads-Botschaft):
+     Pruefe ob die Zielseite dieses Thema abdeckt
+  -> Erstelle Gap-Items mit Prioritaet:
+     - SERP-Signal stark + Seite fehlt = high
+     - SERP-Signal mittel + Seite schwach = medium
+     - SERP-Signal schwach + Seite fehlt = low
+
+Danach: Weiter mit Schritt 2 (Personas ableiten).
+Die Daten aus 0c-2/0c-3/0c-5 ersetzen die Report-Daten aus Schritt 1.
 ```
 
 ---
@@ -258,6 +374,19 @@ Fuer JEDE Persona erstelle:
    - Konkret und umsetzbar
    - Aus der Perspektive dieser Persona formuliert
    - Referenz auf Gap-Analyse oder First-Screen-Check
+
+6. ARCHETYPE (fuer Avatar-Bild)
+   - Ordne jeder Persona einen Archetype-Key zu (siehe references/persona-images.md)
+   - Mapping: Intent-Cluster -> Archetype-Key
+     Preis -> price-conscious | Qualitaet -> quality-focused
+     Lokal -> local-seeker | DIY -> diy-maker
+     Anbieter -> provider-comparer | Angst/Unsicherheit -> anxious-decider
+     Spezialfall -> special-case | Dringlichkeit -> urgent-user
+     Informational -> knowledge-seeker | Commercial -> ready-buyer
+   - Die Hauptpersona (aus User Story) bekommt immer "main-planner"
+   - WICHTIG: Keine zwei Personas duerfen denselben Archetype haben!
+     Bei Kollision: sekundaeren Archetype verwenden (trust-seeker,
+     expert-user, beginner, emotional-seeker, roi-calculator)
 ```
 
 ---
@@ -377,6 +506,48 @@ IF Scoring-Modus = "Projiziert aus SXO-Report":
    -> "Basierend auf SXO-Page" | "Basierend auf Live-URL" | "Projiziert aus SXO-Report"
 ```
 
+### 4b -- Persona-Bilder generieren (mit Cache)
+
+Lies die Referenzdatei `references/persona-images.md` fuer Archetype-Prompts und Cache-Logik.
+
+```
+Fuer JEDE Persona:
+
+1. ARCHETYPE_KEY = Persona.archetype (aus Schritt 2c)
+2. LANG = "de" oder "en" (aus Schritt 0b)
+3. CACHE_KEY = "{ARCHETYPE_KEY}-{LANG}.png"
+4. CACHE_PATH = ~/.sxo-persona/image-cache/{CACHE_KEY}
+
+5. Pruefe Cache:
+   IF Datei existiert UND Dateigroesse > 0:
+     -> Log: "Cache-Hit: {CACHE_KEY}"
+     -> Lies Bild als base64 via Bash:
+        base64_data=$(base64 -w 0 {CACHE_PATH})
+     -> PERSONA_IMG_SRC = "data:image/png;base64,${base64_data}"
+
+   ELSE (Cache-Miss):
+     -> Log: "Cache-Miss: {CACHE_KEY} -- generiere Bild..."
+     -> Erstelle Cache-Verzeichnis: mkdir -p ~/.sxo-persona/image-cache/
+     -> Bestimme BG_COLOR aus Persona-Score:
+        Score 0-29:  #fce4ec (soft coral)
+        Score 30-49: #fff3e0 (soft peach)
+        Score 50-69: #fffde7 (soft warm yellow)
+        Score 70-89: #e3f2fd (soft sky blue)
+        Score 90-100: #e8f5e9 (soft mint)
+     -> Baue Prompt = BASIS_PROMPT + ARCHETYPE_ERWEITERUNG
+        (siehe references/persona-images.md)
+     -> Rufe gemini_generate_image auf (1:1, 512px)
+     -> Kopiere generiertes Bild in Cache:
+        cp ~/Documents/nanobanana_generated/<generated-file> {CACHE_PATH}
+     -> Lies als base64
+     -> PERSONA_IMG_SRC = "data:image/png;base64,${base64_data}"
+
+6. Falls Bildgenerierung fehlschlaegt:
+   -> Verwende Fallback: persona-avatar-placeholder (CSS-Klasse mit Emoji)
+   -> Log: "Warnung: Bild fuer {CACHE_KEY} konnte nicht generiert werden"
+   -> Dashboard trotzdem erstellen (Bild ist optional)
+```
+
 ---
 
 ## Schritt 5: HTML-Dashboard generieren
@@ -475,6 +646,13 @@ Jede Persona-Card folgt diesem Schema:
           stroke-dashoffset="85"/>
       </svg>
       <div class="score-value">{{SCORE}}</div>
+    </div>
+    <!-- Avatar (aus Schritt 4b) -->
+    <div class="persona-avatar-wrap">
+      <!-- IF Bild vorhanden: -->
+      <img class="persona-avatar" src="{{PERSONA_IMG_SRC}}" alt="{{PERSONA_NAME}}">
+      <!-- ELSE (Fallback): -->
+      <!-- <div class="persona-avatar-placeholder">&#128100;</div> -->
     </div>
     <div class="persona-identity">
       <h3>{{PERSONA_NAME}}</h3>
@@ -623,6 +801,30 @@ REGEL 8: Barrierefreiheit
 REGEL 9: Print-Freundlich
   -> Print-Styles inkludieren (wie bei sxo-report Template)
   -> Score-Kreise muessen auch in Schwarz-Weiss lesbar sein
+```
+
+### Bild-Qualitaet
+
+```
+REGEL 10: Cache immer nutzen
+  -> Niemals ein Bild generieren, wenn es bereits im Cache liegt
+  -> Cache-Verzeichnis: ~/.sxo-persona/image-cache/
+  -> Cache-Key: {archetype}-{lang}.png
+
+REGEL 11: Bilder sind optional
+  -> Dashboard MUSS auch ohne Bilder funktionieren
+  -> Bei Fehler: persona-avatar-placeholder CSS-Klasse mit Emoji verwenden
+  -> Niemals den gesamten Workflow abbrechen wegen eines Bildfehlers
+
+REGEL 12: Archetype-Eindeutigkeit
+  -> Keine zwei Personas im selben Dashboard duerfen denselben Archetype haben
+  -> Bei Kollision: sekundaeren Archetype verwenden
+  -> 16 Archetypes verfuegbar (siehe references/persona-images.md)
+
+REGEL 13: Bildformat konsistent
+  -> Alle Bilder als base64 inline im HTML (data:image/png;base64,...)
+  -> Keine externen Bildverweise
+  -> 56x56px Anzeige (CSS), 512px Quellaufloesung
 ```
 
 ---
