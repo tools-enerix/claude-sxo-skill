@@ -1,6 +1,6 @@
 # SXO Skills for Claude Code
 
-Three Claude Code skills for **Search Experience Optimization (SXO)** -- combining SEO with UX to align your pages with what Google's SERPs actually reward.
+Four Claude Code skills for **Search Experience Optimization (SXO)** -- combining SEO with UX to align your pages with what Google's SERPs actually reward.
 
 ## What is SXO?
 
@@ -56,6 +56,7 @@ SXO Page takes the wireframe, the report, and your existing blog post, then **me
 | **SXO Analyzer** | `/sxo-analyzer <keyword> <url>` | SERP analysis, User Story derivation, gap analysis, HTML report |
 | **SXO Builder** | `/sxo-builder <report.html>` | Before/after wireframe from SXO report with concrete placeholders |
 | **SXO Page** | `/sxo-page` | Production-ready HTML/MD page from SXO report + wireframe |
+| **SXO Persona** | `/sxo-persona` | Persona-Feedback-Dashboard from SXO report (+ optional SXO page) |
 
 ### Recommended Workflow
 
@@ -68,9 +69,12 @@ SXO Page takes the wireframe, the report, and your existing blog post, then **me
 
 3. /sxo-page
    → Generates sxo-page-keyword.html (production-ready page)
+
+4. /sxo-persona
+   → Generates sxo-persona-keyword.html (persona feedback dashboard)
 ```
 
-SXO Analyzer tells you **what's wrong**. SXO Builder shows you **how to fix it**. SXO Page **builds the finished page**.
+SXO Analyzer tells you **what's wrong**. SXO Builder shows you **how to fix it**. SXO Page **builds the finished page**. SXO Persona shows you **who you're building it for**.
 
 ---
 
@@ -234,6 +238,56 @@ A production-ready **HTML page** (`sxo-page-<keyword>.html`) or **Markdown file*
 
 ---
 
+## SXO Persona
+
+### The Problem It Solves
+
+After analyzing the SERPs (Analyzer), restructuring the page (Builder), and producing the content (Page), one question remains: **Who exactly are you building this for -- and how well does your page serve each type of searcher?**
+
+A single keyword attracts very different people. "Photovoltaik mit Warmepumpe kombinieren" brings the cost-conscious planner, the winter skeptic, the Altbau owner, and the experience seeker -- each with different expectations, barriers, and scoring criteria. SXO Persona makes these invisible audiences visible.
+
+### How It Works
+
+```
+/sxo-persona
+```
+
+The skill auto-detects files in the current working directory:
+
+| Input | Source | Required? |
+|-------|--------|-----------|
+| `sxo-report-*.html` | From `/sxo-analyzer` | Yes (SERP signals, User Story, gaps) |
+| `sxo-page-*.html` | From `/sxo-page` | Optional (enables precise scoring against actual content) |
+| URL argument | Provided by user | Optional (alternative to SXO page) |
+
+| Step | What Happens |
+|------|-------------|
+| **0. Inputs** | Finds SXO report and optional SXO page. Detects language (DE/EN). |
+| **1. Data Extraction** | Parses Related Searches, PAA questions, Google Ads signals, User Story elements, Gap Analysis, and First Screen Check from the report. |
+| **2. Persona Derivation** | Clusters intent signals into 4-7 distinct personas using a rules-based taxonomy (10 primary + 5 secondary intent clusters). Each persona gets a name, demographics, search motive, and page expectations. |
+| **3. Scoring** | Scores each persona on 4 dimensions (First Screen 0-25, Expectation 0-35, Barrier Reduction 0-25, Trust 0-15 = max 100). Scoring source: SXO page content > live URL > projected from report gaps. |
+| **4. Dashboard** | Generates a visual HTML dashboard with summary, User Story, persona cards (sorted weakest-first), and aggregated action items. |
+
+### Key Features
+
+- **SERP-Driven Personas**: Not fictional marketing personas -- derived from actual search signals (Related Searches, PAA, Ads, User Story)
+- **4-Dimension Scoring**: Each persona scored independently on First Screen relevance, expectation fulfillment, barrier reduction, and trust signals
+- **Three Scoring Modes**: "Based on SXO Page" (most precise), "Based on Live URL", or "Projected from SXO Report" (when no page is available)
+- **Aggregated Action Items**: Cross-persona improvements ranked by number of affected personas
+- **Visual Dashboard**: Score circles, breakdown bars, color-coded cards (red/orange/amber/blue/green), print-friendly
+- **Automatic Language Detection**: German or English based on report language
+
+### Output
+
+A self-contained **HTML dashboard** (`sxo-persona-<keyword>.html`) with:
+- Summary card with average score, weakest/strongest persona, and scoring mode
+- User Story from the SXO report
+- 4-7 persona cards with score circle, intent badge, search motive, expectations, score breakdown bars, and improvement suggestions
+- Top 5 action items with affected-persona tags
+- Responsive layout (2-column desktop, 1-column mobile) and print styles
+
+---
+
 ## Supported Page Types
 
 SXO Builder and SXO Page support 8 page types. The Builder recommends the best fit based on SERP signals; SXO Page produces the corresponding layout with type-specific sections and schema.
@@ -253,7 +307,7 @@ SXO Builder and SXO Page support 8 page types. The Builder recommends the best f
 
 ## Installation
 
-### Option A: Install All Three Skills
+### Option A: Install All Four Skills
 
 ```bash
 # Clone the repository
@@ -271,6 +325,9 @@ cp -r sxo-builder ~/.claude/skills/sxo-builder
 
 # Copy SXO Page
 cp -r sxo-page ~/.claude/skills/sxo-page
+
+# Copy SXO Persona
+cp -r sxo-persona ~/.claude/skills/sxo-persona
 ```
 
 ### Option B: Install Only SXO Analyzer
@@ -311,6 +368,13 @@ claude-sxo-skill/
 │   └── references/
 │       ├── content-production.md          # Wireframe-to-content conversion rules
 │       └── quality-gates.md              # Combined quality criteria
+├── sxo-persona/                          # SXO Persona skill
+│   ├── SKILL.md                          # Persona dashboard skill instructions
+│   ├── assets/
+│   │   ├── persona-template.html         # German persona dashboard template (CSS)
+│   │   └── persona-template-en.html      # English persona dashboard template (CSS)
+│   └── references/
+│       └── persona-derivation.md         # Intent cluster taxonomy and derivation rules
 └── examples/
     ├── sxo-report-content-marketing-roi-calculator.html     # Analyzer example
     ├── sxo-wireframe-content-marketing-roi-calculator.html  # Builder example
@@ -427,9 +491,11 @@ Blog Analyze starts from the **content itself** and scores it against a fixed qu
 | "Why do competitors rank above me?" | **SXO Analyzer** |
 | "Give my designer a concrete restructuring plan" | **SXO Builder** |
 | "Build the finished page from my wireframe" | **SXO Page** |
+| "Who exactly searches this keyword and what do they expect?" | **SXO Persona** |
+| "Does my page serve all searcher types equally well?" | **SXO Persona** |
 | "Does this post have AI content detection issues?" | **Blog Analyze** |
 | "Should my page be a guide, a tool, or a shop page?" | **SXO Analyzer** + **SXO Builder** |
-| "End-to-end: analyze, plan, and produce the page" | **SXO Analyzer** + **SXO Builder** + **SXO Page** |
+| "End-to-end: analyze, plan, produce, and validate" | **SXO Analyzer** + **SXO Builder** + **SXO Page** + **SXO Persona** |
 
 ### Using All Together
 
@@ -440,7 +506,8 @@ The skills complement each other. Two common sequences:
 1. **SXO Analyzer** -- understand what the market wants for your target keyword
 2. **SXO Builder** -- get a concrete restructuring plan with page type recommendation
 3. **SXO Page** -- produce the finished page with researched content, schema, and meta tags
-4. **Blog Analyze** -- verify the content meets quality standards before publishing
+4. **SXO Persona** -- validate the page against all searcher types with persona scoring
+5. **Blog Analyze** -- verify the content meets quality standards before publishing
 
 **Starting with existing content:**
 
@@ -448,9 +515,10 @@ The skills complement each other. Two common sequences:
 2. **SXO Analyzer** -- analyze the SERP to find what's missing for ranking
 3. **SXO Builder** -- get the wireframe showing the optimal page structure
 4. **SXO Page** -- merge your blog content into the SXO-optimized structure
-5. **Blog Analyze** -- verify the final page meets quality standards
+5. **SXO Persona** -- check if the page serves all audience segments (cost-conscious, anxious, technical, local...)
+6. **Blog Analyze** -- verify the final page meets quality standards
 
-SXO Analyzer tells you *what's wrong*. SXO Builder shows you *how to fix it*. SXO Page *builds the finished page* (with or without existing content). Blog Analyze tells you *if you built it well*.
+SXO Analyzer tells you *what's wrong*. SXO Builder shows you *how to fix it*. SXO Page *builds the finished page*. SXO Persona shows you *who you're building it for*. Blog Analyze tells you *if you built it well*.
 
 ---
 

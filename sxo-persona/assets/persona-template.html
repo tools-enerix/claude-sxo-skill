@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SXO Persona-Dashboard: {{KEYWORD}}</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f7;
+    --surface-3: #e8ebf0;
+    --border: #d1d5de;
+    --border-light: #bfc5d2;
+    --text: #1a1f2e;
+    --text-muted: #4a5168;
+    --text-dim: #7a8198;
+    --accent: #2563eb;
+    --accent-glow: rgba(37, 99, 235, 0.08);
+    --green: #16a34a;
+    --green-bg: rgba(22, 163, 74, 0.08);
+    --red: #dc2626;
+    --red-bg: rgba(220, 38, 38, 0.07);
+    --yellow: #b45309;
+    --yellow-bg: rgba(180, 83, 9, 0.07);
+    --orange: #ea580c;
+    --orange-bg: rgba(234, 88, 12, 0.07);
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.07);
+    --amber: #ca8a04;
+    --amber-bg: rgba(202, 138, 4, 0.07);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .report {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .report-header {
+    position: relative;
+    padding: 48px 40px 40px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+  .report-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+  }
+  .report-header .meta-label { color: #94a3b8; }
+  .report-header .meta-value { color: #e2e8f0; }
+  .report-header .meta-value a { color: #93c5fd; }
+  .report-header .label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #93c5fd;
+    background: rgba(147, 197, 253, 0.15);
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .report-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 24px;
+    color: #f1f5f9;
+  }
+  .report-header h1 span {
+    color: #93c5fd;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-item .meta-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .meta-item .meta-value {
+    font-size: 14px;
+    color: var(--text);
+    word-break: break-all;
+  }
+  .meta-item .meta-value a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .meta-item .meta-value a:hover {
+    text-decoration: underline;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 32px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--accent-glow);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card p, .card li {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .card p + p { margin-top: 8px; }
+  .card ul, .card ol {
+    padding-left: 20px;
+    margin-top: 8px;
+  }
+  .card li + li { margin-top: 4px; }
+
+  /* ── Status badges ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .badge-pass    { color: var(--green);  background: var(--green-bg); }
+  .badge-fail    { color: var(--red);    background: var(--red-bg); }
+  .badge-warn    { color: var(--yellow); background: var(--yellow-bg); }
+  .badge-info    { color: var(--accent); background: var(--accent-glow); }
+  .badge-neutral { color: var(--text-muted); background: var(--surface-3); }
+  .badge-orange  { color: var(--orange); background: var(--orange-bg); }
+  .badge-amber   { color: var(--amber);  background: var(--amber-bg); }
+
+  /* ── User Story quote ── */
+  .user-story-quote {
+    position: relative;
+    padding: 24px 28px;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+    border-left: 3px solid var(--purple);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 16px 0;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.8;
+  }
+
+  /* ── Summary Card ── */
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  @media (max-width: 700px) {
+    .summary-card { flex-direction: column; text-align: center; }
+  }
+  .summary-score {
+    flex-shrink: 0;
+    position: relative;
+    width: 140px;
+    height: 140px;
+  }
+  .summary-score svg {
+    width: 140px;
+    height: 140px;
+    transform: rotate(-90deg);
+  }
+  .summary-score .score-bg {
+    fill: none;
+    stroke: var(--surface-3);
+    stroke-width: 8;
+  }
+  .summary-score .score-fill {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.6s ease;
+  }
+  .summary-score .score-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .summary-score .score-number {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .summary-score .score-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .summary-details {
+    flex: 1;
+  }
+  .summary-details h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .summary-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--surface-3);
+    font-size: 13px;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .sr-label {
+    font-weight: 600;
+    color: var(--text-dim);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    min-width: 160px;
+  }
+  .sr-value {
+    color: var(--text-muted);
+  }
+  .scoring-mode {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: var(--purple-bg);
+    color: var(--purple);
+    margin-top: 12px;
+  }
+
+  /* ── Persona Grid ── */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 800px) {
+    .persona-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Persona Card ── */
+  .persona-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    border-top: 3px solid var(--persona-color, var(--accent));
+  }
+  .persona-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  /* ── Score Circle (Persona) ── */
+  .score-circle {
+    flex-shrink: 0;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .score-circle svg {
+    width: 80px;
+    height: 80px;
+    transform: rotate(-90deg);
+  }
+  .score-circle .score-bg {
+    fill: none;
+    stroke: var(--surface-3);
+    stroke-width: 6;
+  }
+  .score-circle .score-fill {
+    fill: none;
+    stroke: var(--persona-color, var(--accent));
+    stroke-width: 6;
+    stroke-linecap: round;
+  }
+  .score-circle .score-value {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--persona-color, var(--accent));
+  }
+
+  .persona-identity h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .persona-demo {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  /* ── Persona Fields ── */
+  .persona-field {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--surface-3);
+  }
+  .pf-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .persona-field p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .persona-field ul {
+    list-style: none;
+    padding: 0;
+  }
+  .persona-field li {
+    position: relative;
+    padding-left: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+  .persona-field li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--persona-color, var(--accent));
+  }
+
+  /* ── Score Breakdown Bars ── */
+  .score-breakdown {
+    margin-top: 8px;
+  }
+  .sb-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 50px;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+  }
+  .sb-row span:first-child {
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .sb-row span:last-child {
+    text-align: right;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .sb-bar {
+    height: 6px;
+    background: var(--surface-3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .sb-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--persona-color, var(--accent));
+    transition: width 0.4s ease;
+  }
+
+  /* ── Action Items ── */
+  .action-list {
+    list-style: none;
+    padding: 0;
+    counter-reset: action-counter;
+  }
+  .action-item {
+    counter-increment: action-counter;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--surface-3);
+  }
+  .action-item:last-child { border-bottom: none; }
+  .action-number {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-glow);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .action-number::before {
+    content: counter(action-counter);
+  }
+  .action-content {
+    flex: 1;
+  }
+  .action-content p {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .action-personas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .persona-tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--surface-3);
+    color: var(--text-muted);
+  }
+
+  /* ── Footer ── */
+  .report-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* ── Utility ── */
+  .mt-8  { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-8  { margin-bottom: 8px; }
+  .text-accent { color: var(--accent); }
+  .text-muted  { color: var(--text-muted); }
+  .fw-600 { font-weight: 600; }
+  .fs-13  { font-size: 13px; }
+  .sub-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; color: #1a1a1a; font-size: 12px; }
+    .report { max-width: 100%; padding: 0; }
+    .report-header { background: #f5f5f5; border: 1px solid #ddd; }
+    .report-header::before { display: none; }
+    .report-header h1, .section-header h2, .card h3, .persona-card h3 { color: #1a1a1a; }
+    .card, .persona-card, .summary-card { background: #fafafa; border-color: #ddd; }
+    .label, .section-number { background: #eee; color: #333; border-color: #ccc; }
+    .persona-card { border-top-color: #999; }
+    .score-circle .score-fill { stroke: #666; }
+    .sb-fill { background: #999; }
+    .persona-grid { grid-template-columns: 1fr 1fr; }
+    .persona-card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="report">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="report-header">
+    <div class="label">SXO Persona-Dashboard</div>
+    <h1>Persona-Feedback: <span>{{KEYWORD}}</span></h1>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Zielseite</span>
+        <span class="meta-value"><a href="{{URL}}" target="_blank">{{URL}}</a></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Datum</span>
+        <span class="meta-value">{{DATUM}}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Scoring-Modus</span>
+        <span class="meta-value">{{SCORING_MODUS}}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Personas</span>
+        <span class="meta-value">{{PERSONA_COUNT}}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sections generated directly by the skill -->
+
+</div>
+</body>
+</html>
