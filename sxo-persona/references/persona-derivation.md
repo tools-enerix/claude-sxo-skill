@@ -1,8 +1,20 @@
 # Persona-Ableitung aus SXO-Report: Regeln und Taxonomie
 
+## Grundprinzip: Ein Keyword, viele Perspektiven
+
+**Alle Personas suchen IMMER das gleiche Fokus-Keyword.** Die Related Searches und PAA-Fragen
+zeigen nicht, dass verschiedene Personas unterschiedliche Keywords tippen, sondern welche
+**verborgenen Beduerfnisse, Hintergruende und Erwartungen** verschiedene Menschen mitbringen,
+wenn sie DASSELBE Keyword eingeben.
+
+Das Ziel ist die bestmoegliche Seite fuer das EINE Fokus-Keyword. Die Personas helfen zu
+verstehen, welche unterschiedlichen Erwartungen auf dieser einen Seite erfuellt werden muessen.
+
 ## Intent-Cluster Taxonomie
 
-Jeder Related-Search-Eintrag und jede PAA-Frage gehoert zu einem oder mehreren Intent-Clustern. Die Cluster bestimmen, welche Personas abgeleitet werden.
+Jeder Related-Search-Eintrag und jede PAA-Frage gehoert zu einem oder mehreren Intent-Clustern.
+Die Cluster zeigen, welche ERWARTUNGEN hinter dem Fokus-Keyword stecken. Sie bestimmen,
+welche Persona-Hintergruende abgeleitet werden.
 
 ### Primaere Intent-Cluster
 
@@ -33,15 +45,28 @@ Jeder Related-Search-Eintrag und jede PAA-Frage gehoert zu einem oder mehreren I
 
 ## Ableitungsregeln
 
+### Regel 0: Alle Personas suchen dasselbe Keyword
+
+**Jede Persona tippt EXAKT das Fokus-Keyword in Google ein.** Die Unterscheidung
+liegt in Lebenssituation, Wissensstand, Motivation und Erwartung -- NICHT im Suchbegriff.
+
+```
+RICHTIG:  "Sucht 'Photovoltaikanlage'. Hintergrund: Will als skeptischer
+           Investor wissen, ob sich die Anlage noch rentiert."
+FALSCH:   "Sucht 'Lohnt sich Photovoltaik noch?'."
+FALSCH:   "Sucht 'Photovoltaikanlage Balkon'."
+```
+
 ### Regel 1: User Story = Hauptpersona
 
-Die User Story aus Section 2 des Reports beschreibt den **statistisch haeufigsten Suchenden**. Daraus wird die erste Persona abgeleitet:
+Die User Story aus Section 2 des Reports beschreibt den **statistisch haeufigsten Suchenden**. Daraus wird die erste Persona abgeleitet. Diese Persona sucht das Fokus-Keyword:
 
 ```
 Hauptpersona:
+  - Sucht: DAS FOKUS-KEYWORD (immer!)
   - Nimm Journey-Phase als Basis (Discovery/Consideration/Decision)
   - Nimm Emotionale Lage als Tonung
-  - Nimm Primaeres Ziel als Suchmotiv
+  - Nimm Primaeres Ziel als Motivation hinter der Suche
   - Nimm Barrieren als Bewertungsgrundlage
 ```
 

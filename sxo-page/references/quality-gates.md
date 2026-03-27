@@ -83,6 +83,17 @@
 | Ergebnis-Erklaerung | Einordnung des Ergebnisses | Ergebnis ohne Kontext |
 | WebApplication Schema | applicationCategory + offers | Kein WebApplication Schema |
 
+**Hybrid-Seite (Landing + Blog):**
+
+| Pruefpunkt | Kriterium | Fail-Bedingung |
+|---|---|---|
+| Zwei-Zonen-Architektur | Zone 1 (Conversion) + Zone 2 (Content) klar getrennt | Conversion-Elemente im Content-Bereich oder umgekehrt |
+| Value Proposition Bar | 3 USPs mit Metriken im Hero | Keine Value Props oder Metriken fehlen |
+| Benefits Grid | 3-4 USP-Karten mit Icons vorhanden | Kein Benefits Grid trotz Hybrid-Typ |
+| Prozess-Schritte | 3-5 Schritte "So funktioniert's" | Keine Prozess-Darstellung |
+| Dual-CTA | Primaer + Sekundaer CTA im Hero | Nur ein CTA im Hero-Bereich |
+| Zone-2-Content | Key Takeaways + H2-Sektionen + FAQ komplett | Content-Zone fehlt oder unvollstaendig |
+
 ---
 
 ## Warn-Gates (Empfehlungen, kein Fail)

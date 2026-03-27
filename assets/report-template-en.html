@@ -456,6 +456,109 @@
   .serp-type-tool       { background: var(--green-bg); color: var(--green); }
   .serp-type-news       { background: var(--red-bg); color: var(--red); }
 
+  /* ── Core Web Vitals table ── */
+  .cwv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+  .cwv-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .cwv-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  .cwv-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+  .cwv-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .cwv-table tr:last-child td { border-bottom: none; }
+  .cwv-good { color: var(--green); font-weight: 600; }
+  .cwv-warn { color: var(--yellow); font-weight: 600; }
+  .cwv-poor { color: var(--red); font-weight: 600; }
+
+  /* ── Score gauges (Performance/Accessibility/SEO) ── */
+  .score-row {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .score-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    flex: 1;
+    min-width: 140px;
+  }
+  .score-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .score-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* ── Image audit ── */
+  .img-audit-summary {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+  .img-audit-stat {
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    min-width: 100px;
+  }
+  .img-audit-stat .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .img-audit-stat .stat-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .img-audit-items {
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .img-audit-items code {
+    display: block;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+    word-break: break-all;
+  }
+  .img-audit-items code:last-child { border-bottom: none; }
+
   /* ── Footer ── */
   .report-footer {
     margin-top: 48px;
@@ -813,6 +916,81 @@
         </li>
         <!-- {{/SEO_URL_CHECKS}} -->
       </ul>
+    </div>
+
+    <!-- Image Alt Tags (from Lighthouse + Instant Pages) -->
+    <div class="card">
+      <h3>Images &amp; Alt Tags</h3>
+      <div class="img-audit-summary">
+        <div class="img-audit-stat">
+          <div class="stat-value">{{IMAGES_TOTAL}}</div>
+          <div class="stat-label">Total images</div>
+        </div>
+        <div class="img-audit-stat">
+          <div class="stat-value cwv-good">{{IMAGES_WITH_ALT}}</div>
+          <div class="stat-label">with alt tag</div>
+        </div>
+        <div class="img-audit-stat">
+          <div class="stat-value {{IMAGES_MISSING_CLASS}}">{{IMAGES_WITHOUT_ALT}}</div>
+          <div class="stat-label">missing alt tag</div>
+        </div>
+      </div>
+      <!-- Affected images (from Lighthouse image-alt audit) -->
+      <!-- {{IF_IMAGES_MISSING}} -->
+      <div class="img-audit-items">
+        <!-- {{IMAGE_ALT_ITEMS}} -->
+        <code>{{IMG_ELEMENT}}</code>
+        <!-- {{/IMAGE_ALT_ITEMS}} -->
+      </div>
+      <!-- {{/IF_IMAGES_MISSING}} -->
+      <p class="fs-13 text-muted mt-8">{{IMAGES_VERDICT}}</p>
+    </div>
+
+    <!-- Core Web Vitals (from Lighthouse) -->
+    <div class="card">
+      <h3>Core Web Vitals &amp; Performance</h3>
+      <div class="score-row">
+        <div class="score-item">
+          <div class="score-value {{PERF_SCORE_CLASS}}">{{PERF_SCORE}}</div>
+          <div class="score-label">Performance</div>
+        </div>
+        <div class="score-item">
+          <div class="score-value {{A11Y_SCORE_CLASS}}">{{A11Y_SCORE}}</div>
+          <div class="score-label">Accessibility</div>
+        </div>
+        <div class="score-item">
+          <div class="score-value {{SEO_SCORE_CLASS}}">{{SEO_SCORE}}</div>
+          <div class="score-label">SEO</div>
+        </div>
+      </div>
+      <table class="cwv-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Value</th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- {{CWV_ROWS}} -->
+          <tr>
+            <td>{{CWV_METRIC}}</td>
+            <td>{{CWV_VALUE}}</td>
+            <td><span class="badge {{CWV_BADGE_CLASS}}">{{CWV_RATING}}</span></td>
+          </tr>
+          <!-- {{/CWV_ROWS}} -->
+        </tbody>
+      </table>
+      <!-- {{IF_CWV_RECOMMENDATIONS}} -->
+      <div class="mt-16">
+        <div class="sub-label">Optimization Tips</div>
+        <ul class="mt-8">
+          <!-- {{CWV_RECOMMENDATIONS}} -->
+          <li class="fs-13 text-muted">{{CWV_REC_TEXT}}</li>
+          <!-- {{/CWV_RECOMMENDATIONS}} -->
+        </ul>
+      </div>
+      <!-- {{/IF_CWV_RECOMMENDATIONS}} -->
     </div>
 
     <!-- SEO Domain -->

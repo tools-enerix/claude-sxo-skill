@@ -308,15 +308,27 @@ Lies die Referenzdatei `references/persona-derivation.md` fuer die vollstaendige
 ### 2a -- Intent-Cluster bilden
 
 ```
-1. Gruppiere alle Related Searches nach Intent-Badge:
-   - Gleiche Badges = gleicher Cluster (z.B. alle "Preis" = 1 Cluster)
-   - ABER: Unterscheide innerhalb eines Clusters, wenn der Kontext
-     sich grundlegend unterscheidet (z.B. "Preis Anbieter A" vs. "Preis selber machen")
+WICHTIG: Alle Personas suchen dasselbe Fokus-Keyword!
+Related Searches und PAA-Fragen zeigen NICHT, dass Personas
+andere Keywords tippen, sondern welche ERWARTUNGEN und HINTERGRUENDE
+verschiedene Menschen mitbringen, wenn sie das Fokus-Keyword eingeben.
+
+Beispiel: Keyword "Photovoltaikanlage"
+  -> Related "Photovoltaikanlage Kosten" zeigt: Manche Suchende
+     haben primaer Kosten im Kopf, wenn sie "Photovoltaikanlage" tippen
+  -> PAA "Lohnt sich PV noch?" zeigt: Manche Suchende sind skeptisch
+  -> ABER: Alle tippen "Photovoltaikanlage" in Google ein!
+
+1. Gruppiere Related Searches und PAA-Fragen nach Erwartungs-Cluster:
+   - Welche VERBORGENEN BEDUERFNISSE stecken hinter dem Fokus-Keyword?
+   - Gleicher Bedarf-Typ = gleicher Cluster (z.B. alle Preis-bezogenen = 1 Cluster)
+   - ABER: Unterscheide innerhalb eines Clusters, wenn der Hintergrund
+     sich grundlegend unterscheidet (z.B. Preis-Optimierer vs. ROI-Skeptiker)
 
 2. Ordne PAA-Fragen den Clustern zu:
-   - Preisbezogene PAA -> Preis-Cluster
-   - Qualitaetsfragen -> Qualitaets-Cluster
-   - Grundsatzfragen ("Lohnt es sich?") -> eigener Cluster "Unsicherheit"
+   - Preisbezogene PAA -> Kosten-Erwartungs-Cluster
+   - Qualitaetsfragen -> Qualitaets-Erwartungs-Cluster
+   - Grundsatzfragen ("Lohnt es sich?") -> Unsicherheits-Cluster
 
 3. Pruefe Gap-Analyse auf unabgedeckte Cluster:
    - High-Priority-Gap ohne passenden Cluster -> neuer Cluster
@@ -324,7 +336,8 @@ Lies die Referenzdatei `references/persona-derivation.md` fuer die vollstaendige
 4. User Story als Basis-Persona:
    - Die User Story beschreibt den "typischen" Suchenden
    - Daraus wird die Haupt-Persona abgeleitet
-   - Weitere Personas sind Varianten mit anderem Fokus
+   - Weitere Personas sind Varianten mit anderem Hintergrund und Fokus
+   - Alle suchen dasselbe Keyword, aber mit unterschiedlicher Erwartung
 ```
 
 ### 2b -- Persona-Anzahl bestimmen
@@ -356,10 +369,16 @@ Fuer JEDE Persona erstelle:
    - English: "Budget-Conscious Ben, 28, Graduate Student"
 
 2. SUCHMOTIV & INTENT
-   - Welche Suchphrase wuerde diese Persona tippen?
-   - Was ist der konkrete Ausloser? (Event, Problem, Vergleich)
+   - WICHTIG: Die Persona sucht IMMER das Fokus-Keyword, NICHT ein anderes Keyword!
+   - Beschreibe den HINTERGRUND und die MOTIVATION hinter der Suche
+   - Was hat diese Person dazu bewogen, genau jetzt "{{KEYWORD}}" zu googeln?
+   - Was ist der konkrete Ausloser? (Event, Problem, Vergleich, Lebenssituation)
    - Intent-Typ: Informational / Transaktional / Commercial / Navigational / Lokal / DIY
-   - Referenz auf den Related-Search-Eintrag oder PAA-Frage
+   - Welcher Related-Search oder PAA-Eintrag spiegelt die Erwartung dieser Persona wider?
+   - Beispiel: Keyword "Photovoltaikanlage"
+     RICHTIG: "Sucht 'Photovoltaikanlage'. Hintergrund: Will wissen, was eine Anlage
+              fuer sein Einfamilienhaus kostet und ob sich die Investition lohnt."
+     FALSCH:  "Sucht 'Photovoltaikanlage Kosten'."
 
 3. ERWARTUNG AN DIE SEITE
    - 2-3 Saetze: Was will diese Person KONKRET finden?
@@ -662,8 +681,11 @@ Jede Persona-Card folgt diesem Schema:
   </div>
 
   <div class="persona-field">
-    <div class="pf-label">Suchmotiv</div>  <!-- bzw. "Search Motive" EN -->
-    <p>{{SUCHMOTIV}}</p>
+    <div class="pf-label">Suchmotiv &amp; Intent</div>  <!-- bzw. "Search Motive & Intent" EN -->
+    <p>Sucht <strong>&bdquo;{{KEYWORD}}&ldquo;</strong>. {{HINTERGRUND_UND_MOTIVATION}}</p>
+    <!-- WICHTIG: Alle Personas suchen IMMER das Fokus-Keyword!
+         {{HINTERGRUND_UND_MOTIVATION}} beschreibt die Lebenssituation,
+         den Ausloser und die verborgene Erwartung hinter der Suche. -->
   </div>
 
   <div class="persona-field">
@@ -758,9 +780,20 @@ Zeige:
 ### Persona-Qualitaet
 
 ```
+REGEL 0: Alle Personas suchen dasselbe Fokus-Keyword!
+  -> Jede Persona tippt EXAKT das Fokus-Keyword in Google ein
+  -> Die Differenzierung liegt im HINTERGRUND, INTENT und ERWARTUNG
+  -> Related Searches und PAA zeigen verborgene Beduerfnisse, NICHT andere Suchbegriffe
+  -> RICHTIG: "Sucht 'Photovoltaikanlage'. Hintergrund: Will vor allem wissen,
+              was die Anlage kostet und ob sich die Investition lohnt."
+  -> FALSCH: "Sucht 'Photovoltaikanlage Kosten'."
+  -> FALSCH: "Sucht 'Photovoltaikanlage Balkon'."
+  -> Das Ziel ist die bestmoegliche Seite fuer das EINE Fokus-Keyword
+
 REGEL 1: Jede Persona MUSS sich klar von den anderen unterscheiden
   -> Nicht: 2x "will guenstigen Preis" mit anderem Namen
   -> Sondern: "will billigsten Preis" vs. "will bestes Preis-Leistungs-Verhaeltnis"
+  -> Unterscheidung ueber: Lebenssituation, Wissensstand, Motivation, Barrieren
 
 REGEL 2: Namen muessen branchenspezifisch sein
   -> Nicht: "User A", "Persona 1", "Max Mustermann"
@@ -840,6 +873,7 @@ REGEL 13: Bildformat konsistent
 | Staerkste Persona | Staerkste Persona | Strongest Persona |
 | Scoring-Modus | Scoring-Modus | Scoring Mode |
 | Suchmotiv | Suchmotiv & Intent | Search Motive & Intent |
+| Suchmotiv-Prefix | Sucht &bdquo;{{KEYWORD}}&ldquo;. | Searches for &ldquo;{{KEYWORD}}&rdquo;. |
 | Erwartung | Erwartung an die Seite | Page Expectation |
 | Score-Begruendung | Score-Begruendung | Score Reasoning |
 | Verbesserungen | Verbesserungen | Improvements |

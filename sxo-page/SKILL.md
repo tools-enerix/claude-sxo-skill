@@ -268,16 +268,54 @@ Lies `references/content-production.md` fuer die vollstaendigen Konvertierungsre
 **Zusammenfassung der Sektions-Typen:**
 
 ```
-HERO-BEREICH:
+HERO-BEREICH (bei Hybrid: erweitert):
   -> H1 mit Keyword (exakt aus Wireframe-Placeholder)
   -> Subheadline: 1 Satz mit Kernversprechen + Statistik
   -> CTA-Button (Text + Design aus Wireframe-Placeholder)
   -> Hero-Bild (aus Recherche oder Wireframe-Anweisung)
+  -> BEI HYBRID zusaetzlich:
+     * Value Proposition Bar: 3 Kern-USPs mit Metriken (Zahlen aus SERP-Ads/Report)
+     * Dual-CTA: Primaer-Button + Sekundaer-Button ("Mehr erfahren" -> #ratgeber)
+     * Hero-Trust-Siegel: Optional, z.B. TUeV, Trusted Shops (aus Report Trust-Signalen)
 
 TRUST-SIGNALE:
   -> Konkrete Zahlen (aus Wireframe: "X Berechnungen", "Y Bewertungen")
   -> Siegel/Logos (als Platzhalter-Referenz)
   -> Horizontal nebeneinander
+
+BENEFITS GRID / USP-KARTEN (NUR Hybrid):
+  -> H2: "Warum [Produkt/Service] mit [Marke]?"
+  -> 3-4 Icon-Karten mit Metrik + Vorteil-Titel + 1-2 Saetze
+  -> Metriken aus SXO-Report (SERP-Ads, Trust-Signale, Wettbewerber)
+  -> Grid: 4 Spalten Desktop, 2 Tablet, 1 Mobile
+
+FEATURE SHOWCASE (NUR Hybrid, bedingt):
+  -> 2-4 alternierende Bild/Text-Bloecke
+  -> Jeder Block: Produktbild + H3-Titel + Answer-First + 3 Bullet-Details
+  -> CSS dreht gerade/ungerade Bloecke automatisch
+  -> Nur wenn konkrete Produkt-/Service-Features vorhanden
+
+LOESUNG / OEKOSYSTEM (NUR Hybrid, optional):
+  -> Zeigt das Gesamtangebot als visuelles Oekosystem (4-6 Komponenten als Icon-Grid)
+  -> Nur wenn Angebot aus 4+ Komponenten besteht
+  -> CTA unter dem Oekosystem-Grid
+
+TRUST CAROUSEL (NUR Hybrid, bedingt):
+  -> 4-6 Slides als Alpine.js Karussell
+  -> Jeder Slide: Icon + Titel + 2-3 Saetze Trust-Signal
+  -> Mobile: 1 Slide, Tablet: 2, Desktop: 3 sichtbar
+  -> Nur wenn mind. 4 verschiedene Trust-Dimensionen vorhanden
+
+PROZESS-SCHRITTE (NUR Hybrid):
+  -> 3-5 nummerierte Schritte: "So funktioniert's"
+  -> Jeder Schritt: Nummer + Titel + 15-25 Woerter + Zeitangabe
+  -> Reduziert Barriere "Komplexitaet" aus User Story
+  -> CTA unter den Schritten
+
+AWARDS / ZERTIFIZIERUNGEN (NUR Hybrid, bedingt):
+  -> 3-5 Award-Badges als horizontale Reihe
+  -> Nur echte, verifizierbare Awards (nie erfinden)
+  -> Positioniert zwischen Zone 1 und Zone 2
 
 HAUPTINHALT (Content-Sektionen):
   -> Fuer jede H2-Sektion: Answer-First + Statistik + Citation Capsule
@@ -395,6 +433,34 @@ IF Output = HTML:
 
 3. Generiere den <body> Inhalt direkt aus den produzierten Sektionen
    WICHTIG: Schreibe echten HTML-Content, NICHT Template-Platzhalter ersetzen
+
+   BEI HYBRID-SEITENTYP: Beachte die Zwei-Zonen-Architektur!
+   Das Template hat zwei klar getrennte Bereiche:
+
+   ZONE 1 (Conversion / Landing-Teil):
+     - HERO (mit Value Props + Dual-CTA + optionalem Trust-Siegel)
+     - TRUST BAR
+     - BENEFITS GRID (3-4 USP-Karten)
+     - FEATURE SHOWCASE (2-4 alternierende Bild/Text-Bloecke) [bedingt]
+     - LOESUNG / OEKOSYSTEM (Icon-Grid mit 4-6 Komponenten) [optional]
+     - TRUST CAROUSEL (4-6 Alpine.js Slides) [bedingt]
+     - PROZESS-SCHRITTE (3-5 nummerierte Steps)
+     - AWARDS BAR (3-5 Siegel/Badges) [bedingt]
+
+   ZONE 2 (SEO/Content / Blog-Teil):
+     - KEY TAKEAWAYS
+     - HAUPTINHALT (H2-Sektionen)
+     - FAQ AKKORDEON
+     - CTA SEKTION
+     - WEITERFUEHRENDE INHALTE
+
+   Entscheidung welche Zone-1-Sektionen aktiv sind:
+     -> Siehe references/content-production.md Abschnitt "Entscheidungslogik"
+
+   BEI NICHT-HYBRID (Blog, Landing, Service etc.):
+     -> Nur die relevanten Sektionen aus dem Wireframe generieren
+     -> Zone-1-Sektionen (Benefits Grid, Feature Showcase etc.) NICHT verwenden
+     -> Template-Struktur entsprechend vereinfachen
 
 4. Fuege im <head> ein:
    - <title> aus Wireframe Meta-Kommentar

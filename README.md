@@ -2,6 +2,45 @@
 
 Four Claude Code skills for **Search Experience Optimization (SXO)** -- combining SEO with UX to align your pages with what Google's SERPs actually reward.
 
+## What's New
+
+### Hybrid Zwei-Zonen-Architektur (Two-Zone Architecture)
+
+The Hybrid page type has been completely redesigned based on best-practice analysis. Hybrid pages now feature a **two-zone layout**:
+
+- **Zone 1 (Conversion)**: Landing-page-style sections above the fold -- Hero with Value Proposition Bar + Dual CTAs, Trust Bar, Benefits Grid, Feature Showcase, Solution/Ecosystem Overview, Alpine.js Trust Carousel, Process Steps, Awards Bar
+- **Zone 2 (SEO/Content)**: Blog-quality guide content below -- Key Takeaways, H2 sections with Answer-First pattern, FAQ, internal links
+
+**7 new section types** for Zone 1:
+| Section | Purpose |
+|---------|---------|
+| **Value Proposition Bar** | 3 USPs with metrics in the hero area |
+| **Benefits Grid** | 3-4 benefit cards with icons and metrics (responsive 4-col grid) |
+| **Feature Showcase** | Alternating image/text blocks with auto-flip via CSS `nth-child(even)` |
+| **Solution/Ecosystem Overview** | Icon grid for 4+ product/service components |
+| **Trust Carousel** | Alpine.js carousel with responsive slides (1/2/3 columns) and auto-advance |
+| **Process Steps** | Numbered step cards ("So funktioniert's" / "How it works") |
+| **Awards Bar** | Horizontal badge/certification display |
+
+**Conditional inclusion logic**: Not every Hybrid page needs all Zone 1 sections. The template includes decision rules:
+- **Always**: Hero, Trust Bar, Benefits Grid, Process Steps
+- **Conditional**: Feature Showcase (if concrete features exist), Trust Carousel (if 4+ trust dimensions), Awards Bar (if real awards/certs)
+- **Optional**: Solution/Ecosystem (only if 4+ components)
+
+### Style Extraction Reference
+
+New reference file (`style-extraction.md`) that guides brand-consistent design token extraction from target sites -- colors, fonts, spacing, border radius, shadows. Ensures generated pages match the client's visual identity.
+
+### SXO Persona: Standalone Mode
+
+SXO Persona can now run standalone with just a URL + keyword (no SXO report required). It internally performs a SERP analysis to derive personas. Also supports avatar image generation for persona cards.
+
+### Updated Quality Gates
+
+New quality gate category for Hybrid pages checking: two-zone separation, Value Proposition Bar with metrics, Benefits Grid, Process Steps, Dual CTAs, and Zone 2 content completeness.
+
+---
+
 ## What is SXO?
 
 **Search Experience Optimization (SXO)** combines SEO with UX. The core idea: Google's SERPs already show the optimal answer to the User Story -- you just need to read them backwards.
@@ -297,7 +336,7 @@ SXO Builder and SXO Page support 8 page types. The Builder recommends the best f
 | **Landing Page** | Strong transactional intent, CTAs, converters | Hero + CTA, trust bar, social proof | WebPage |
 | **Blog / Guide** | Informational intent, how-tos, listicles | Content-heavy, images, FAQ, internal links | BlogPosting |
 | **Product Page** | Commercial intent, prices, reviews | Product hero, features, pricing, reviews | Product, AggregateRating |
-| **Hybrid** | Mixed intent (info + action) | CTA above fold + guide content below | WebPage |
+| **Hybrid** | Mixed intent (info + action) | **Zone 1** (conversion): Hero + Value Props + Benefits Grid + Feature Showcase + Trust Carousel + Process Steps + Awards. **Zone 2** (SEO): Key Takeaways + Guide Content + FAQ | WebPage |
 | **Service Page** | Booking ads, service providers, price ranges | Service overview, pricing, process steps, booking CTA | Service |
 | **Comparison Page** | "vs" queries, "best X", comparison tables | Feature matrix, pros/cons, recommendation | ItemPage |
 | **Local Page** | Map pack, "near me", opening hours | Address, map, hours, local reviews, contact form | LocalBusiness |
@@ -367,7 +406,8 @@ claude-sxo-skill/
 │   │   └── page-template-en.html         # English page template (CSS)
 │   └── references/
 │       ├── content-production.md          # Wireframe-to-content conversion rules
-│       └── quality-gates.md              # Combined quality criteria
+│       ├── quality-gates.md              # Combined quality criteria
+│       └── style-extraction.md           # Brand design token extraction guide
 ├── sxo-persona/                          # SXO Persona skill
 │   ├── SKILL.md                          # Persona dashboard skill instructions
 │   ├── assets/

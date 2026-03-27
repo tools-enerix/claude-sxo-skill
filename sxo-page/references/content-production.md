@@ -639,6 +639,278 @@ Diese drei Datenpunkte werden zu echtem, optimiertem Content konvertiert.
 
 ---
 
+---
+
+### VALUE PROPOSITION BAR (Hybrid-Seite: im Hero)
+
+**Input aus Wireframe:**
+- `[VALUE-PROPS: 3 Kern-USPs mit Metriken]`
+- Aus User Story: Primaeres Ziel + Barrieren
+
+**Output produzieren:**
+
+```html
+<div class="flex flex-wrap justify-center gap-6 md:gap-10 mb-8">
+  <div class="flex items-center gap-2 text-sm md:text-base">
+    <span class="text-brand font-bold text-lg md:text-xl">[Metrik 1]</span>
+    <span class="text-gray-500">[USP-Beschreibung 1]</span>
+  </div>
+  <div class="flex items-center gap-2 text-sm md:text-base">
+    <span class="text-brand font-bold text-lg md:text-xl">[Metrik 2]</span>
+    <span class="text-gray-500">[USP-Beschreibung 2]</span>
+  </div>
+  <div class="flex items-center gap-2 text-sm md:text-base">
+    <span class="text-brand font-bold text-lg md:text-xl">[Metrik 3]</span>
+    <span class="text-gray-500">[USP-Beschreibung 3]</span>
+  </div>
+</div>
+```
+
+**Regeln:**
+- Exakt 3 Value Props (nicht mehr, nicht weniger)
+- Jede Prop hat eine konkrete Metrik (Zahl, Prozent, ab-Preis)
+- Metriken kommen aus dem SXO-Report (SERP-Ads, Trust-Signale, Wettbewerber)
+- Kurz: Max 5 Woerter pro Beschreibung
+- Adressiert das primaere User-Story-Ziel auf einen Blick
+
+---
+
+### BENEFITS GRID / USP-KARTEN (Hybrid-Seite)
+
+**Input aus Wireframe:**
+- `[BENEFITS: 3-4 Kern-Vorteile mit Icons und Metriken]`
+- Aus Gap-Analyse: Fehlende Trust-Signale, Differenzierungsmerkmale
+
+**Output produzieren:**
+
+```html
+<section class="py-16 bg-white">
+  <div class="max-w-5xl mx-auto px-6">
+    <h2 class="text-2xl md:text-3xl font-bold text-center mb-10">[z.B. "Warum [Produkt/Service] mit [Marke]?"]</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition-shadow">
+        <div class="text-3xl mb-3">[Icon/Emoji]</div>
+        <div class="text-2xl font-bold text-brand mb-1">[Metrik, z.B. "ab 98 EUR/Monat"]</div>
+        <h3 class="font-semibold text-gray-900 mb-2">[Vorteil-Titel]</h3>
+        <p class="text-sm text-gray-500">[1-2 Saetze Nutzen-Beschreibung]</p>
+      </div>
+      [... 3-4 Karten insgesamt ...]
+    </div>
+  </div>
+</section>
+```
+
+**Regeln:**
+- 3-4 Karten (4 bevorzugt fuer Desktop-Grid-Balance)
+- Jede Karte hat eine Metrik ODER ein starkes Statement
+- Icons als Emoji oder SVG-Platzhalter
+- Nutzen-Sprache: "Sparen Sie bis zu..." / "Erhalten Sie..." (nicht Features)
+- H2-Heading als Frage: "Warum [Angebot] mit [Marke]?"
+- Metriken muessen aus SXO-Report oder Recherche stammen (nie erfinden)
+
+---
+
+### FEATURE SHOWCASE (Hybrid-Seite: alternierende Bild/Text-Bloecke)
+
+**Input aus Wireframe:**
+- `[FEATURE: Produktmerkmal/Leistung mit Bild und Details]`
+- 2-4 Feature-Bloecke aus Gap-Analyse oder SERP-Wettbewerbern
+
+**Output produzieren:**
+
+```html
+<div class="feature-showcase flex flex-col md:flex-row items-center gap-8 md:gap-12">
+  <div class="md:w-1/2">
+    <img src="[Bild-URL]" alt="[Beschreibender Alt-Text mit Keyword]"
+         width="600" height="400" class="rounded-xl shadow-lg w-full" loading="lazy">
+  </div>
+  <div class="md:w-1/2">
+    <h3 class="font-heading text-xl md:text-2xl font-bold text-gray-900 mb-3">[Feature-Titel]</h3>
+    <p class="text-gray-500 mb-4 leading-relaxed">[Answer-First: 40-60 Woerter mit Statistik]</p>
+    <ul class="space-y-2 text-sm text-gray-600">
+      <li class="flex items-start gap-2"><span class="text-brand mt-0.5">&#10003;</span> [Detail 1]</li>
+      <li class="flex items-start gap-2"><span class="text-brand mt-0.5">&#10003;</span> [Detail 2]</li>
+      <li class="flex items-start gap-2"><span class="text-brand mt-0.5">&#10003;</span> [Detail 3]</li>
+    </ul>
+  </div>
+</div>
+```
+
+**Regeln:**
+- 2-4 Feature-Bloecke (nicht mehr, Aufmerksamkeitsspanne beachten)
+- CSS dreht gerade/ungerade Bloecke automatisch (nth-child(even) flex-row-reverse)
+- Jeder Block: Answer-First Absatz + 3-5 Bullet-Details
+- Bilder: Produktfotos, Screenshots, oder Infografiken aus Recherche
+- Feature-Titel: Konkreter Nutzen, nicht technischer Jargon
+- Mindestens 1 Statistik pro Feature-Block
+- Features aus SERP-Wettbewerberanalyse ableiten (was betonen die Top-10?)
+
+---
+
+### LOESUNG / OEKOSYSTEM-UEBERSICHT (Hybrid-Seite)
+
+**Input aus Wireframe:**
+- `[SOLUTION: Gesamtangebot als Oekosystem darstellen]`
+- Aus User Story: Sekundaeres Ziel "Gesamtloesung verstehen"
+
+**Output produzieren:**
+
+```html
+<section class="py-16 bg-white">
+  <div class="max-w-5xl mx-auto px-6 text-center">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4">[z.B. "Ihre Komplettloesung fuer [Thema]"]</h2>
+    <p class="text-lg text-gray-500 max-w-2xl mx-auto mb-10">[1-2 Saetze: Wie die Teile zusammenwirken]</p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div class="bg-gray-50 rounded-xl p-4 flex flex-col items-center gap-2">
+        <div class="w-12 h-12 bg-brand/10 rounded-full flex items-center justify-center text-xl">[Icon]</div>
+        <span class="text-sm font-semibold text-gray-700">[Komponente 1]</span>
+      </div>
+      [... 4-6 Komponenten ...]
+    </div>
+    <a href="#[CTA-Ziel]" class="inline-block mt-8 px-8 py-3.5 bg-brand text-white font-semibold rounded-lg">[CTA-Text]</a>
+  </div>
+</section>
+```
+
+**Regeln:**
+- NUR verwenden wenn das Angebot ein echtes Oekosystem/Komplettloesung ist
+- 4-6 Komponenten (nicht weniger als 4, sonst kein Oekosystem-Effekt)
+- Icons: Emoji oder simple SVG-Platzhalter
+- Zeigt den Mehrwert der Kombination, nicht nur Einzelteile
+- Optional: Kurzer Absatz unter den Icons mit Statistik zum Gesamtnutzen
+- WEGLASSEN wenn das Angebot ein Einzelprodukt/-service ist
+
+---
+
+### TRUST CAROUSEL (Hybrid-Seite: erweiterte Trust-Sektion)
+
+**Input aus Wireframe:**
+- `[TRUST-CAROUSEL: 4-6 Trust-Slides mit Details]`
+- Aus Gap-Analyse: Fehlende Trust-Signale, Barriere "Risiko/Unsicherheit"
+
+**Output produzieren:**
+
+```html
+<section class="py-16 bg-gray-50" x-data="{ current: 0, total: 0 }" x-init="total = $refs.track.children.length">
+  <div class="max-w-5xl mx-auto px-6">
+    <h2 class="text-2xl md:text-3xl font-bold text-center mb-10">[z.B. "Warum [Marke]?"]</h2>
+    <div class="trust-carousel relative">
+      <div class="trust-carousel-track" x-ref="track"
+           :style="'transform: translateX(-' + (current * (100 / Math.min(total, window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1))) + '%)'">
+        <div class="trust-carousel-slide px-3">
+          <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 h-full">
+            <div class="text-3xl mb-3">[Icon]</div>
+            <h3 class="font-semibold text-gray-900 mb-2">[Slide-Titel]</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">[2-3 Saetze mit konkretem Trust-Signal]</p>
+          </div>
+        </div>
+        [... 4-6 Slides ...]
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+**Regeln:**
+- 4-6 Slides (weniger ist zu wenig fuer Karussell, mehr verwaessert)
+- Jeder Slide adressiert eine andere Trust-Dimension:
+  * Finanzierung/Preis-Transparenz
+  * Produkt-/Servicequalitaet
+  * Kundenzufriedenheit (Anzahl + Rating)
+  * Geschwindigkeit/Zuverlaessigkeit
+  * Zertifizierungen/Awards
+  * Gesamtloesung/Support
+- Alpine.js steuert die Slide-Navigation (kein externes Karussell-Plugin)
+- Mobile: 1 Slide sichtbar, Tablet: 2, Desktop: 3
+- Jeder Slide: Icon + Titel + 2-3 Saetze (max 50 Woerter)
+
+---
+
+### AWARDS / ZERTIFIZIERUNGEN BAR (Hybrid-Seite)
+
+**Input aus Wireframe:**
+- `[AWARDS: 3-5 Awards/Siegel/Zertifizierungen]`
+- Aus SXO-Report: Wettbewerber-Trust-Signale, fehlende Autoritaetssignale
+
+**Output produzieren:**
+
+```html
+<div class="border-y border-gray-100 bg-gray-50/60">
+  <div class="max-w-5xl mx-auto flex flex-wrap justify-center items-center gap-8 md:gap-14 px-6 py-8">
+    <div class="flex flex-col items-center gap-1 text-center">
+      <span class="text-2xl">[Icon/Emoji]</span>
+      <span class="text-xs font-bold text-gray-700">[Award-Titel]</span>
+      <span class="text-xs text-gray-400">[Jahr / Quelle]</span>
+    </div>
+    [... 3-5 Awards ...]
+  </div>
+</div>
+```
+
+**Regeln:**
+- 3-5 Awards/Siegel (nicht mehr, wirkt ueberladen)
+- Nur echte, verifizierbare Awards (nie erfinden)
+- Falls Siegel-Bilder verfuegbar: Als img mit alt-Text
+- Falls keine Bilder: Emoji + Text reicht
+- Positioniert zwischen Zone 1 (Conversion) und Zone 2 (Content)
+- Typische Awards: Branchensiegel, Testsieger, TUeV, Trusted Shops, Kundenzufriedenheit
+
+---
+
+## Hybrid-Seitentyp: Zwei-Zonen-Architektur
+
+Bei Hybrid-Seiten (Landing + Blog) wird die Seite in zwei Zonen aufgeteilt:
+
+### Zone 1: Conversion (Above-the-Fold / Landing-Teil)
+```
+Reihenfolge:
+1. HERO (erweitert: Value Props + Dual-CTA + Trust-Siegel)
+2. TRUST BAR
+3. BENEFITS GRID / USP-Karten
+4. FEATURE SHOWCASE (alternierend Bild/Text)
+5. LOESUNG / OEKOSYSTEM (optional, nur bei Komplettloesungen)
+6. TRUST CAROUSEL
+7. PROZESS-SCHRITTE
+8. AWARDS BAR
+```
+
+**Ziel Zone 1:** Conversion-Optimierung. User soll den CTA klicken OHNE scrollen zu muessen
+(oder zumindest innerhalb der ersten 2-3 Viewport-Hoehen ueberzeugt werden).
+
+### Zone 2: SEO / Content (Below-the-Fold / Blog-Teil)
+```
+Reihenfolge:
+1. KEY TAKEAWAYS
+2. HAUPTINHALT (H2-Sektionen mit Answer-First, Statistiken, Citation Capsules)
+3. FAQ AKKORDEON (PAA-Fragen)
+4. CTA SEKTION (sekundaer)
+5. WEITERFUEHRENDE INHALTE (interne Links)
+```
+
+**Ziel Zone 2:** SEO-Rankings + AI-Citability. Tiefgehender Ratgeber-Content,
+der die User Story vollstaendig bedient und Google/AI-Systemen strukturierte Daten liefert.
+
+### Entscheidungslogik: Zone-1-Sektionen ein-/ausblenden
+
+```
+IMMER bei Hybrid:
+  - Hero (erweitert)     -> IMMER
+  - Trust Bar            -> IMMER
+  - Benefits Grid        -> IMMER (mind. 3 Vorteile aus Report ableitbar)
+  - Prozess-Schritte     -> IMMER (reduziert Komplexitaets-Barriere)
+
+BEDINGT bei Hybrid:
+  - Feature Showcase     -> Wenn Produkt/Service konkrete Features hat
+                            (nicht bei abstrakten Dienstleistungen wie "Beratung")
+  - Loesung/Oekosystem   -> Nur wenn Angebot aus 4+ Komponenten besteht
+  - Trust Carousel       -> Wenn mind. 4 verschiedene Trust-Dimensionen vorhanden
+  - Awards Bar           -> Nur wenn echte, verifizierbare Awards existieren
+
+ZONE 2 IMMER KOMPLETT bei Hybrid.
+```
+
+---
+
 ## Ton-Ableitung aus User Story
 
 Der Content-Ton wird aus der User Story abgeleitet:

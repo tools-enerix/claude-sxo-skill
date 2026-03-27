@@ -83,6 +83,40 @@ Sektion:
 25. `methodology` — Berechnungsgrundlage, Datenquellen, Formeln (Tool-Seite)
 26. `related-tools` — Verwandte Rechner/Tools als Karten verlinkt (Tool-Seite)
 
+### Hybrid-spezifische Sektionen (Zwei-Zonen-Architektur)
+
+Bei Hybrid-Seiten (Landing + Blog) werden zusaetzliche Sektionen fuer Zone 1 (Conversion) eingefuegt:
+
+27. `value-props` — 3 Kern-USPs mit Metriken im Hero-Bereich (Hybrid)
+28. `benefits-grid` — 3-4 Vorteil-Karten mit Icons und Metriken (Hybrid)
+29. `feature-showcase` — Alternierende Bild/Text-Bloecke fuer Features (Hybrid, bedingt)
+30. `solution-overview` — Oekosystem-/Komplettloesung als Icon-Grid (Hybrid, optional)
+31. `trust-carousel` — 4-6 Alpine.js Trust-Slides mit Details (Hybrid, bedingt)
+32. `awards-bar` — 3-5 Award-Badges/Zertifizierungen horizontal (Hybrid, bedingt)
+
+**Hybrid-Sektionsreihenfolge (SOLL):**
+
+Zone 1 (Conversion):
+1. `head-meta`
+2. `header`
+3. `hero` (erweitert mit `value-props` + Dual-CTA + Trust-Siegel)
+4. `trust-bar`
+5. `benefits-grid`
+6. `feature-showcase` (bedingt: nur wenn konkrete Features vorhanden)
+7. `solution-overview` (optional: nur wenn 4+ Komponenten)
+8. `trust-carousel` (bedingt: nur wenn 4+ Trust-Dimensionen)
+9. `process-steps`
+10. `awards-bar` (bedingt: nur wenn echte Awards existieren)
+
+Zone 2 (SEO/Content):
+11. `key-takeaways`
+12. `content-main`
+13. `image-section`
+14. `faq-section`
+15. `cta-section`
+16. `internal-links`
+17. `footer`
+
 ### Regeln fuer IST-Ableitung
 
 Wenn Content-Parsing-Daten verfuegbar:

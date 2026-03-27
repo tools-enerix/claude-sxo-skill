@@ -17,421 +17,271 @@
 <meta name="twitter:title" content="{{OG_TITLE}}">
 <meta name="twitter:description" content="{{OG_DESCRIPTION}}">
 <meta name="twitter:image" content="{{OG_IMAGE}}">
-<style>
-  /* ── Reset & Base ── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #ffffff;
-    --bg-alt: #f8f9fb;
-    --surface: #ffffff;
-    --surface-2: #f1f3f7;
-    --surface-3: #e8ebf0;
-    --border: #e2e5ec;
-    --border-light: #eef0f4;
-    --text: #1a1f2e;
-    --text-muted: #4a5168;
-    --text-dim: #7a8198;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --accent-light: rgba(37, 99, 235, 0.08);
-    --green: #16a34a;
-    --green-bg: rgba(22, 163, 74, 0.06);
-    --purple: #7c3aed;
-    --purple-bg: rgba(124, 58, 237, 0.06);
-    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    --mono: 'JetBrains Mono', 'Fira Code', monospace;
-    --radius: 12px;
-    --radius-sm: 8px;
-    --max-w: 760px;
-    --max-w-wide: 1100px;
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{{GOOGLE_FONTS_LINK}}
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Alpine.js -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+<!-- Brand Design Tokens (extracted from target site) -->
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          DEFAULT: '{{BRAND_PRIMARY}}',
+          dark: '{{BRAND_DARK}}',
+          light: '{{BRAND_LIGHT}}',
+        },
+        accent: {
+          DEFAULT: '{{BRAND_SECONDARY}}',
+          hover: '{{BRAND_SECONDARY_HOVER}}',
+        },
+      },
+      fontFamily: {
+        sans: ['{{FONT_BODY}}', 'system-ui', 'sans-serif'],
+        heading: ['{{FONT_HEADING}}', 'system-ui', 'sans-serif'],
+      },
+      borderRadius: {
+        DEFAULT: '{{RADIUS_DEFAULT}}',
+      },
+      maxWidth: {
+        content: '{{MAX_WIDTH}}',
+      },
+    },
+  },
+}
+</script>
+<style type="text/tailwindcss">
+  /* Custom utilities Tailwind can't cover */
+  @layer utilities {
+    .answer-first { @apply text-lg leading-relaxed; }
   }
 
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.75;
-    font-size: 16px;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ── Article Container ── */
-  .page-content {
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 0 24px 80px;
-  }
-
-  /* ── Hero Section ── */
-  .hero {
-    max-width: var(--max-w-wide);
-    margin: 0 auto;
-    padding: 60px 24px 48px;
-    text-align: center;
-  }
-  .hero h1 {
-    font-size: clamp(28px, 4vw, 42px);
-    font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 16px;
-    letter-spacing: -0.02em;
-    color: var(--text);
-  }
-  .hero-sub {
-    font-size: 18px;
-    color: var(--text-muted);
-    max-width: 600px;
-    margin: 0 auto 24px;
-    line-height: 1.6;
-  }
-  .hero-image {
-    max-width: 100%;
-    border-radius: var(--radius);
-    margin-top: 32px;
-  }
-
-  /* ── CTA Buttons ── */
-  .cta-primary {
-    display: inline-block;
-    padding: 14px 32px;
-    background: var(--accent);
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    transition: background 0.15s, transform 0.1s;
-  }
-  .cta-primary:hover {
-    background: var(--accent-hover);
-    transform: translateY(-1px);
-  }
-
-  /* ── Trust Bar ── */
-  .trust-bar {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    flex-wrap: wrap;
-    padding: 20px 24px;
-    background: var(--bg-alt);
-    border-top: 1px solid var(--border-light);
-    border-bottom: 1px solid var(--border-light);
-    margin-bottom: 48px;
-  }
-  .trust-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
-
-  /* ── Key Takeaways ── */
-  .key-takeaways {
-    background: var(--accent-light);
-    border: 1px solid rgba(37, 99, 235, 0.15);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    padding: 24px 28px;
-    margin-bottom: 40px;
-  }
-  .key-takeaways h2 {
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 12px;
-  }
-  .key-takeaways ul { list-style: none; padding: 0; }
-  .key-takeaways li {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 6px;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--text);
-  }
-  .key-takeaways li::before {
-    content: '\2713';
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-weight: 700;
-  }
-
-  /* ── Headings ── */
-  h2 {
-    font-size: 26px;
-    font-weight: 700;
-    line-height: 1.3;
-    margin: 48px 0 16px;
-    letter-spacing: -0.01em;
-    color: var(--text);
-  }
-  h3 {
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.4;
-    margin: 32px 0 12px;
-    color: var(--text);
-  }
-
-  /* ── Paragraphs ── */
-  p { margin-bottom: 16px; color: var(--text); }
-  .answer-first { font-size: 17px; line-height: 1.7; }
-
-  /* ── Citation Capsule ── */
-  blockquote.citation-capsule {
-    border-left: 3px solid var(--purple);
-    background: var(--purple-bg);
-    padding: 16px 20px;
-    margin: 24px 0;
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--text);
-  }
-
-  /* ── Images ── */
-  figure.content-image { margin: 32px 0; }
-  figure.content-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: var(--radius-sm);
-    display: block;
-  }
-  figcaption {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-top: 8px;
-    text-align: center;
-  }
-
-  /* ── Tables ── */
-  table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
-  th {
-    background: var(--bg-alt);
-    font-weight: 600;
-    text-align: left;
-    padding: 12px 16px;
-    border-bottom: 2px solid var(--border);
-    color: var(--text);
-  }
-  td {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border-light);
-    color: var(--text-muted);
-  }
-  tr:last-child td { border-bottom: none; }
-
-  /* ── Tool Placeholder ── */
-  .tool-placeholder {
-    background: var(--surface-2);
-    border: 2px dashed var(--border);
-    border-radius: var(--radius);
-    padding: 32px;
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 14px;
-    margin: 24px 0;
-  }
-
-  /* ── FAQ Accordion ── */
-  .faq-section details {
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-sm);
-    margin-bottom: 8px;
-    overflow: hidden;
-  }
-  .faq-section summary {
-    padding: 16px 20px;
-    font-weight: 600;
-    font-size: 16px;
-    cursor: pointer;
-    background: var(--bg-alt);
-    color: var(--text);
-    list-style: none;
-  }
-  .faq-section summary::-webkit-details-marker { display: none; }
-  .faq-section summary::before {
+  /* FAQ Accordion markers */
+  .faq-section details summary { list-style: none; cursor: pointer; }
+  .faq-section details summary::-webkit-details-marker { display: none; }
+  .faq-section details summary::before {
     content: '+';
-    display: inline-block;
-    width: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin-right: 12px;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.08);
+    color: rgb(37, 99, 235);
     font-weight: 700;
-    color: var(--accent);
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: all 0.2s;
   }
-  .faq-section details[open] summary::before { content: '\2212'; }
-  .faq-section details > p,
-  .faq-section details > div {
-    padding: 16px 20px;
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--text-muted);
+  .faq-section details[open] summary::before {
+    content: '\2212';
+    background: rgba(37, 99, 235, 0.15);
   }
 
-  /* ── CTA Section ── */
-  .cta-section {
-    background: var(--bg-alt);
-    border-radius: var(--radius);
-    padding: 40px;
-    text-align: center;
-    margin: 48px 0;
+  /* Trust Carousel */
+  .trust-carousel { overflow: hidden; position: relative; }
+  .trust-carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .cta-section h2 { margin-top: 0; font-size: 24px; }
-  .cta-section p {
-    max-width: 500px;
-    margin: 0 auto 20px;
-    color: var(--text-muted);
+  .trust-carousel-slide {
+    min-width: 100%;
+    padding: 0 1rem;
   }
-
-  /* ── Related Content ── */
-  .related-content {
-    background: var(--bg-alt);
-    border-radius: var(--radius);
-    padding: 28px;
-    margin: 40px 0;
+  @media (min-width: 768px) {
+    .trust-carousel-slide { min-width: 50%; }
   }
-  .related-content h2 { font-size: 18px; margin: 0 0 16px; }
-  .related-content ul { list-style: none; padding: 0; }
-  .related-content li { margin-bottom: 8px; }
-  .related-content a { color: var(--accent); text-decoration: none; font-weight: 500; }
-  .related-content a:hover { text-decoration: underline; }
-
-  /* ── Social Proof ── */
-  .social-proof {
-    padding: 40px 0;
-    border-top: 1px solid var(--border-light);
-    border-bottom: 1px solid var(--border-light);
-    margin: 40px 0;
-  }
-  .testimonial {
-    background: var(--bg-alt);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 16px;
-    font-style: italic;
-    color: var(--text-muted);
-  }
-  .testimonial-author {
-    font-style: normal;
-    font-weight: 600;
-    color: var(--text);
-    margin-top: 8px;
-    font-size: 14px;
+  @media (min-width: 1024px) {
+    .trust-carousel-slide { min-width: 33.333%; }
   }
 
-  /* ── Inline Links ── */
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  /* Feature Showcase: alternating left/right */
+  .feature-showcase:nth-child(even) { @apply md:flex-row-reverse; }
 
-  /* ── Lists ── */
-  ul, ol { padding-left: 24px; margin-bottom: 16px; }
-  li { margin-bottom: 4px; }
-
-  /* ── Source Citations ── */
-  .source-cite { font-size: 14px; color: var(--text-dim); }
-  .source-cite a { color: var(--text-dim); text-decoration: underline; }
-
-  /* ── Footer ── */
-  .page-footer {
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 24px;
-    border-top: 1px solid var(--border);
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-
-  /* ── Responsive ── */
-  @media (max-width: 640px) {
-    .hero { padding: 40px 16px 32px; }
-    .hero h1 { font-size: 26px; }
-    .trust-bar { gap: 16px; flex-direction: column; align-items: center; }
-    .page-content { padding: 0 16px 60px; }
-    h2 { font-size: 22px; }
-    .cta-section { padding: 28px 20px; }
-  }
-
-  /* ── Print ── */
+  /* Print */
   @media print {
-    body { font-size: 12px; line-height: 1.5; }
-    .hero { padding: 20px 0; }
-    .cta-primary, .cta-section { display: none; }
-    .trust-bar { border: 1px solid #ccc; }
-    a { color: #000; text-decoration: underline; }
+    .no-print { display: none !important; }
     a::after { content: ' (' attr(href) ')'; font-size: 10px; }
   }
 </style>
 <!-- {{SCHEMA_JSON_LD}} -->
 </head>
-<body>
+<body class="bg-white text-gray-900 antialiased">
 
-  <!-- ═══════════ HERO ═══════════ -->
-  <section class="hero">
-    <h1>{{H1}}</h1>
-    <p class="hero-sub">{{HERO_SUBHEADLINE}}</p>
-    <a href="#{{CTA_TARGET}}" class="cta-primary">{{CTA_TEXT}}</a>
+  <!-- ═══════════ HEADER (from target site) ═══════════ -->
+  <header class="border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur-sm z-50">
+    <nav class="max-w-content mx-auto flex items-center justify-between px-6 py-4">
+      <a href="/" class="flex items-center">
+        {{LOGO_IMG}}
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+        {{NAV_ITEMS}}
+      </div>
+      {{HEADER_CTA}}
+    </nav>
+  </header>
+
+  <!-- ╔═══════════════════════════════════════════════════════╗
+       ║  ZONE 1: CONVERSION (Above-the-Fold / Landing part)  ║
+       ╚═══════════════════════════════════════════════════════╝ -->
+
+  <!-- ═══════════ HERO (enhanced: Value Props + Dual CTA) ═══════════ -->
+  <section class="bg-gradient-to-b from-gray-50 to-white">
+    <div class="max-w-5xl mx-auto px-6 pt-16 pb-12 text-center">
+      <h1 class="font-heading text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-gray-900 mb-5 leading-[1.1]">{{H1}}</h1>
+
+      <!-- Value Proposition Bar: 3 core USPs with metrics -->
+      <div class="flex flex-wrap justify-center gap-6 md:gap-10 mb-8">
+        {{VALUE_PROPS}}
+      </div>
+
+      <p class="text-lg text-gray-500 max-w-2xl mx-auto mb-8 leading-relaxed">{{HERO_SUBHEADLINE}}</p>
+
+      <!-- Dual CTA: Primary + Secondary -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#{{CTA_TARGET}}" class="inline-block px-8 py-3.5 bg-brand text-white font-semibold rounded-lg hover:opacity-90 transition-all no-print shadow-lg shadow-brand/20">{{CTA_TEXT}}</a>
+        <a href="#guide" class="inline-block px-8 py-3.5 border-2 border-gray-200 text-gray-700 font-semibold rounded-lg hover:border-brand hover:text-brand transition-all no-print">{{CTA_SECONDARY_TEXT}}</a>
+      </div>
+
+      <!-- Trust seal in hero (optional, e.g. BBB, Trustpilot) -->
+      {{HERO_TRUST_SEAL}}
+    </div>
   </section>
 
-  <!-- ═══════════ TRUST ═══════════ -->
-  <div class="trust-bar">
-    <!-- {{TRUST_ITEMS}} -->
-    <div class="trust-item">{{TRUST_TEXT}}</div>
-    <!-- {{/TRUST_ITEMS}} -->
+  <!-- ═══════════ TRUST BAR ═══════════ -->
+  <div class="border-y border-gray-100 bg-gray-50/60">
+    <div class="max-w-5xl mx-auto flex flex-wrap justify-center gap-8 md:gap-12 px-6 py-5 text-sm font-semibold text-gray-500">
+      {{TRUST_ITEMS}}
+    </div>
   </div>
 
-  <!-- ═══════════ CONTENT ═══════════ -->
-  <article class="page-content">
+  <!-- ═══════════ BENEFITS / USP GRID ═══════════ -->
+  <section class="py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-center text-gray-900 mb-10">{{BENEFITS_HEADING}}</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {{BENEFITS_CARDS}}
+      </div>
+    </div>
+  </section>
 
-    <!-- {{KEY_TAKEAWAYS}} -->
-    <div class="key-takeaways">
-      <h2>Key Takeaways</h2>
-      <ul>
-        <li>{{TAKEAWAY}}</li>
+  <!-- ═══════════ FEATURE SHOWCASE (alternating image/text) ═══════════ -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-6 space-y-16">
+      {{FEATURE_SHOWCASES}}
+    </div>
+  </section>
+
+  <!-- ═══════════ SOLUTION / ECOSYSTEM OVERVIEW ═══════════ -->
+  <section class="py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-gray-900 mb-4">{{SOLUTION_HEADING}}</h2>
+      <p class="text-lg text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">{{SOLUTION_SUBHEADLINE}}</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        {{SOLUTION_ITEMS}}
+      </div>
+      <div class="mt-8">
+        <a href="#{{CTA_TARGET}}" class="inline-block px-8 py-3.5 bg-brand text-white font-semibold rounded-lg hover:opacity-90 transition-all no-print">{{CTA_TEXT}}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ TRUST CAROUSEL ═══════════ -->
+  <section class="py-16 bg-gray-50" x-data="{ current: 0, total: 0 }" x-init="total = $refs.track.children.length">
+    <div class="max-w-5xl mx-auto px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-center text-gray-900 mb-10">{{TRUST_CAROUSEL_HEADING}}</h2>
+      <div class="trust-carousel relative">
+        <div class="trust-carousel-track" x-ref="track"
+             :style="'transform: translateX(-' + (current * (100 / Math.min(total, window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1))) + '%)'">
+          {{TRUST_CAROUSEL_SLIDES}}
+        </div>
+        <div class="flex justify-center gap-2 mt-6">
+          <button @click="current = Math.max(0, current - 1)"
+                  class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:border-brand transition-colors no-print"
+                  :class="current === 0 && 'opacity-40 cursor-default'">&larr;</button>
+          <button @click="current = Math.min(total - (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1), current + 1)"
+                  class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:border-brand transition-colors no-print"
+                  :class="current >= total - (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1) && 'opacity-40 cursor-default'">&rarr;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PROCESS STEPS ═══════════ -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-gray-900 mb-10">{{PROCESS_HEADING}}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {{PROCESS_STEPS}}
+      </div>
+      <div class="mt-10">
+        <a href="#{{CTA_TARGET}}" class="inline-block px-8 py-3.5 bg-brand text-white font-semibold rounded-lg hover:opacity-90 transition-all no-print shadow-lg shadow-brand/20">{{CTA_TEXT}}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ AWARDS / CERTIFICATIONS ═══════════ -->
+  <div class="border-y border-gray-100 bg-gray-50/60">
+    <div class="max-w-5xl mx-auto flex flex-wrap justify-center items-center gap-8 md:gap-14 px-6 py-8">
+      {{AWARDS_ITEMS}}
+    </div>
+  </div>
+
+  <!-- ╔═══════════════════════════════════════════════════════╗
+       ║  ZONE 2: SEO / CONTENT (Below-the-Fold / Guide part) ║
+       ╚═══════════════════════════════════════════════════════╝ -->
+
+  <article id="guide" class="max-w-3xl mx-auto px-6 py-16">
+
+    <!-- Key Takeaways -->
+    <div class="bg-brand/5 border border-brand/15 border-l-4 border-l-brand rounded-r-lg px-7 py-6 mb-10">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-brand mb-3">Key Takeaways</h2>
+      <ul class="space-y-2">
+        {{KEY_TAKEAWAYS}}
       </ul>
     </div>
-    <!-- {{/KEY_TAKEAWAYS}} -->
 
-    <!-- {{CONTENT_SECTIONS}} -->
-    <!-- Content sections generated from wireframe SOLL blocks -->
-    <!-- {{/CONTENT_SECTIONS}} -->
+    <!-- Content sections: H2, paragraphs, images, tables, citation capsules, tools -->
+    {{CONTENT_SECTIONS}}
 
-    <!-- {{FAQ_SECTION}} -->
-    <section class="faq-section">
-      <h2>{{FAQ_HEADING}}</h2>
-      <details>
-        <summary>{{FAQ_QUESTION}}</summary>
-        <p>{{FAQ_ANSWER}}</p>
-      </details>
+    <!-- FAQ Accordion -->
+    <section class="faq-section mt-16">
+      <h2 class="font-heading text-2xl font-bold text-gray-900 mb-6">{{FAQ_HEADING}}</h2>
+      {{FAQ_ITEMS}}
     </section>
-    <!-- {{/FAQ_SECTION}} -->
 
-    <!-- {{CTA_SECTION}} -->
-    <section class="cta-section">
-      <h2>{{CTA_HEADING}}</h2>
-      <p>{{CTA_DESCRIPTION}}</p>
-      <a href="#{{CTA_TARGET}}" class="cta-primary">{{CTA_TEXT}}</a>
+    <!-- CTA Section -->
+    <section class="bg-gradient-to-br from-brand/5 to-accent/5 rounded-xl p-10 text-center mt-16 border border-brand/10">
+      <h2 class="font-heading text-2xl font-bold text-gray-900 mb-3 mt-0">{{CTA_HEADING}}</h2>
+      <p class="text-gray-500 max-w-lg mx-auto mb-6">{{CTA_DESCRIPTION}}</p>
+      <a href="#{{CTA_TARGET}}" class="inline-block px-8 py-3.5 bg-brand text-white font-semibold rounded-lg hover:opacity-90 transition-all no-print shadow-lg shadow-brand/20">{{CTA_TEXT}}</a>
     </section>
-    <!-- {{/CTA_SECTION}} -->
 
-    <!-- {{RELATED_CONTENT}} -->
-    <section class="related-content">
-      <h2>Related Resources</h2>
-      <ul>
-        <li><a href="{{LINK_URL}}">{{LINK_TEXT}}</a></li>
+    <!-- Related Resources -->
+    <section class="bg-gray-50 rounded-xl p-7 mt-10">
+      <h2 class="text-lg font-bold text-gray-900 mb-4 mt-0">Related Resources</h2>
+      <ul class="space-y-3">
+        {{RELATED_LINKS}}
       </ul>
     </section>
-    <!-- {{/RELATED_CONTENT}} -->
 
   </article>
 
-  <footer class="page-footer">
-    Generated with Claude Code &middot; SXO-Page Skill &middot; {{DATE}}
+  <!-- ═══════════ FOOTER (from target site) ═══════════ -->
+  <footer class="bg-brand-dark text-gray-400 mt-16">
+    <div class="max-w-content mx-auto px-6 py-12">
+      {{FOOTER_CONTENT}}
+    </div>
+    <div class="border-t border-white/10 text-center py-6 text-xs text-gray-500">
+      {{COPYRIGHT}}
+    </div>
   </footer>
 
 </body>
