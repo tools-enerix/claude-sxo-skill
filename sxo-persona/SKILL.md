@@ -1,5 +1,5 @@
 ---
-name: sxo-persona
+name: seo-sxo-persona
 description: >
   Erstellt ein Persona-Feedback-Dashboard als HTML-Datei auf Basis eines SXO-Analyzer
   Reports und/oder einer SXO Page. Kann auch standalone mit URL + Keyword arbeiten
@@ -44,7 +44,7 @@ Logik: **SERP-Signale -> Intent-Cluster -> Personas -> Scoring gegen Zielseite -
 ```
 Suche mit Glob im aktuellen Arbeitsverzeichnis nach:
 
-1. SXO-Report:  sxo-report-*.html   (aus /sxo-analyzer)
+1. SXO-Report:  sxo-report-*.html   (aus /seo-sxo-analyzer)
 2. SXO-Page:    sxo-page-*.html     (aus /sxo-page)
 3. Argumente:   URL und/oder Keyword als Argument
 
@@ -73,8 +73,8 @@ MODUS C -- Kein Report, nur URL (ohne Keyword):
 
 MODUS D -- Weder Report noch URL:
   -> Fehler: "Ich brauche mindestens einen SXO-Report oder eine URL + Keyword."
-  -> "Option 1: /sxo-analyzer [keyword] [url]  (vollstaendiger Report)"
-  -> "Option 2: /sxo-persona [keyword] [url]   (Standalone-Analyse)"
+  -> "Option 1: /seo-sxo-analyzer [keyword] [url]  (vollstaendiger Report)"
+  -> "Option 2: /seo-sxo-persona [keyword] [url]   (Standalone-Analyse)"
 ```
 
 ### 0b -- Spracherkennung
@@ -380,6 +380,16 @@ Fuer JEDE Persona erstelle:
               fuer sein Einfamilienhaus kostet und ob sich die Investition lohnt."
      FALSCH:  "Sucht 'Photovoltaikanlage Kosten'."
 
+   SPRECHBLASE (Ich-Perspektive):
+   - Zusaetzlich zum Suchmotiv-Text: Schreibe 2-3 Saetze in der ICH-Form
+   - Diese Saetze erscheinen in einer visuellen Sprechblase neben dem Avatar
+   - Die Sprechblase macht die Persona lebendig und greifbar
+   - Formuliere natuerlich, wie ein echter Mensch reden wuerde
+   - Beispiel DE: "Mein iPhone-Display ist gesprungen und ich brauche schnell
+     eine Reparatur. Am liebsten haette ich einen guenstigen Anbieter in meiner Naehe."
+   - Beispiel EN: "My phone screen just cracked and I need it fixed fast.
+     I'm looking for a reliable shop nearby that won't charge a fortune."
+
 3. ERWARTUNG AN DIE SEITE
    - 2-3 Saetze: Was will diese Person KONKRET finden?
    - Welche Fragen muessen beantwortet werden?
@@ -555,7 +565,7 @@ Fuer JEDE Persona:
         Score 90-100: #e8f5e9 (soft mint)
      -> Baue Prompt = BASIS_PROMPT + ARCHETYPE_ERWEITERUNG
         (siehe references/persona-images.md)
-     -> Rufe gemini_generate_image auf (1:1, 512px)
+     -> Rufe gemini_generate_image auf (1:1, 512px -- wird als 120px Avatar angezeigt)
      -> Kopiere generiertes Bild in Cache:
         cp ~/Documents/nanobanana_generated/<generated-file> {CACHE_PATH}
      -> Lies als base64
@@ -584,7 +594,11 @@ Fuer JEDE Persona:
 
 ### 5b -- HTML-Struktur generieren
 
-Generiere den Body-Inhalt in dieser Reihenfolge:
+Generiere den Body-Inhalt in dieser Reihenfolge.
+
+**WICHTIG: Laienverstaendliche Sprache!** Alle Labels und Texte so formulieren,
+dass ein Nicht-SEO-Experte (z.B. ein Geschaeftsfuehrer oder Marketing-Mitarbeiter)
+das Dashboard sofort versteht. Keine Fachbegriffe ohne Erklaerung.
 
 ```html
 <!-- HEADER -->
@@ -592,51 +606,52 @@ Generiere den Body-Inhalt in dieser Reihenfolge:
   <div class="label">SXO Persona-Dashboard</div>  <!-- bzw. "SXO Persona Dashboard" EN -->
   <h1>Persona-Feedback: <span>{{KEYWORD}}</span></h1>
   <div class="meta-grid">
-    <!-- Zielseite, Datum, Scoring-Modus, Anzahl Personas -->
+    <!-- Zielseite, Datum, Bewertungsmethode, Anzahl Personas -->
   </div>
 </header>
 
-<!-- SUMMARY -->
+<!-- ZUSAMMENFASSUNG -->
 <div class="section">
   <div class="section-header">
-    <div class="section-number">&#8984;</div>  <!-- oder Sigma-Zeichen -->
-    <h2>Zusammenfassung</h2>  <!-- bzw. "Summary" EN -->
+    <div class="section-icon">&#128202;</div>
+    <h2>Auf einen Blick</h2>  <!-- bzw. "At a Glance" EN -->
   </div>
   <div class="summary-card">
-    <!-- Durchschnitts-Score (grosser SVG-Kreis) -->
+    <!-- Durchschnitts-Score (grosser SVG-Kreis, 150px) -->
     <!-- Schwaechste Persona + Staerkste Persona -->
-    <!-- Scoring-Modus Hinweis -->
+    <!-- Bewertungsmethode-Hinweis -->
   </div>
 </div>
 
-<!-- USER STORY (aus Report uebernommen) -->
+<!-- USER STORY -->
 <div class="section">
   <div class="section-header">
-    <div class="section-number">&#128100;</div>
-    <h2>User Story</h2>
+    <div class="section-icon">&#128172;</div>
+    <h2>Die typische Suche</h2>  <!-- bzw. "The Typical Search" EN -->
   </div>
   <div class="card">
     <div class="user-story-quote">{{USER_STORY_STATEMENT}}</div>
   </div>
 </div>
 
-<!-- PERSONA CARDS -->
+<!-- PERSONA CARDS (Einzelspalte fuer mehr Platz pro Persona) -->
 <div class="section">
   <div class="section-header">
-    <div class="section-number">&#128101;</div>
-    <h2>Personas</h2>
+    <div class="section-icon">&#128101;</div>
+    <h2>So unterschiedlich suchen Menschen</h2>  <!-- bzw. "How People Search Differently" EN -->
   </div>
-  <div class="persona-grid">
+  <div class="persona-list">
     <!-- 4-7 Persona-Cards, je eine pro Persona -->
     <!-- Reihenfolge: nach Score aufsteigend (schwaechste zuerst = groesster Handlungsbedarf) -->
+    <!-- Jede Persona-Card: grosses Avatar-Bild + Sprechblase + Details -->
   </div>
 </div>
 
-<!-- AGGREGIERTE HANDLUNGSFELDER -->
+<!-- HANDLUNGSEMPFEHLUNGEN -->
 <div class="section">
   <div class="section-header">
-    <div class="section-number">&#9889;</div>
-    <h2>Top-Handlungsfelder</h2>  <!-- bzw. "Top Action Items" EN -->
+    <div class="section-icon">&#9889;</div>
+    <h2>Das sollten Sie als N&auml;chstes tun</h2>  <!-- bzw. "What You Should Do Next" EN -->
   </div>
   <div class="card">
     <!-- Nummerierte Liste, max 5 Eintraege -->
@@ -650,13 +665,31 @@ Generiere den Body-Inhalt in dieser Reihenfolge:
 </footer>
 ```
 
-### 5c -- Persona-Card Struktur
+### 5c -- Persona-Card Struktur (mit Sprechblase)
 
-Jede Persona-Card folgt diesem Schema:
+Jede Persona-Card hat 3 Bereiche:
+1. **Profil-Kopf**: Grosses Avatar-Bild (120px) + Name + Score-Kreis
+2. **Sprechblase**: Suchmotiv in Ich-Perspektive (macht die Persona lebendig)
+3. **Details**: Erwartung, Score-Balken, Verbesserungstipps
 
 ```html
 <div class="persona-card" style="--persona-color: {{COLOR}}">
-  <div class="persona-header">
+  <!-- Farbiger Akzentstreifen oben -->
+  <div class="persona-topbar"></div>
+
+  <!-- PROFIL-KOPF: Grosses Bild + Name + Score -->
+  <div class="persona-profile">
+    <!-- Avatar (120px, aus Schritt 4b) -->
+    <!-- IF Bild vorhanden: -->
+    <img class="persona-avatar" src="{{PERSONA_IMG_SRC}}" alt="{{PERSONA_NAME}}">
+    <!-- ELSE (Fallback): -->
+    <!-- <div class="persona-avatar-placeholder">&#128100;</div> -->
+
+    <div class="persona-identity">
+      <h3>{{PERSONA_NAME}}</h3>
+      <div class="persona-demo">{{DEMOGRAFIE}}</div>
+      <span class="badge {{INTENT_BADGE_CLASS}}">{{INTENT_TYP}}</span>
+    </div>
     <div class="score-circle" data-score="{{SCORE}}">
       <svg viewBox="0 0 120 120">
         <circle class="score-bg" cx="60" cy="60" r="54"/>
@@ -666,66 +699,72 @@ Jede Persona-Card folgt diesem Schema:
       </svg>
       <div class="score-value">{{SCORE}}</div>
     </div>
-    <!-- Avatar (aus Schritt 4b) -->
-    <div class="persona-avatar-wrap">
-      <!-- IF Bild vorhanden: -->
-      <img class="persona-avatar" src="{{PERSONA_IMG_SRC}}" alt="{{PERSONA_NAME}}">
-      <!-- ELSE (Fallback): -->
-      <!-- <div class="persona-avatar-placeholder">&#128100;</div> -->
-    </div>
-    <div class="persona-identity">
-      <h3>{{PERSONA_NAME}}</h3>
-      <div class="persona-demo">{{DEMOGRAFIE}}</div>
-      <span class="badge {{INTENT_BADGE_CLASS}}">{{INTENT_TYP}}</span>
-    </div>
   </div>
 
-  <div class="persona-field">
-    <div class="pf-label">Suchmotiv &amp; Intent</div>  <!-- bzw. "Search Motive & Intent" EN -->
-    <p>Sucht <strong>&bdquo;{{KEYWORD}}&ldquo;</strong>. {{HINTERGRUND_UND_MOTIVATION}}</p>
-    <!-- WICHTIG: Alle Personas suchen IMMER das Fokus-Keyword!
-         {{HINTERGRUND_UND_MOTIVATION}} beschreibt die Lebenssituation,
-         den Ausloser und die verborgene Erwartung hinter der Suche. -->
-  </div>
-
-  <div class="persona-field">
-    <div class="pf-label">Erwartung an die Seite</div>  <!-- bzw. "Page Expectation" EN -->
-    <p>{{ERWARTUNG}}</p>
-  </div>
-
-  <div class="persona-field">
-    <div class="pf-label">Score-Begruendung</div>  <!-- bzw. "Score Reasoning" EN -->
-    <div class="score-breakdown">
-      <div class="sb-row">
-        <span>First Screen</span>
-        <div class="sb-bar"><div class="sb-fill" style="width: {{DIM1_PCT}}%"></div></div>
-        <span>{{DIM1}}/25</span>
-      </div>
-      <div class="sb-row">
-        <span>Erwartung</span>  <!-- bzw. "Expectation" EN -->
-        <div class="sb-bar"><div class="sb-fill" style="width: {{DIM2_PCT}}%"></div></div>
-        <span>{{DIM2}}/35</span>
-      </div>
-      <div class="sb-row">
-        <span>Barrieren</span>  <!-- bzw. "Barriers" EN -->
-        <div class="sb-bar"><div class="sb-fill" style="width: {{DIM3_PCT}}%"></div></div>
-        <span>{{DIM3}}/25</span>
-      </div>
-      <div class="sb-row">
-        <span>Trust</span>
-        <div class="sb-bar"><div class="sb-fill" style="width: {{DIM4_PCT}}%"></div></div>
-        <span>{{DIM4}}/15</span>
-      </div>
+  <!-- SPRECHBLASE: Suchmotiv in Ich-Perspektive -->
+  <div class="speech-bubble-wrap">
+    <div class="speech-bubble">
+      <span class="speech-keyword">&bdquo;{{KEYWORD}}&ldquo;</span> &mdash;
+      {{SPRECHBLASE_ICH_PERSPEKTIVE}}
+      <!-- 2-3 Saetze in der Ich-Form, natuerlich formuliert -->
+      <!-- Beispiel: "Mein Display ist kaputt gegangen und ich suche jetzt
+           eine guenstige Reparatur. Am besten in meiner Naehe, damit ich
+           das Handy noch heute abgeben kann." -->
     </div>
   </div>
 
-  <div class="persona-field">
-    <div class="pf-label">Verbesserungen</div>  <!-- bzw. "Improvements" EN -->
-    <ul>
-      <li>{{VERBESSERUNG_1}}</li>
-      <li>{{VERBESSERUNG_2}}</li>
-      <!-- 2-4 Punkte -->
-    </ul>
+  <!-- DETAILS: Erwartung + Score + Tipps -->
+  <div class="persona-body">
+    <div class="persona-columns">
+      <!-- Linke Spalte: Erwartung + Score-Balken -->
+      <div>
+        <div class="persona-field">
+          <div class="pf-label"><span class="pf-icon">&#127919;</span> Was erwartet diese Person?</div>
+          <!-- bzw. "What does this person expect?" EN -->
+          <p>{{ERWARTUNG}}</p>
+        </div>
+
+        <div class="persona-field">
+          <div class="pf-label"><span class="pf-icon">&#128200;</span> Bewertung im Detail</div>
+          <!-- bzw. "Score Details" EN -->
+          <div class="score-breakdown">
+            <div class="sb-row">
+              <span>Erster Eindruck</span>  <!-- bzw. "First Impression" EN -->
+              <div class="sb-bar"><div class="sb-fill" style="width: {{DIM1_PCT}}%"></div></div>
+              <span>{{DIM1}}/25</span>
+            </div>
+            <div class="sb-row">
+              <span>Inhalte gefunden</span>  <!-- bzw. "Content Found" EN -->
+              <div class="sb-bar"><div class="sb-fill" style="width: {{DIM2_PCT}}%"></div></div>
+              <span>{{DIM2}}/35</span>
+            </div>
+            <div class="sb-row">
+              <span>Bedenken gekl&auml;rt</span>  <!-- bzw. "Concerns Addressed" EN -->
+              <div class="sb-bar"><div class="sb-fill" style="width: {{DIM3_PCT}}%"></div></div>
+              <span>{{DIM3}}/25</span>
+            </div>
+            <div class="sb-row">
+              <span>Vertrauen</span>  <!-- bzw. "Trust" EN -->
+              <div class="sb-bar"><div class="sb-fill" style="width: {{DIM4_PCT}}%"></div></div>
+              <span>{{DIM4}}/15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rechte Spalte: Verbesserungstipps -->
+      <div>
+        <div class="persona-field">
+          <div class="pf-label"><span class="pf-icon">&#128161;</span> Das k&ouml;nnen Sie tun</div>
+          <!-- bzw. "What You Can Do" EN -->
+          <ul class="tip-list">
+            <li>{{VERBESSERUNG_1}}</li>
+            <li>{{VERBESSERUNG_2}}</li>
+            <!-- 2-4 Punkte -->
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 ```
@@ -733,19 +772,23 @@ Jede Persona-Card folgt diesem Schema:
 ### 5d -- Score-Kreis berechnen (SVG)
 
 ```
-Umfang = 2 * PI * 54 = 339.29
-FILLED = (SCORE / 100) * 339.29
-REMAINING = 339.29 - FILLED
+Persona-Score-Kreis (80px Anzeige, viewBox 120):
+  Umfang = 2 * PI * 54 = 339.29
+  FILLED = (SCORE / 100) * 339.29
+  REMAINING = 339.29 - FILLED
+
+Summary-Score-Kreis (150px Anzeige, viewBox 120):
+  Gleiche Formel wie oben (SVG skaliert automatisch)
 ```
 
 ### 5e -- Farbzuordnung
 
 ```
-Score  0-29:  --persona-color: #dc2626  (Rot / Kritisch)
-Score 30-49:  --persona-color: #ea580c  (Orange / Schwach)
-Score 50-69:  --persona-color: #ca8a04  (Amber / Teilweise)
-Score 70-89:  --persona-color: #2563eb  (Blau / Gut)
-Score 90-100: --persona-color: #16a34a  (Gruen / Exzellent)
+Score  0-29:  --persona-color: #ef4444  (Rot / Kritisch)
+Score 30-49:  --persona-color: #f97316  (Orange / Schwach)
+Score 50-69:  --persona-color: #eab308  (Amber / Teilweise)
+Score 70-89:  --persona-color: #4f6ef7  (Blau / Gut)
+Score 90-100: --persona-color: #22c55e  (Gruen / Exzellent)
 ```
 
 ### 5f -- Dateiname
@@ -822,8 +865,10 @@ REGEL 6: Selbststaendige Datei
   -> SVG direkt im HTML (kein externer Verweis)
 
 REGEL 7: Responsive Design
-  -> Persona-Grid: 2 Spalten Desktop, 1 Spalte Mobile
-  -> Score-Kreise: min. 80px Durchmesser
+  -> Persona-Liste: Einzelspalte (volle Breite pro Persona)
+  -> Persona-Body: 2 Spalten Desktop, 1 Spalte Mobile (persona-columns)
+  -> Avatar: 120px Durchmesser, Score-Kreis: 80px
+  -> Sprechblase: volle Breite mit Pfeil nach oben
   -> Lesbar auf 360px Breite
 
 REGEL 8: Barrierefreiheit
@@ -857,33 +902,42 @@ REGEL 12: Archetype-Eindeutigkeit
 REGEL 13: Bildformat konsistent
   -> Alle Bilder als base64 inline im HTML (data:image/png;base64,...)
   -> Keine externen Bildverweise
-  -> 56x56px Anzeige (CSS), 512px Quellaufloesung
+  -> 120x120px Anzeige (CSS), 512px Quellaufloesung
+
+REGEL 14: Sprechblase pflicht
+  -> Jede Persona-Card MUSS eine Sprechblase mit Ich-Perspektive-Text haben
+  -> Die Sprechblase macht die Persona greifbar und menschlich
+  -> Formulierung: natuerlich, wie ein echter Mensch reden wuerde
+  -> Keine Fachbegriffe in der Sprechblase
 ```
 
 ---
 
-## Sprachspezifische Labels
+## Sprachspezifische Labels (Laienverstaendlich)
+
+**Prinzip:** Alle Labels so formulieren, dass ein Nicht-SEO-Experte sie sofort versteht.
+Keine Fachbegriffe wie "First-Screen-Relevanz" oder "Barriereabbau".
 
 | Bereich | Deutsch | English |
 |---|---|---|
 | Header-Label | SXO Persona-Dashboard | SXO Persona Dashboard |
-| Zusammenfassung | Zusammenfassung | Summary |
+| Zusammenfassung | Auf einen Blick | At a Glance |
 | Durchschnitts-Score | Durchschnitts-Score | Average Score |
-| Schwaechste Persona | Schwaechste Persona | Weakest Persona |
-| Staerkste Persona | Staerkste Persona | Strongest Persona |
-| Scoring-Modus | Scoring-Modus | Scoring Mode |
-| Suchmotiv | Suchmotiv & Intent | Search Motive & Intent |
-| Suchmotiv-Prefix | Sucht &bdquo;{{KEYWORD}}&ldquo;. | Searches for &ldquo;{{KEYWORD}}&rdquo;. |
-| Erwartung | Erwartung an die Seite | Page Expectation |
-| Score-Begruendung | Score-Begruendung | Score Reasoning |
-| Verbesserungen | Verbesserungen | Improvements |
-| Handlungsfelder | Top-Handlungsfelder | Top Action Items |
+| Schwaechste Persona | Groesster Handlungsbedarf | Needs Most Work |
+| Staerkste Persona | Am besten bedient | Best Served |
+| Bewertungsmethode | Bewertungsmethode | Scoring Method |
+| User Story Section | Die typische Suche | The Typical Search |
+| Personas Section | So unterschiedlich suchen Menschen | How People Search Differently |
+| Erwartung | Was erwartet diese Person? | What does this person expect? |
+| Score-Detail | Bewertung im Detail | Score Details |
+| Verbesserungen | Das k&ouml;nnen Sie tun | What You Can Do |
+| Handlungsfelder | Das sollten Sie als N&auml;chstes tun | What You Should Do Next |
 | Betrifft | Betrifft | Affects |
-| Projiziert | Projiziert aus SXO-Report | Projected from SXO Report |
-| First Screen | First Screen | First Screen |
-| Erwartung (Dim) | Erwartung | Expectation |
-| Barrieren (Dim) | Barrieren | Barriers |
-| Trust | Trust | Trust |
+| Projiziert | Gesch&auml;tzt aus SXO-Report | Estimated from SXO Report |
+| Dim 1 | Erster Eindruck | First Impression |
+| Dim 2 | Inhalte gefunden | Content Found |
+| Dim 3 | Bedenken gekl&auml;rt | Concerns Addressed |
+| Dim 4 | Vertrauen | Trust |
 | Footer | SXO Persona-Dashboard erstellt mit Claude Code | SXO Persona Dashboard generated with Claude Code |
 
 ---
@@ -898,3 +952,8 @@ REGEL 13: Bildformat konsistent
 - Nutze HTML-Entities fuer Umlaute im HTML oder UTF-8 direkt
 - Score-Kreise: Verwende SVG `stroke-dasharray` fuer den Fortschrittskreis
 - Persona-Cards sortieren: schwaechster Score zuerst (= groesster Handlungsbedarf oben)
+- Verwende `persona-list` (Einzelspalte), NICHT `persona-grid` (2-Spalten)
+- Verwende `section-icon` fuer Section-Header, NICHT `section-number`
+- Jede Persona-Card hat: persona-topbar, persona-profile, speech-bubble-wrap, persona-body
+- Die Sprechblase (speech-bubble) enthaelt Ich-Perspektive-Text der Persona
+- Alle Labels laienverstaendlich (siehe Labels-Tabelle)

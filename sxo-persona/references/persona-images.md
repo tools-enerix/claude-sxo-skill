@@ -152,7 +152,7 @@ Haenge diese Beschreibung an den Basis-Prompt an:
 ```
 Tool:        gemini_generate_image
 Aspect Ratio: 1:1 (via set_aspect_ratio vorher setzen)
-Resolution:  512 (kleinste Stufe -- reicht fuer 56x56px Avatar, spart Kosten)
+Resolution:  512 (reicht fuer 120x120px Avatar bei Retina-Displays, spart Kosten)
 Model:       gemini-3.1-flash-image-preview (Standard)
 ```
 

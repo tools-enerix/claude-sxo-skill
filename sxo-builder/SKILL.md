@@ -1,15 +1,15 @@
 ---
-name: sxo-builder
+name: seo-sxo-builder
 description: >
   Erstellt einen Vorher/Nachher-Wireframe als HTML-Datei auf Basis eines SXO-Analyzer
   Reports. Zeigt die aktuelle Seitenstruktur (IST) neben der optimierten Struktur (SOLL)
   mit konkreten Platzhaltern fuer Inhalte, CTAs, Trust-Signale und fehlende Sektionen.
-  Downstream-Skill von sxo-analyzer. Supports German and English -- auto-detects language
-  from SXO report or keyword/URL. Use when user says "SXO Wireframe", "Wireframe erstellen",
-  "Wireframe bauen", "build wireframe", "Seite umbauen", "Seitenstruktur optimieren",
-  "Vorher Nachher", "before after wireframe", "page structure wireframe",
-  "SXO Builder", "Wireframe aus Report", "wireframe from report",
-  "Seitenstruktur aus SXO", or "page layout from SXO".
+  Downstream-Skill von seo-sxo-analyzer. Supports German and English -- auto-detects
+  language from SXO report or keyword/URL. Use when user says "SXO Wireframe",
+  "Wireframe erstellen", "Wireframe bauen", "build wireframe", "Seite umbauen",
+  "Seitenstruktur optimieren", "Vorher Nachher", "before after wireframe",
+  "page structure wireframe", "SXO Builder", "Wireframe aus Report",
+  "wireframe from report", "Seitenstruktur aus SXO", or "page layout from SXO".
   Do NOT use for: general wireframing without SXO context, UI design, mockups,
   Figma export, or pixel-perfect design.
 argument-hint: "[sxo-report-datei] oder [keyword] [url]"
@@ -52,7 +52,7 @@ IF SXO-Analyse wurde gerade in dieser Konversation durchgefuehrt:
 
 ```
 IF User gibt nur Keyword + URL an:
-  -> Hinweis: "Fuer optimale Ergebnisse empfehle ich zuerst /sxo-analyzer [keyword] [url]"
+  -> Hinweis: "Fuer optimale Ergebnisse empfehle ich zuerst /seo-sxo-analyzer [keyword] [url]"
   -> Frage: "Soll ich trotzdem einen Basis-Wireframe erstellen?"
   -> Falls ja: Rufe on_page_content_parsing fuer die URL auf
   -> Erstelle vereinfachten Wireframe mit generischen Optimierungshinweisen

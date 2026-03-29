@@ -1,5 +1,5 @@
 ---
-name: sxo-analyzer
+name: seo-sxo-analyzer
 description: >
   Vollstaendige SXO-Analyse (Search Experience Optimization) fuer ein gegebenes
   Keyword und eine Zielseite. Analysiert SERPs via DataForSEO MCP (Autocomplete,
@@ -13,6 +13,8 @@ description: >
   "SXO-Report", "SXO report", "SERP-Analyse fuer", "SERP analysis for",
   "User Story aus SERPs", "user story from SERPs", "Zielseiten-Abgleich",
   "target page comparison", or "SXO Check".
+  Do NOT use for: general SEO audits (use seo-audit), technical SEO checks
+  (use seo-technical), or blog content scoring (use blog-analyze).
 argument-hint: "[keyword] [zielseite-url]"
 allowed-tools:
   - Read
@@ -134,52 +136,7 @@ Rufe diese Tools **parallel** zur SERP-Abfrage auf, um Wartezeit zu minimieren:
 
 ### 1c -- Fallback-Modus (MCP nicht verfuegbar)
 
-Informiere den User klar:
-
-```
-DataForSEO MCP ist nicht erreichbar.
-Ich fuehre die Analyse im manuellen Modus durch.
-
-Bitte gib mir folgende Informationen (so viele wie moeglich):
-
-1. AUTOCOMPLETE: Welche Vorschlaege erscheinen, wenn du das Keyword in Google eingibst?
-   (Screenshot oder Liste)
-
-2. GOOGLE ADS: Welche gesponserten Anzeigen erscheinen oben?
-   (Headline + kurze Description reicht)
-
-3. AEHNLICHE FRAGEN (PAA): Welche Fragen zeigt die "Aehnliche Fragen"-Box?
-   (Liste der Fragen)
-
-4. TOP-5-ERGEBNISSE: Titel + Meta-Description der ersten 5 organischen Ergebnisse?
-   (Screenshot oder manuell abtippen)
-
-5. SERP-FEATURES: Gibt es Featured Snippets, Bilder-Integration, lokale Ergebnisse,
-   AI Overviews? (ja/nein + kurze Beschreibung)
-
-6. ZIELSEITE: Beschreibe kurz den First Screen der Zielseite
-   (Was sieht man ohne zu scrollen? Headline, CTA, wichtigste Elemente)
-
-Alternativ: Fuege Screenshots als Bilder ein -- ich analysiere sie direkt.
-```
-
-**English fallback (if language = English):**
-
-```
-DataForSEO MCP is not available.
-I'll run the analysis in manual mode.
-
-Please provide the following information (as much as possible):
-
-1. AUTOCOMPLETE: What suggestions appear when you type the keyword into Google?
-2. GOOGLE ADS: What sponsored ads appear at the top? (headline + short description)
-3. PEOPLE ALSO ASK: What questions does the "People also ask" box show?
-4. TOP-5 RESULTS: Title + meta description of the first 5 organic results?
-5. SERP FEATURES: Any featured snippets, image packs, local results, AI Overviews?
-6. TARGET PAGE: Briefly describe the first screen of the target page.
-
-Alternatively: Paste screenshots -- I'll analyze them directly.
-```
+Lies `references/fallback-mode.md` fuer die vollstaendigen Fallback-Nachrichten (DE/EN). Bitte den User um manuelle SERP-Daten (Autocomplete, Ads, PAA, Top-5, Features, First Screen). Screenshots werden ebenfalls akzeptiert.
 
 ### 1d -- Lighthouse- und Instant-Pages-Daten aufbereiten
 
@@ -214,10 +171,7 @@ Interpretation: Welche Absichten und Themen-Cluster stehen dahinter?
 
 Nutze: `related_searches` Items + `people_also_search` Items aus der SERP-Response.
 
-**Leitfragen:**
-- Dominieren informationale Terme (was, wie, warum) oder transaktionale (kaufen, Preis, Angebot)?
-- Gibt es Tool-/Rechner-Terme ("berechnen", "Rechner", "Tabelle", "online")?
-- Gibt es lokale Modifikatoren ("in meiner Naehe", PLZ)?
+**Leitfragen:** Informational vs. transaktional? Tool-/Rechner-Terme? Lokale Modifikatoren?
 
 ### 2b -- Google Ads / Shopping-Signale
 
@@ -259,11 +213,7 @@ Analysiere diese als Shopping-Signale. Sie zeigen, dass Google eine transaktiona
 - Welche Plattformen dominieren? (idealo = Preisvergleich, Amazon = Convenience)
 - Gibt es Bewertungen/Sterne? (Trust-Signal)
 
-**Leitfragen:**
-- Welche Versprechen dominieren (Schnelligkeit / Sicherheit / Preis / Qualitaet)?
-- Werden Aengste adressiert ("risikolos", "kostenlos", "unverbindlich")?
-- Gibt es implizite Hinweise auf Kaufhuerden, die Ads gezielt abbauen?
-- Was signalisiert der CPC ueber den kommerziellen Wert der Suchanfrage?
+**Leitfragen:** Welche Versprechen dominieren? Werden Aengste adressiert? Was signalisiert der CPC ueber den kommerziellen Wert?
 
 ### 2c -- Featured Snippet / AI Overview / Knowledge Graph
 
@@ -276,30 +226,21 @@ Nutze: `featured_snippet` Items + `knowledge_graph` Items. Pruefe auch, ob PAA-A
 
 **Bei AI Overviews in PAA:** Google beantwortet bestimmte Fragen direkt per AI -- das zeigt, welche Teilfragen Google als "beantwortet" betrachtet (weniger Click-Potential fuer diese Fragen).
 
-**Leitfragen:**
-- In welchem Format (Text / Liste / Tabelle / Video)?
-- Wie tief ist die Antwort (oberflaechlich / detailliert)?
-- Welche Domain rankt hier -- und warum vermutlich?
+**Leitfragen:** Format (Text/Liste/Tabelle/Video)? Antworttiefe? Welche Domain rankt und warum?
 
 ### 2d -- People Also Ask (Aehnliche Fragen)
 
 Beobachtung: Welche Folgefragen stellt die Zielgruppe?
 Interpretation: Wissensstand und Detailtiefe der Suchenden.
 
-**Leitfragen:**
-- Sind die Fragen eher allgemein oder sehr spezifisch (-> Informiertheit der Zielgruppe)?
-- Gibt es Fragen, die auf spezifische Aengste oder Unsicherheiten hinweisen?
-- Zeigen die Fragen, ob Nutzer frueh oder spaet in ihrer Customer Journey sind?
+**Leitfragen:** Allgemein vs. spezifisch (Informiertheit)? Aengste/Unsicherheiten? Frueh/spaet in der Journey?
 
 ### 2e -- Bilder-Integration
 
 Beobachtung: Welche Bildtypen dominieren die Google Bilder-Box?
 Interpretation: Visuelle Erwartungshaltung der Zielgruppe.
 
-**Leitfragen:**
-- Fotos / Infografiken / Diagramme / Tabellen / Screenshots?
-- Welche Domains ranken in den Bildern -- stimmt das mit der organischen Top-10 ueberein?
-- Gibt es ein klares visuelles Format, das die Zielgruppe erwartet?
+**Leitfragen:** Bildtypen (Fotos/Infografiken/Diagramme)? Domain-Ueberschneidung mit Top-10? Erwartetes visuelles Format?
 
 ### 2f -- Top-10 organische Ergebnisse
 
@@ -327,21 +268,14 @@ Zusaetzlich notiere Sondertypen (kein Seitentyp-Match):
 
 **Zaehle die Seitentyp-Verteilung der Top-10** (z.B. "5x Blog/Guide, 2x Tool Page, 2x Service Page, 1x Forum").
 
-**Leitfragen:**
-- Welcher Seitentyp dominiert die Top-3? (-> Das ist der Seitentyp, den Google fuer dieses Keyword bevorzugt)
-- Gibt es auffaellige Muster in den Titeln (Woerter, die immer wieder auftauchen)?
-- Ranken grosse Portale oder Nischen-Anbieter? (-> Wettbewerbsintensitaet)
+**Leitfragen:** Dominierender Seitentyp in Top-3? Titel-Muster? Portale vs. Nischen-Anbieter?
 
 ### 2g -- Meta-Descriptions Muster
 
 Beobachtung: Welche Versprechen machen die Rankings in ihrer Description?
 Interpretation: Was klickt die Zielgruppe an -- und warum.
 
-**Destilliere die 3-5 haeufigsten Muster:**
-- Sicherheits-/Risikoversprechen
-- Schnelligkeits-/Einfachheitsversprechen
-- Individualitaets-/Praezisionsversprechen
-- Call-to-Action Typen
+**Destilliere die 3-5 haeufigsten Muster:** Sicherheits-/Risiko-, Schnelligkeits-/Einfachheits-, Individualitaetsversprechen, CTA-Typen.
 
 ### 2h -- Page-Type-Mismatch Erkennung
 
@@ -408,15 +342,7 @@ Fuelle diese Tabelle aus den SERP-Daten:
 | **Sekundaeres Ziel** | z.B. "Danach ggf. konkretes Angebot einholen" |
 | **Barrieren** | Was haelt den User zurueck? (Risiko, Komplexitaet, Zeit) |
 
-**Intent-Klassifikation ableiten aus SERP-Signalen:**
-
-```
-Informational:   PAA dominiert, Wikipedia/Knowledge Graph, Blog/Guide in Top-3, keine Ads
-Transactional:   Shopping-Produkte, Preis-Terme, Warenkorb-CTAs, Product Pages in Top-3
-Commercial:      Vergleichsportale, "beste/bester", Reviews, Ads mit Preisen, Comparison/Service Pages
-Navigational:    Markenname im Keyword, eine Domain dominiert, Knowledge Graph mit Brand
-Mixed:           Mehrere Signale gleichzeitig (z.B. Ads + Blog + Tool) -> nenne die 2 staerksten
-```
+**Intent-Klassifikation:** Informational (PAA, Knowledge Graph, Blog in Top-3), Transactional (Shopping, Preis-Terme, Product Pages), Commercial (Vergleiche, Reviews, Ads), Navigational (Brand-Keyword, eine Domain dominiert), Mixed (2 staerkste Signale nennen).
 
 ### 3b -- User Story Statement formulieren
 
@@ -568,21 +494,9 @@ Lies `references/output-format.md` fuer CSS-Klassen Referenz, HTML-Struktur Kurz
 
 ## Fehlerbehandlung
 
-```
-IF API-Response leer oder Fehler:
-  -> Logge den Fehlertyp
-  -> Wechsle automatisch in Fallback-Modus (Schritt 1c)
-  -> Informiere den User mit konkreter Fehlermeldung
-
-IF Keyword keine Ergebnisse liefert:
-  -> Pruefe Schreibweise / Sprache / Location
-  -> Schlage alternative Keyword-Varianten vor
-
-IF Zielseite nicht erreichbar:
-  -> Zielseiten-Abgleich (Schritt 4) ueberspringen
-  -> Report ohne Zielseiten-Analyse ausgeben
-  -> Hinweis: "Zielseite nicht erreichbar -- Abgleich manuell durchfuehren"
-```
+- **API-Fehler:** Logge Fehlertyp, wechsle in Fallback-Modus (Schritt 1c), informiere User.
+- **Keyword ohne Ergebnisse:** Pruefe Schreibweise/Sprache/Location, schlage Alternativen vor.
+- **Zielseite nicht erreichbar:** Schritt 4 ueberspringen, Report ohne Zielseiten-Analyse ausgeben.
 
 ## Qualitaetsstandards
 

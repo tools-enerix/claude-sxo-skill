@@ -9,33 +9,37 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f8f9fb;
+    --bg: #f6f7fb;
     --surface: #ffffff;
-    --surface-2: #f1f3f7;
-    --surface-3: #e8ebf0;
-    --border: #d1d5de;
-    --border-light: #bfc5d2;
-    --text: #1a1f2e;
-    --text-muted: #4a5168;
-    --text-dim: #7a8198;
-    --accent: #2563eb;
-    --accent-glow: rgba(37, 99, 235, 0.08);
-    --green: #16a34a;
-    --green-bg: rgba(22, 163, 74, 0.08);
-    --red: #dc2626;
-    --red-bg: rgba(220, 38, 38, 0.07);
-    --yellow: #b45309;
-    --yellow-bg: rgba(180, 83, 9, 0.07);
-    --orange: #ea580c;
-    --orange-bg: rgba(234, 88, 12, 0.07);
-    --purple: #7c3aed;
-    --purple-bg: rgba(124, 58, 237, 0.07);
-    --amber: #ca8a04;
-    --amber-bg: rgba(202, 138, 4, 0.07);
+    --surface-2: #f0f2f8;
+    --surface-3: #e4e7f0;
+    --border: #d4d8e5;
+    --border-light: #c0c5d5;
+    --text: #1a1f36;
+    --text-muted: #4a5070;
+    --text-dim: #7a80a0;
+    --accent: #4f6ef7;
+    --accent-glow: rgba(79, 110, 247, 0.08);
+    --accent-soft: rgba(79, 110, 247, 0.14);
+    --green: #22c55e;
+    --green-bg: rgba(34, 197, 94, 0.10);
+    --red: #ef4444;
+    --red-bg: rgba(239, 68, 68, 0.08);
+    --yellow: #eab308;
+    --yellow-bg: rgba(234, 179, 8, 0.08);
+    --orange: #f97316;
+    --orange-bg: rgba(249, 115, 22, 0.08);
+    --purple: #8b5cf6;
+    --purple-bg: rgba(139, 92, 246, 0.08);
+    --amber: #d97706;
+    --amber-bg: rgba(217, 119, 6, 0.08);
     --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-    --radius: 12px;
-    --radius-sm: 8px;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.05);
   }
 
   body {
@@ -49,7 +53,7 @@
 
   /* ── Layout ── */
   .report {
-    max-width: 1080px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 40px 24px 80px;
   }
@@ -57,10 +61,10 @@
   /* ── Header ── */
   .report-header {
     position: relative;
-    padding: 48px 40px 40px;
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    border: 1px solid #334155;
-    border-radius: 16px;
+    padding: 52px 44px 44px;
+    background: linear-gradient(135deg, #1e2a4a 0%, #0f1629 50%, #1a1040 100%);
+    border: 1px solid #2a3560;
+    border-radius: 20px;
     margin-bottom: 40px;
     overflow: hidden;
   }
@@ -68,12 +72,23 @@
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+    height: 4px;
+    background: linear-gradient(90deg, #4f6ef7, #8b5cf6, #ec4899, #8b5cf6, #4f6ef7);
+    background-size: 200% 100%;
   }
-  .report-header .meta-label { color: #94a3b8; }
+  .report-header::after {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(79, 110, 247, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .report-header .meta-label { color: #94a3c8; }
   .report-header .meta-value { color: #e2e8f0; }
-  .report-header .meta-value a { color: #93c5fd; }
+  .report-header .meta-value a { color: #93c5fd; text-decoration: none; }
+  .report-header .meta-value a:hover { text-decoration: underline; }
   .report-header .label {
     display: inline-block;
     font-size: 11px;
@@ -81,16 +96,16 @@
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: #93c5fd;
-    background: rgba(147, 197, 253, 0.15);
-    padding: 4px 12px;
-    border-radius: 4px;
+    background: rgba(147, 197, 253, 0.12);
+    padding: 5px 14px;
+    border-radius: 6px;
     margin-bottom: 16px;
   }
   .report-header h1 {
-    font-size: 28px;
-    font-weight: 700;
+    font-size: 30px;
+    font-weight: 800;
     line-height: 1.3;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
     color: #f1f5f9;
   }
   .report-header h1 span {
@@ -99,12 +114,12 @@
   .meta-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
+    gap: 14px;
   }
   .meta-item {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
   }
   .meta-item .meta-label {
     font-size: 11px;
@@ -128,32 +143,30 @@
 
   /* ── Section ── */
   .section {
-    margin-bottom: 32px;
+    margin-bottom: 36px;
   }
   .section-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     margin-bottom: 24px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--surface-3);
   }
-  .section-number {
+  .section-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
     background: var(--accent-glow);
-    border: 1px solid rgba(96, 165, 250, 0.3);
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--accent);
+    border: 1px solid var(--accent-soft);
+    border-radius: 12px;
+    font-size: 20px;
     flex-shrink: 0;
   }
   .section-header h2 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--text);
   }
@@ -163,8 +176,9 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 24px;
+    padding: 28px;
     margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
   }
   .card h3 {
     font-size: 15px;
@@ -194,8 +208,8 @@
     gap: 5px;
     font-size: 12px;
     font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 6px;
+    padding: 4px 12px;
+    border-radius: 8px;
     white-space: nowrap;
   }
   .badge-pass    { color: var(--green);  background: var(--green-bg); }
@@ -209,15 +223,26 @@
   /* ── User Story quote ── */
   .user-story-quote {
     position: relative;
-    padding: 24px 28px;
+    padding: 28px 32px;
     background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
-    border-left: 3px solid var(--purple);
+    border-left: 4px solid var(--purple);
     border-radius: 0 var(--radius) var(--radius) 0;
     margin: 16px 0;
-    font-size: 15px;
+    font-size: 16px;
     font-style: italic;
     color: var(--text);
     line-height: 1.8;
+  }
+  .user-story-quote::before {
+    content: '\201E';
+    position: absolute;
+    top: 8px;
+    left: 16px;
+    font-size: 40px;
+    color: var(--purple);
+    opacity: 0.3;
+    font-style: normal;
+    line-height: 1;
   }
 
   /* ── Summary Card ── */
@@ -225,10 +250,11 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 32px;
+    padding: 36px;
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 36px;
+    box-shadow: var(--shadow);
   }
   @media (max-width: 700px) {
     .summary-card { flex-direction: column; text-align: center; }
@@ -236,24 +262,24 @@
   .summary-score {
     flex-shrink: 0;
     position: relative;
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
   }
   .summary-score svg {
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
     transform: rotate(-90deg);
   }
   .summary-score .score-bg {
     fill: none;
     stroke: var(--surface-3);
-    stroke-width: 8;
+    stroke-width: 10;
   }
   .summary-score .score-fill {
     fill: none;
-    stroke-width: 8;
+    stroke-width: 10;
     stroke-linecap: round;
-    transition: stroke-dasharray 0.6s ease;
+    transition: stroke-dasharray 0.8s ease;
   }
   .summary-score .score-text {
     position: absolute;
@@ -262,43 +288,43 @@
     text-align: center;
   }
   .summary-score .score-number {
-    font-size: 36px;
+    font-size: 40px;
     font-weight: 800;
     line-height: 1;
   }
   .summary-score .score-label {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: var(--text-dim);
-    margin-top: 2px;
+    margin-top: 4px;
   }
   .summary-details {
     flex: 1;
   }
   .summary-details h3 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
     color: var(--text);
-    margin-bottom: 12px;
+    margin-bottom: 16px;
   }
   .summary-row {
     display: flex;
     align-items: baseline;
-    gap: 8px;
-    padding: 6px 0;
+    gap: 10px;
+    padding: 8px 0;
     border-bottom: 1px solid var(--surface-3);
-    font-size: 13px;
+    font-size: 14px;
   }
   .summary-row:last-child { border-bottom: none; }
   .sr-label {
     font-weight: 600;
     color: var(--text-dim);
-    font-size: 11px;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.3px;
-    min-width: 160px;
+    min-width: 170px;
   }
   .sr-value {
     color: var(--text-muted);
@@ -309,21 +335,18 @@
     gap: 5px;
     font-size: 11px;
     font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 6px;
+    padding: 4px 12px;
+    border-radius: 8px;
     background: var(--purple-bg);
     color: var(--purple);
-    margin-top: 12px;
+    margin-top: 14px;
   }
 
-  /* ── Persona Grid ── */
-  .persona-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  @media (max-width: 800px) {
-    .persona-grid { grid-template-columns: 1fr; }
+  /* ── Persona Cards (Single Column) ── */
+  .persona-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 
   /* ── Persona Card ── */
@@ -331,16 +354,71 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 24px;
+    padding: 0;
     position: relative;
     overflow: hidden;
-    border-top: 3px solid var(--persona-color, var(--accent));
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.3s ease;
   }
-  .persona-header {
+  .persona-card:hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* ── Persona Top Bar (colored accent strip) ── */
+  .persona-topbar {
+    height: 6px;
+    background: var(--persona-color, var(--accent));
+  }
+
+  /* ── Persona Profile Section ── */
+  .persona-profile {
     display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 20px;
+    align-items: center;
+    gap: 20px;
+    padding: 28px 32px 0;
+  }
+  @media (max-width: 600px) {
+    .persona-profile { flex-direction: column; text-align: center; }
+  }
+
+  /* ── Persona Avatar (Large, Prominent) ── */
+  .persona-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--persona-color, var(--accent));
+    flex-shrink: 0;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .persona-avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+    border: 4px solid var(--persona-color, var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: var(--persona-color, var(--accent));
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .persona-identity {
+    flex: 1;
+  }
+  .persona-identity h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .persona-demo {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
   }
 
   /* ── Score Circle (Persona) ── */
@@ -375,60 +453,88 @@
     color: var(--persona-color, var(--accent));
   }
 
-  /* ── Persona Avatar ── */
-  .persona-avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--persona-color, var(--accent));
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  /* ── Speech Bubble ── */
+  .speech-bubble-wrap {
+    padding: 0 32px 24px;
   }
-  .persona-avatar-placeholder {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    background: var(--surface-3);
-    border: 2px solid var(--persona-color, var(--accent));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    color: var(--persona-color, var(--accent));
+  .speech-bubble {
+    position: relative;
+    background: var(--surface-2);
+    border: 1px solid var(--surface-3);
+    border-radius: 20px;
+    padding: 20px 24px;
+    margin-top: 16px;
+    margin-left: 40px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 30px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 12px solid var(--surface-3);
+  }
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 31px;
+    width: 0;
+    height: 0;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 11px solid var(--surface-2);
+  }
+  .speech-bubble strong {
+    color: var(--text);
+  }
+  .speech-bubble .speech-keyword {
+    color: var(--accent);
+    font-weight: 700;
   }
 
-  .persona-identity h3 {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 2px;
+  /* ── Persona Body (Details Grid) ── */
+  .persona-body {
+    padding: 0 32px 28px;
   }
-  .persona-demo {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 6px;
+  .persona-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 700px) {
+    .persona-columns { grid-template-columns: 1fr; }
   }
 
   /* ── Persona Fields ── */
   .persona-field {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--surface-3);
+    margin-top: 20px;
+  }
+  .persona-field:first-child {
+    margin-top: 0;
   }
   .pf-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pf-label .pf-icon {
+    font-size: 16px;
   }
   .persona-field p {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.7;
   }
   .persona-field ul {
     list-style: none;
@@ -436,57 +542,82 @@
   }
   .persona-field li {
     position: relative;
-    padding-left: 16px;
-    font-size: 13px;
+    padding-left: 20px;
+    font-size: 14px;
     color: var(--text-muted);
-    line-height: 1.6;
-    margin-top: 4px;
+    line-height: 1.7;
+    margin-top: 6px;
   }
   .persona-field li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 9px;
-    width: 6px;
-    height: 6px;
+    top: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--persona-color, var(--accent));
+    opacity: 0.6;
   }
 
   /* ── Score Breakdown Bars ── */
   .score-breakdown {
-    margin-top: 8px;
+    margin-top: 10px;
   }
   .sb-row {
     display: grid;
-    grid-template-columns: 90px 1fr 50px;
+    grid-template-columns: 120px 1fr 50px;
     align-items: center;
-    gap: 8px;
-    padding: 4px 0;
-    font-size: 12px;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13px;
   }
   .sb-row span:first-child {
-    color: var(--text-dim);
+    color: var(--text-muted);
     font-weight: 500;
   }
   .sb-row span:last-child {
     text-align: right;
-    color: var(--text-muted);
+    color: var(--text-dim);
     font-weight: 600;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 12px;
   }
   .sb-bar {
-    height: 6px;
+    height: 8px;
     background: var(--surface-3);
-    border-radius: 3px;
+    border-radius: 4px;
     overflow: hidden;
   }
   .sb-fill {
     height: 100%;
-    border-radius: 3px;
+    border-radius: 4px;
     background: var(--persona-color, var(--accent));
-    transition: width 0.4s ease;
+    transition: width 0.5s ease;
+  }
+
+  /* ── Improvement Tips ── */
+  .tip-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 12px;
+  }
+  .tip-list li {
+    position: relative;
+    padding: 10px 12px 10px 40px;
+    margin-top: 8px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .tip-list li::before {
+    content: '\1F4A1';
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    font-size: 16px;
   }
 
   /* ── Action Items ── */
@@ -499,22 +630,22 @@
     counter-increment: action-counter;
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    padding: 14px 0;
+    gap: 14px;
+    padding: 16px 0;
     border-bottom: 1px solid var(--surface-3);
   }
   .action-item:last-child { border-bottom: none; }
   .action-number {
     flex-shrink: 0;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--accent-glow);
-    border: 1px solid rgba(96, 165, 250, 0.3);
-    border-radius: 8px;
-    font-size: 13px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--accent);
   }
@@ -525,33 +656,33 @@
     flex: 1;
   }
   .action-content p {
-    font-size: 14px;
+    font-size: 15px;
     color: var(--text);
     font-weight: 500;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
   .action-personas {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 6px;
+    gap: 6px;
+    margin-top: 8px;
   }
   .persona-tag {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
-    padding: 2px 8px;
-    border-radius: 4px;
+    padding: 3px 10px;
+    border-radius: 6px;
     background: var(--surface-3);
     color: var(--text-muted);
   }
 
   /* ── Footer ── */
   .report-footer {
-    margin-top: 48px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 2px solid var(--surface-3);
     text-align: center;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-dim);
   }
 
@@ -576,45 +707,27 @@
   @media print {
     body { background: #fff; color: #1a1a1a; font-size: 12px; }
     .report { max-width: 100%; padding: 0; }
-    .report-header { background: #f5f5f5; border: 1px solid #ddd; }
-    .report-header::before { display: none; }
-    .report-header h1, .section-header h2, .card h3, .persona-card h3 { color: #1a1a1a; }
-    .card, .persona-card, .summary-card { background: #fafafa; border-color: #ddd; }
-    .label, .section-number { background: #eee; color: #333; border-color: #ccc; }
-    .persona-card { border-top-color: #999; }
-    .score-circle .score-fill { stroke: #666; }
-    .sb-fill { background: #999; }
-    .persona-grid { grid-template-columns: 1fr 1fr; }
+    .report-header { background: #f5f5f5 !important; border: 1px solid #ddd; }
+    .report-header::before, .report-header::after { display: none; }
+    .report-header h1, .section-header h2, .card h3, .persona-identity h3 { color: #1a1a1a !important; }
+    .report-header .label, .report-header .meta-label { color: #666 !important; }
+    .report-header .meta-value, .report-header h1 span { color: #333 !important; }
+    .card, .persona-card, .summary-card { background: #fafafa; border-color: #ddd; box-shadow: none; }
+    .persona-topbar { background: #999 !important; }
+    .persona-card:hover { box-shadow: none; }
+    .speech-bubble { background: #f5f5f5; border-color: #ddd; }
+    .speech-bubble::before { border-bottom-color: #ddd; }
+    .speech-bubble::after { border-bottom-color: #f5f5f5; }
+    .tip-list li { background: #f5f5f5; }
+    .persona-avatar, .persona-avatar-placeholder { border-color: #999 !important; box-shadow: none !important; }
+    .score-circle .score-fill { stroke: #666 !important; }
+    .sb-fill { background: #999 !important; }
     .persona-card { break-inside: avoid; }
   }
 </style>
 </head>
 <body>
 <div class="report">
-
-  <!-- ═══════════════ HEADER ═══════════════ -->
-  <header class="report-header">
-    <div class="label">SXO Persona-Dashboard</div>
-    <h1>Persona-Feedback: <span>{{KEYWORD}}</span></h1>
-    <div class="meta-grid">
-      <div class="meta-item">
-        <span class="meta-label">Zielseite</span>
-        <span class="meta-value"><a href="{{URL}}" target="_blank">{{URL}}</a></span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Datum</span>
-        <span class="meta-value">{{DATUM}}</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Scoring-Modus</span>
-        <span class="meta-value">{{SCORING_MODUS}}</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Personas</span>
-        <span class="meta-value">{{PERSONA_COUNT}}</span>
-      </div>
-    </div>
-  </header>
 
   <!-- Sections generated directly by the skill -->
 

@@ -1,18 +1,19 @@
 ---
-name: sxo-page
+name: seo-sxo-page
 description: >
   Erstellt eine fertige HTML- oder Markdown-Seite auf Basis eines SXO-Analyzer Reports
   und eines SXO-Builder Wireframes. Kombiniert die UX-Strukturvorgaben aus dem Wireframe
   mit den Content-Qualitaetsstandards von blog-write (Statistik-Recherche, Answer-First,
   E-E-A-T, Readability). Liest Report, Wireframe und optionalen Beitrag aus dem aktuellen
-  Arbeitsverzeichnis. Downstream-Skill von sxo-analyzer und sxo-builder.
+  Arbeitsverzeichnis. Downstream-Skill von seo-sxo-analyzer und seo-sxo-builder.
   Supports German and English -- auto-detects language from SXO report/wireframe.
   Use when user says "Seite erstellen", "create the page", "build page from wireframe",
   "SXO Seite bauen", "Inhalt produzieren", "produce content", "wireframe to html",
   "wireframe to page", "sxo page", "Seite aus Wireframe", "page from wireframe",
   "fill wireframe", "Wireframe umsetzen", "content from SXO", or "Inhalt aus SXO".
-  Do NOT use for: wireframe creation (use sxo-builder), SXO analysis (use sxo-analyzer),
-  blog posts without SXO context (use blog-write), or pure design/mockup tasks.
+  Do NOT use for: wireframe creation (use seo-sxo-builder), SXO analysis
+  (use seo-sxo-analyzer), blog posts without SXO context (use blog-write),
+  or pure design/mockup tasks.
 argument-hint: "[output-format: html|md]"
 allowed-tools:
   - Read
@@ -43,8 +44,8 @@ Ergebnis: Eine Seite, die sowohl fuer Rankings als auch fuer Conversions optimie
 ```
 Suche mit Glob im aktuellen Arbeitsverzeichnis nach:
 
-1. SXO-Report:    sxo-report-*.html     (aus /sxo-analyzer)
-2. SXO-Wireframe: sxo-wireframe-*.html  (aus /sxo-builder)
+1. SXO-Report:    sxo-report-*.html     (aus /seo-sxo-analyzer)
+2. SXO-Wireframe: sxo-wireframe-*.html  (aus /seo-sxo-builder)
 3. Bestehender Beitrag (optional):
    - *.html (nicht sxo-report-* oder sxo-wireframe-*)
    - *.md (nicht README.md)
@@ -55,13 +56,13 @@ IF Report UND Wireframe gefunden:
 
 IF nur Report ODER nur Wireframe:
   -> Hinweis: "Fuer optimale Ergebnisse brauche ich beides."
-  -> "Report fehlt? -> /sxo-analyzer [keyword] [url]"
-  -> "Wireframe fehlt? -> /sxo-builder [report-datei]"
+  -> "Report fehlt? -> /seo-sxo-analyzer [keyword] [url]"
+  -> "Wireframe fehlt? -> /seo-sxo-builder [report-datei]"
   -> Falls nur Wireframe: Fahre trotzdem fort (Wireframe enthaelt User Story + Gaps)
-  -> Falls nur Report: Abbruch mit Empfehlung /sxo-builder zuerst
+  -> Falls nur Report: Abbruch mit Empfehlung /seo-sxo-builder zuerst
 
 IF weder Report noch Wireframe:
-  -> Frage nach Dateien oder empfehle /sxo-analyzer als Startpunkt
+  -> Frage nach Dateien oder empfehle /seo-sxo-analyzer als Startpunkt
 ```
 
 ### 0b -- Output-Format bestimmen
@@ -601,7 +602,7 @@ Naechste Schritte:
 IF Wireframe-Datei nicht parsbar:
   -> Fehlermeldung: "Die Wireframe-Datei konnte nicht gelesen werden."
   -> Pruefe ob es eine gueltige sxo-wireframe-*.html ist
-  -> Biete an: "/sxo-builder [report] fuer einen neuen Wireframe"
+  -> Biete an: "/seo-sxo-builder [report] fuer einen neuen Wireframe"
 
 IF Report-Datei nicht parsbar:
   -> Warnung: "Report konnte nicht gelesen werden. Nutze nur Wireframe-Daten."
