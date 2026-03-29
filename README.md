@@ -90,14 +90,14 @@ Runs a 6-step analysis:
 | Step | What Happens |
 |------|-------------|
 | **0. Inputs** | Keyword, target URL, market/language, device |
-| **1. Data Collection** | Live SERP data via DataForSEO MCP (autocomplete, ads, featured snippets, PAA, images, top-10). Falls back to manual input if API unavailable. |
+| **1. Data Collection** | Live SERP data via DataForSEO MCP (autocomplete, ads, featured snippets, PAA, images, top-10). Above-the-fold screenshot via Playwright. Falls back to manual input if API unavailable. |
 | **2. SERP Analysis** | Systematic analysis of 7 SERP elements with observation + interpretation |
 | **3. User Story** | Synthesizes all SERP signals into a User Story (knowledge level, journey phase, emotional state, goals, barriers) |
 | **4. Page Comparison** | 3-second first-screen test + gap analysis between SERP signals and target page |
 | **5. Recommendations** | Max 2 strategic options with effort/impact ratings and a clear recommendation |
 | **6. Checklists** | Layout basics, on-page SEO hygiene, Core Web Vitals, domain-level SEO hygiene |
 
-**Output:** Self-contained HTML report (`sxo-report-<keyword>.html`) with color-coded badges, gap analysis cards, recommendation cards, and print-friendly stylesheet.
+**Output:** Self-contained HTML report (`sxo-report-<keyword>.html`) with above-the-fold screenshot, color-coded badges, gap analysis cards, recommendation cards, and print-friendly stylesheet.
 
 ---
 
@@ -164,7 +164,7 @@ Can run with an SXO report, standalone with URL + keyword, or with an SXO page f
 
 | Step | What Happens |
 |------|-------------|
-| **0. Inputs** | Finds SXO report and optional SXO page. Also works standalone with URL + keyword. |
+| **0. Inputs** | Finds SXO report and optional SXO page. Also works standalone with URL + keyword. Captures above-the-fold screenshot via Playwright. |
 | **1. Data Extraction** | Parses Related Searches, PAA, Google Ads signals, User Story, Gap Analysis |
 | **2. Persona Derivation** | Clusters intent signals into 4-7 distinct personas with name, demographics, search motive |
 | **3. Scoring** | Scores each persona on 4 dimensions (max 100): First Screen, Expectation, Barrier Reduction, Trust |
@@ -176,8 +176,9 @@ Can run with an SXO report, standalone with URL + keyword, or with an SXO page f
 - **Three Scoring Modes**: Based on SXO Page (most precise), Live URL, or projected from report
 - **Standalone Mode**: Works with just URL + keyword (no SXO report required)
 - **Avatar Generation**: Optional flat-illustration avatar images via Nano Banana MCP
+- **Above-the-Fold Screenshot**: Embedded screenshot of the target page for visual context
 
-**Output:** Self-contained HTML dashboard (`sxo-persona-<keyword>.html`) with summary, persona cards (sorted weakest-first), and top 5 action items.
+**Output:** Self-contained HTML dashboard (`sxo-persona-<keyword>.html`) with above-the-fold screenshot, summary, persona cards (sorted weakest-first), and top 5 action items.
 
 ---
 
@@ -214,6 +215,7 @@ bash uninstall.sh
 
 - **Claude Code** with skill support
 - **DataForSEO MCP server** (optional but recommended -- falls back to manual SERP input)
+- **Playwright** (optional -- for above-the-fold screenshots in reports and dashboards: `npx playwright install chromium`)
 
 ### File Structure
 

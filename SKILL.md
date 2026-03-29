@@ -146,6 +146,27 @@ Lies `references/cwv-thresholds.md` fuer die vollstaendigen Schwellwerte, Feld-P
 
 Lies `references/dataforseo-api.md` fuer weitere optionale Endpunkte (Backlinks).
 
+### 1e -- Above-the-Fold Screenshot (parallel)
+
+Erstelle einen Screenshot des sichtbaren Bereichs (Above-the-Fold) der Zielseite. Dieser wird als visueller Kontext im HTML-Report eingebettet.
+
+Lies `references/screenshot-capture.md` fuer Capture-Befehl, Base64-Konvertierung und Fehlerbehandlung.
+
+```
+IF Zielseite-URL vorhanden:
+  -> Fuehre parallel zu den anderen Datenbeschaffungs-Schritten aus:
+     npx playwright screenshot "{{URL}}" /tmp/sxo-screenshot.png --viewport-size "1280,800" --timeout 15000
+  -> Konvertiere zu Base64:
+     SCREENSHOT_BASE64=$(base64 -w 0 /tmp/sxo-screenshot.png 2>/dev/null || openssl base64 -A -in /tmp/sxo-screenshot.png)
+  -> Loesche temporaere Datei: rm -f /tmp/sxo-screenshot.png
+  -> Speichere SCREENSHOT_BASE64 fuer die HTML-Ausgabe
+
+IF Screenshot fehlschlaegt:
+  -> Screenshot-Sektion im Report weglassen
+  -> Hinweis an User ausgeben
+  -> Workflow NICHT abbrechen
+```
+
 ---
 
 ## Schritt 2: SERP-Analyse
@@ -488,7 +509,15 @@ Der finale Report wird als **selbststaendige HTML-Datei** gespeichert.
 1. Bestimme die Report-Sprache (Schritt 0) und lies das passende Template: `assets/report-template.html` (DE) oder `assets/report-template-en.html` (EN)
 2. Kopiere den `<style>` Block (CSS) aus dem Template woertlich
 3. Generiere den `<body>` Inhalt direkt als HTML aus den Analyseergebnissen -- **NICHT** die `{{PLATZHALTER}}` im Template ersetzen
-4. Speichere als `sxo-report-[KEYWORD-SLUG].html` im aktuellen Arbeitsverzeichnis
+4. **Screenshot einbetten** (wenn SCREENSHOT_BASE64 vorhanden): Direkt nach dem `</header>` Block, vor Sektion 1, fuege ein:
+   ```html
+   <div class="screenshot-card">
+     <div class="sub-label">Above-the-Fold Ansicht</div>  <!-- bzw. "Above-the-Fold View" EN -->
+     <img class="screenshot-img" src="data:image/png;base64,{{SCREENSHOT_BASE64}}" alt="Above-the-Fold Screenshot: {{URL}}">
+     <p class="fs-13 text-muted mt-8">Viewport: 1280 &times; 800px (Desktop)</p>
+   </div>
+   ```
+5. Speichere als `sxo-report-[KEYWORD-SLUG].html` im aktuellen Arbeitsverzeichnis
 
 Lies `references/output-format.md` fuer CSS-Klassen Referenz, HTML-Struktur Kurzreferenz und sprachspezifische Labels (DE/EN).
 

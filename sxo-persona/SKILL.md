@@ -192,6 +192,15 @@ SCHRITT 0c-5: Gap-Analyse ableiten
      - SERP-Signal mittel + Seite schwach = medium
      - SERP-Signal schwach + Seite fehlt = low
 
+SCHRITT 0c-6: Above-the-Fold Screenshot (parallel zu 0c-4)
+
+  -> Lies references/screenshot-capture.md fuer Capture-Befehl und Fehlerbehandlung
+  -> npx playwright screenshot "{{URL}}" /tmp/sxo-screenshot.png --viewport-size "1280,800" --timeout 15000
+  -> Konvertiere zu Base64:
+     SCREENSHOT_BASE64=$(base64 -w 0 /tmp/sxo-screenshot.png 2>/dev/null || openssl base64 -A -in /tmp/sxo-screenshot.png)
+  -> rm -f /tmp/sxo-screenshot.png
+  -> IF Screenshot fehlschlaegt: weglassen, Workflow NICHT abbrechen
+
 Danach: Weiter mit Schritt 2 (Personas ableiten).
 Die Daten aus 0c-2/0c-3/0c-5 ersetzen die Report-Daten aus Schritt 1.
 ```
@@ -297,6 +306,17 @@ Aus "First Screen Check":
 Aus .verdict:
   VERDICT_CLASS: verdict-good | verdict-partial | verdict-bad
   VERDICT_TEXT:  Freitext
+```
+
+### 1i -- Above-the-Fold Screenshot (wenn URL verfuegbar)
+
+```
+IF URL aus Report-Metadaten (Schritt 1a) vorhanden:
+  -> Lies references/screenshot-capture.md fuer Capture-Befehl und Fehlerbehandlung
+  -> npx playwright screenshot "{{URL}}" /tmp/sxo-screenshot.png --viewport-size "1280,800" --timeout 15000
+  -> Konvertiere zu Base64 und speichere als SCREENSHOT_BASE64
+  -> rm -f /tmp/sxo-screenshot.png
+  -> IF Screenshot fehlschlaegt: weglassen, Workflow NICHT abbrechen
 ```
 
 ---
@@ -622,6 +642,15 @@ das Dashboard sofort versteht. Keine Fachbegriffe ohne Erklaerung.
     <!-- Bewertungsmethode-Hinweis -->
   </div>
 </div>
+
+<!-- ABOVE-THE-FOLD SCREENSHOT (nur wenn SCREENSHOT_BASE64 vorhanden) -->
+<!-- IF SCREENSHOT_BASE64 vorhanden: -->
+<div class="screenshot-card">
+  <div class="sub-label">Above-the-Fold Ansicht</div>  <!-- bzw. "Above-the-Fold View" EN -->
+  <img class="screenshot-img" src="data:image/png;base64,{{SCREENSHOT_BASE64}}" alt="Above-the-Fold Screenshot: {{URL}}">
+  <p class="fs-13 text-muted mt-8">Viewport: 1280 &times; 800px (Desktop)</p>
+</div>
+<!-- ENDIF -->
 
 <!-- USER STORY -->
 <div class="section">

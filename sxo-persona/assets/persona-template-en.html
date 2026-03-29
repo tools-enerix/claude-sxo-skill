@@ -676,6 +676,27 @@
     color: var(--text-muted);
   }
 
+  /* ── Above-the-Fold Screenshot ── */
+  .screenshot-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 16px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .screenshot-card .sub-label {
+    margin-bottom: 12px;
+  }
+  .screenshot-img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
   /* ── Footer ── */
   .report-footer {
     margin-top: 56px;
@@ -723,6 +744,8 @@
     .score-circle .score-fill { stroke: #666 !important; }
     .sb-fill { background: #999 !important; }
     .persona-card { break-inside: avoid; }
+    .screenshot-card { box-shadow: none !important; border-color: #ddd; }
+    .screenshot-img { box-shadow: none !important; }
   }
 </style>
 </head>

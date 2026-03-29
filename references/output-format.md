@@ -34,12 +34,15 @@ Der finale Report wird als **selbststaendige HTML-Datei** gespeichert.
 
 **Checkliste:** `check-pass` (Haekchen), `check-fail` (X), `check-warn` (!), `check-na` (?)
 
+**Screenshot:** `screenshot-card` (Container), `screenshot-img` (responsive Bild mit Border und Shadow)
+
 **Aufwand/Impact Farben:** `text-accent` (Gering/Low), `text-muted` (Mittel/Medium), `priority-high` (Hoch/High)
 
 ## HTML-Struktur Kurzreferenz
 
 ```html
 <!-- Header: .report-header mit .label, h1, .meta-grid -->
+<!-- Screenshot: .screenshot-card > .sub-label + img.screenshot-img + p (nach Header, vor Sektion 1) -->
 <!-- Sektionen: .section > .section-header + .card(s) -->
 <!-- Tabellen: .card > .table-wrap > table -->
 <!-- Gap-Items: .gap-item.gap-{priority} > h4 + .gap-detail > 3x div -->

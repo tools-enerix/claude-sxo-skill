@@ -559,6 +559,26 @@
   }
   .img-audit-items code:last-child { border-bottom: none; }
 
+  /* ── Above-the-Fold Screenshot ── */
+  .screenshot-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  .screenshot-card .sub-label {
+    margin-bottom: 12px;
+  }
+  .screenshot-img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
   /* ── Footer ── */
   .report-footer {
     margin-top: 48px;
@@ -591,6 +611,8 @@
     thead th { background: #eee; }
     tbody td, .card p, .card li, .checklist li { color: #333; }
     .reco-card.recommended::before { background: #333; color: #fff; }
+    .screenshot-card { box-shadow: none; border-color: #ddd; }
+    .screenshot-img { box-shadow: none; }
   }
 </style>
 </head>
