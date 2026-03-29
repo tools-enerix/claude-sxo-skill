@@ -6,7 +6,7 @@ SKILL_DIR="${HOME}/.claude/skills"
 
 echo "Uninstalling SXO Skills..."
 
-for SKILL in seo-sxo-analyzer seo-sxo-builder seo-sxo-page seo-sxo-persona; do
+for SKILL in sxo-analyze sxo-wireframe sxo-prototype sxo-persona; do
   TARGET="${SKILL_DIR}/${SKILL}"
   if [ -d "${TARGET}" ]; then
     rm -rf "${TARGET}"

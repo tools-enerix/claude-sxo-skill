@@ -15,28 +15,28 @@ SXO asks: *"What experience does the searcher expect, and does my page deliver i
 
 | Skill | Command | Purpose |
 |-------|---------|---------|
-| **SXO Analyzer** | `/seo-sxo-analyzer <keyword> <url>` | SERP analysis, User Story derivation, gap analysis, HTML report |
-| **SXO Builder** | `/seo-sxo-builder <report.html>` | Before/after wireframe from SXO report with concrete placeholders |
-| **SXO Page** | `/seo-sxo-page` | Production-ready HTML/MD page from SXO report + wireframe |
-| **SXO Persona** | `/seo-sxo-persona` | Persona feedback dashboard with scoring per searcher type |
+| **SXO Analyzer** | `/sxo-analyze <keyword> <url>` | SERP analysis, User Story derivation, gap analysis, HTML report |
+| **SXO Wireframe** | `/sxo-wireframe <report.html>` | Before/after wireframe from SXO report with concrete placeholders |
+| **SXO Prototype** | `/sxo-prototype` | Production-ready HTML/MD page from SXO report + wireframe |
+| **SXO Persona** | `/sxo-persona` | Persona feedback dashboard with scoring per searcher type |
 
 ### Recommended Workflow
 
 ```
-1. /seo-sxo-analyzer "your keyword" https://your-page.com
+1. /sxo-analyze "your keyword" https://your-page.com
    -> Generates sxo-report-keyword.html
 
-2. /seo-sxo-builder sxo-report-keyword.html
+2. /sxo-wireframe sxo-report-keyword.html
    -> Generates sxo-wireframe-keyword.html
 
-3. /seo-sxo-page
+3. /sxo-prototype
    -> Generates sxo-page-keyword.html (production-ready page)
 
-4. /seo-sxo-persona
+4. /sxo-persona
    -> Generates sxo-persona-keyword.html (persona feedback dashboard)
 ```
 
-SXO Analyzer tells you **what's wrong**. SXO Builder shows you **how to fix it**. SXO Page **builds the finished page**. SXO Persona shows you **who you're building it for**.
+SXO Analyzer tells you **what's wrong**. SXO Wireframe shows you **how to fix it**. SXO Prototype **builds the finished page**. SXO Persona shows you **who you're building it for**.
 
 ---
 
@@ -50,7 +50,7 @@ You use `/blog-write` and get an excellent guide: "iPhone 13 Screen Repair -- Ev
 
 But it doesn't rank. Why?
 
-**Step 1: Read the SERPs backwards** (`/seo-sxo-analyzer`)
+**Step 1: Read the SERPs backwards** (`/sxo-analyze`)
 
 You run an SXO analysis on your keyword. The skill pulls live Google data and discovers the **page type is wrong**:
 
@@ -62,18 +62,18 @@ You run an SXO analysis on your keyword. The skill pulls live Google data and di
 From all these signals, the skill derives a **User Story**:
 > *"Someone with a cracked iPhone 13 screen who wants to book a repair quickly. They're price-sensitive, slightly stressed, comparing options, and ready to act."*
 
-**Step 2: Build the wireframe** (`/seo-sxo-builder`)
+**Step 2: Build the wireframe** (`/sxo-wireframe`)
 
-The Builder recommends a **Service Page** type and creates a wireframe with:
+The Wireframe recommends a **Service Page** type and creates a wireframe with:
 - Hero with price range and "same-day repair" promise + booking CTA above the fold
 - Trust bar: "2,500+ repairs completed" + Google rating + warranty badge
 - Price/service table (because the Featured Snippet rewards structured data)
 - FAQ from the PAA questions
 - Prominent CTA: "Book your repair -- get a free quote in 30 seconds"
 
-**Step 3: Produce the finished page** (`/seo-sxo-page`)
+**Step 3: Produce the finished page** (`/sxo-prototype`)
 
-SXO Page takes the wireframe, the report, and your existing blog post, then **merges them**: it keeps the best parts of your well-researched content but restructures everything into the service-page layout the SERPs demand.
+SXO Prototype takes the wireframe, the report, and your existing blog post, then **merges them**: it keeps the best parts of your well-researched content but restructures everything into the service-page layout the SERPs demand.
 
 **The result:** Your page now matches what Google actually rewards for this keyword. You rank **and** convert.
 
@@ -82,7 +82,7 @@ SXO Page takes the wireframe, the report, and your existing blog post, then **me
 ## SXO Analyzer
 
 ```
-/seo-sxo-analyzer "your keyword" https://your-target-page.com
+/sxo-analyze "your keyword" https://your-target-page.com
 ```
 
 Runs a 6-step analysis:
@@ -101,10 +101,10 @@ Runs a 6-step analysis:
 
 ---
 
-## SXO Builder
+## SXO Wireframe
 
 ```
-/seo-sxo-builder sxo-report-keyword.html
+/sxo-wireframe sxo-report-keyword.html
 ```
 
 Reads an SXO Analyzer report and generates a visual page structure comparison:
@@ -127,10 +127,10 @@ Reads an SXO Analyzer report and generates a visual page structure comparison:
 
 ---
 
-## SXO Page
+## SXO Prototype
 
 ```
-/seo-sxo-page
+/sxo-prototype
 ```
 
 Auto-detects SXO report + wireframe in the current directory and produces a finished page:
@@ -157,7 +157,7 @@ Auto-detects SXO report + wireframe in the current directory and produces a fini
 ## SXO Persona
 
 ```
-/seo-sxo-persona
+/sxo-persona
 ```
 
 Can run with an SXO report, standalone with URL + keyword, or with an SXO page for precise scoring:
@@ -220,20 +220,20 @@ bash uninstall.sh
 ```
 claude-sxo-skill/
 |-- install.sh / uninstall.sh
-|-- SKILL.md                          # seo-sxo-analyzer
+|-- SKILL.md                          # sxo-analyze
 |-- assets/                           # Report templates (DE/EN)
 |-- references/                       # API reference, output format, CWV thresholds, fallback mode
-|-- sxo-builder/                      # seo-sxo-builder + assets + references
-|-- sxo-page/                         # seo-sxo-page + assets + references
-|-- sxo-persona/                      # seo-sxo-persona + assets + references
-|-- examples/                         # Full example outputs (Analyzer, Builder, Page)
+|-- sxo-wireframe/                    # sxo-wireframe + assets + references
+|-- sxo-prototype/                    # sxo-prototype + assets + references
+|-- sxo-persona/                      # sxo-persona + assets + references
+|-- examples/                         # Full example outputs (Analyzer, Wireframe, Prototype)
 ```
 
 ## Examples
 
 - **Analyzer**: [`examples/sxo-report-content-marketing-roi-calculator.html`](examples/sxo-report-content-marketing-roi-calculator.html)
-- **Builder**: [`examples/sxo-wireframe-content-marketing-roi-calculator.html`](examples/sxo-wireframe-content-marketing-roi-calculator.html)
-- **Page**: [`examples/sxo-page-content-marketing-roi-calculator.html`](examples/sxo-page-content-marketing-roi-calculator.html)
+- **Wireframe**: [`examples/sxo-wireframe-content-marketing-roi-calculator.html`](examples/sxo-wireframe-content-marketing-roi-calculator.html)
+- **Prototype**: [`examples/sxo-page-content-marketing-roi-calculator.html`](examples/sxo-page-content-marketing-roi-calculator.html)
 
 ---
 

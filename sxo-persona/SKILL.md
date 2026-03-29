@@ -1,5 +1,5 @@
 ---
-name: seo-sxo-persona
+name: sxo-persona
 description: >
   Erstellt ein Persona-Feedback-Dashboard als HTML-Datei auf Basis eines SXO-Analyzer
   Reports und/oder einer SXO Page. Kann auch standalone mit URL + Keyword arbeiten
@@ -44,7 +44,7 @@ Logik: **SERP-Signale -> Intent-Cluster -> Personas -> Scoring gegen Zielseite -
 ```
 Suche mit Glob im aktuellen Arbeitsverzeichnis nach:
 
-1. SXO-Report:  sxo-report-*.html   (aus /seo-sxo-analyzer)
+1. SXO-Report:  sxo-report-*.html   (aus /sxo-analyze)
 2. SXO-Page:    sxo-page-*.html     (aus /sxo-page)
 3. Argumente:   URL und/oder Keyword als Argument
 
@@ -73,8 +73,8 @@ MODUS C -- Kein Report, nur URL (ohne Keyword):
 
 MODUS D -- Weder Report noch URL:
   -> Fehler: "Ich brauche mindestens einen SXO-Report oder eine URL + Keyword."
-  -> "Option 1: /seo-sxo-analyzer [keyword] [url]  (vollstaendiger Report)"
-  -> "Option 2: /seo-sxo-persona [keyword] [url]   (Standalone-Analyse)"
+  -> "Option 1: /sxo-analyze [keyword] [url]  (vollstaendiger Report)"
+  -> "Option 2: /sxo-persona [keyword] [url]   (Standalone-Analyse)"
 ```
 
 ### 0b -- Spracherkennung

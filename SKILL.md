@@ -1,5 +1,5 @@
 ---
-name: seo-sxo-analyzer
+name: sxo-analyze
 description: >
   Vollstaendige SXO-Analyse (Search Experience Optimization) fuer ein gegebenes
   Keyword und eine Zielseite. Analysiert SERPs via DataForSEO MCP (Autocomplete,
